@@ -2,340 +2,788 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Cyber Realm Idle</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a1a;color:#0ff;font-family:'Courier New',monospace;overflow:hidden;height:100vh}
-#game{display:flex;flex-direction:column;height:100vh}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a1a;--bg2:#0d1025;--neon:#0ff;--neon2:#0f0;--gold:#ffd700;
+  --red:#f04;--purple:#a0f;--orange:#f80;--blue: #4af;
+  --panel:rgba(0,255,255,0.04);--border:rgba(0,255,255,0.15);
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--neon);font-family:'Segoe UI','Courier New',monospace;font-size:12px;user-select:none}
 
-/* Header */
-#header{background:linear-gradient(180deg,#0a1628,#0a0a1a);padding:8px;text-align:center;border-bottom:2px solid #0ff}
-#header h1{font-size:18px;text-shadow:0 0 10px #0ff,0 0 20px #0ff;letter-spacing:3px}
-#resources{display:flex;justify-content:center;gap:12px;padding:6px;font-size:12px}
-.res{display:flex;align-items:center;gap:4px}
-.res span{color:#ff0;text-shadow:0 0 5px #ff0}
+/* ═══ LAYOUT ═══ */
+#app{display:grid;grid-template-rows:auto 1fr auto;height:100vh}
 
-/* Main area */
-#flex{flex:1;display:flex;overflow:hidden}
-#left-panel{width:200px;background:rgba(0,255,255,0.03);border-right:1px solid #0ff3;padding:8px;overflow-y:auto}
-#main-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;position:relative}
-#right-panel{width:200px;background:rgba(0,255,255,0.03);border-left:1px solid #0ff3;padding:8px;overflow-y:auto}
+/* ═══ TOP BAR ═══ */
+#top{background:linear-gradient(180deg,#0a1628,var(--bg2));padding:6px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+#top h1{font-size:14px;letter-spacing:2px;text-shadow:0 0 8px var(--neon)}
+#top-right{display:flex;gap:8px;align-items:center}
+.btn-icon{background:var(--panel);border:1px solid var(--border);color:var(--neon);padding:4px 8px;border-radius:4px;font-size:11px;cursor:pointer;transition:.15s}
+.btn-icon:hover{background:rgba(0,255,255,.15)}
+.btn-icon:active{transform:scale(.95)}
 
-#realm-btn{width:140px;height:140px;border-radius:50%;border:3px solid #0ff;background:radial-gradient(circle,#0a1628,#1a0a3c);color:#0ff;font-size:14px;cursor:pointer;box-shadow:0 0 20px #0ff5,inset 0 0 30px #0ff2;transition:0.1s;display:flex;align-items:center;justify-content:center;margin:20px auto}
-#realm-btn:active{transform:scale(0.95);box-shadow:0 0 30px #fff,inset 0 0 40px #0ff5}
-#realm-btn:hover{box-shadow:0 0 30px #0ff,inset 0 0 40px #0ff3}
+/* ═══ RESOURCES BAR ═══ */
+#resources{background:var(--bg2);padding:4px 10px;display:flex;gap:10px;justify-content:center;border-bottom:1px solid var(--border);font-size:11px}
+.res{display:flex;align-items:center;gap:3px}
+.res .icon{font-size:13px}
+.res .val{color:var(--gold);font-weight:bold;min-width:40px;text-align:right}
+.res .rate{color:var(--neon2);font-size:10px;opacity:.7}
 
-#click-value{font-size:12px;color:#0f0;text-shadow:0 0 5px #0f0;min-height:20px;text-align:center;margin-top:8px}
-#cps{font-size:11px;color:#888;text-align:center;margin-top:4px}
+/* ═══ MAIN CONTENT ═══ */
+#main{display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+#left{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:15px;position:relative;overflow:hidden}
+#right{overflow-y:auto;padding:10px;border-left:1px solid var(--border)}
 
-/* Upgrades */
-.upgrade{background:rgba(0,255,255,0.05);border:1px solid #0ff3;border-radius:4px;padding:6px;margin-bottom:6px;font-size:11px;cursor:pointer;transition:0.2s}
-.upgrade:hover{background:rgba(0,255,255,0.12);border-color:#0ff}
-.upgrade.owned{opacity:0.5;cursor:default}
-.upgrade .name{color:#0ff;font-weight:bold}
-.upgrade .cost{color:#ff0}
-.upgrade .desc{color:#888;font-size:10px}
-.upgrade.locked{display:none}
+/* ═══ TABS ═══ */
+#tabs{display:flex;gap:0;margin-bottom:10px;border-bottom:1px solid var(--border)}
+.tab{flex:1;text-align:center;padding:6px 4px;font-size:10px;cursor:pointer;border-bottom:2px solid transparent;color:#888;transition:.15s}
+.tab.active{color:var(--neon);border-color:var(--neon);text-shadow:0 0 5px var(--neon)}
+.tab:hover{color:var(--neon)}
 
-.tab-btn{background:rgba(0,255,255,0.08);border:1px solid #0ff5;color:#0ff;padding:4px 8px;font-size:11px;cursor:pointer;margin:2px;border-radius:3px}
-.tab-btn.active{background:rgba(0,255,255,0.2);box-shadow:0 0 5px #0ff}
+/* ═══ CENTRAL BUTTON ═══ */
+#click-btn{width:120px;height:120px;border-radius:50%;border:2px solid var(--neon);
+  background:radial-gradient(circle at 35% 35%,#1a2a4a,#0a0a2a);cursor:pointer;
+  box-shadow:0 0 25px rgba(0,255,255,.3),inset 0 0 20px rgba(0,255,255,.1);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  transition:.08s;color:var(--neon);position:relative;margin:10px auto}
+#click-btn:active{transform:scale(.93);box-shadow:0 0 40px rgba(0,255,255,.6)}
+#click-btn .inner{text-align:center;line-height:1.3}
+#click-btn .big{font-size:28px;display:block}
+#earn-text{font-size:10px;color:var(--neon2);min-height:16px;text-align:center;margin:4px 0}
+#cps-text{font-size:10px;color:#888;text-align:center}
 
-/* Stats */
-.stat-row{display:flex;justify-content:space-between;font-size:10px;padding:2px 0;border-bottom:1px solid #0ff1}
-.stat-label{color:#888}
-.stat-value{color:#0ff}
+/* ═══ PROGRESS ═══ */
+#progress-wrap{width:220px;margin:10px auto}
+#progress-bg{background:#1a1a2e;border-radius:3px;height:6px;overflow:hidden}
+#progress-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));border-radius:3px;transition:.3s;width:0%}
+#progress-text{text-align:center;font-size:10px;color:#888;margin-top:3px}
 
-/* Progress bar */
-.progress-bg{background:#1a1a2e;border-radius:3px;height:8px;margin:4px 0}
-.progress-fill{height:100%;background:linear-gradient(90deg,#0ff,#0f0);border-radius:3px;transition:0.3s}
-
-/* Footer / log */
-#log{background:rgba(0,0,0,0.3);padding:6px;font-size:10px;color:#0f0;height:80px;overflow-y:auto;border-top:1px solid #0ff3}
-#log div{padding:1px 0}
-
-/* Animations */
-@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-4px)}100%{transform:translateY(0)}}
-.float{animation:float 2s ease-in-out infinite}
-
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
-#realm-btn{animation:pulse 3s ease-in-out infinite}
-
-/* Particles */
+/* ═══ PARTICLES ═══ */
 #particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
-.particle{position:absolute;color:#0ff;font-size:14px;animation:particleFade 1s ease-out forwards}
-@keyframes particleFade{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0.5)}}
+.particle{position:absolute;font-size:12px;font-weight:bold;animation:fly 1s ease-out forwards;pointer-events:none}
+@keyframes fly{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-80px)}}
 
-/* Tabs */
-#tabs{display:flex;gap:4px;margin-bottom:8px}
+/* ═══ UPGRADES ═══ */
+.section-title{font-size:11px;color:var(--neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.upgrade{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:6px;cursor:pointer;transition:.15s;position:relative;overflow:hidden}
+.upgrade:hover{background:rgba(0,255,255,.08);border-color:var(--neon)}
+.upgrade:active{transform:scale(.98)}
+.upgrade.maxed{opacity:.4;cursor:default}
+.upgrade .u-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.upgrade .u-name{color:var(--neon);font-weight:bold;font-size:11px}
+.upgrade .u-lvl{color:var(--gold);font-size:10px}
+.upgrade .u-desc{color:#888;font-size:10px;margin-bottom:3px}
+.upgrade .u-cost{color:var(--gold);font-size:10px}
+.upgrade .u-cost.affordable{color:var(--neon2)}
+.upgrade .u-effect{color:var(--blue);font-size:9px}
 
-/* Scroll */
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-thumb{background:#0ff3;border-radius:2px}
+/* ═══ BOSSES ═══ */
+.boss-card{background:linear-gradient(135deg,rgba(255,0,68,.08),rgba(170,0,255,.08));border:1px solid rgba(255,0,68,.3);border-radius:8px;padding:10px;margin-bottom:8px}
+.boss-name{color:var(--red);font-weight:bold;font-size:12px;text-shadow:0 0 5px var(--red)}
+.boss-hp-bar{background:#1a1a2e;border-radius:3px;height:8px;margin:4px 0;overflow:hidden}
+.boss-hp-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:3px;transition:.3s}
+.boss-stats{display:flex;justify-content:space-between;font-size:10px;color:#888}
+.boss-reward{color:var(--gold);font-size:10px;margin-top:4px}
+.boss-btn{background:linear-gradient(135deg,var(--red),var(--orange));border:none;color:#fff;padding:6px 12px;border-radius:4px;font-size:11px;cursor:pointer;margin-top:6px;width:100%;font-weight:bold}
+.boss-btn:disabled{opacity:.4;cursor:default}
+
+/* ═══ ACHIEVEMENTS ═══ */
+.achv{display:flex;align-items:center;gap:8px;padding:6px;background:var(--panel);border:1px solid var(--border);border-radius:4px;margin-bottom:4px}
+.achv.done{border-color:var(--gold);background:rgba(255,215,0,.05)}
+.achv .achv-icon{font-size:18px}
+.achv .achv-info{flex:1}
+.achv .achv-name{font-size:10px;color:var(--neon)}
+.achv .achv-desc{font-size:9px;color:#888}
+.achv .achv-reward{color:var(--gold);font-size:9px}
+
+/* ═══ QUESTS ═══ */
+.quest{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:6px}
+.quest-title{color:var(--purple);font-weight:bold;font-size:11px}
+.quest-desc{color:#888;font-size:10px;margin:2px 0}
+.quest-progress{background:#1a1a2e;border-radius:3px;height:5px;margin:4px 0}
+.quest-progress-fill{height:100%;background:var(--purple);border-radius:3px;transition:.3s}
+.quest-reward{color:var(--gold);font-size:10px}
+.quest-claim{background:var(--purple);border:none;color:#fff;padding:4px 10px;border-radius:3px;font-size:10px;cursor:pointer;margin-top:4px}
+.quest-claim:disabled{opacity:.4}
+
+/* ═══ PRESTIGE ═══ */
+#prestige-panel{text-align:center;padding:20px}
+#prestige-panel h2{color:var(--gold);font-size:16px;text-shadow:0 0 10px var(--gold);margin-bottom:10px}
+#prestige-panel p{color:#888;font-size:11px;margin-bottom:15px;line-height:1.5}
+.prestige-btn{background:linear-gradient(135deg,var(--gold),var(--orange));border:none;color:#000;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 0 15px rgba(255,215,0,.3)}
+.prestige-btn:hover{box-shadow:0 0 25px rgba(255,215,0,.5)}
+.prestige-btn:active{transform:scale(.95)}
+
+/* ═══ SHOP / DONATE ═══ */
+.shop-item{background:linear-gradient(135deg,rgba(0,255,255,.05),rgba(170,0,255,.05));border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;text-align:center}
+.shop-item .item-icon{font-size:24px;margin-bottom:4px}
+.shop-item .item-name{color:var(--neon);font-weight:bold;font-size:12px}
+.shop-item .item-desc{color:#888;font-size:10px;margin:4px 0}
+.shop-item .item-price{color:var(--gold);font-size:12px;font-weight:bold}
+.shop-item .buy-btn{background:linear-gradient(135deg,var(--neon),var(--blue));border:none;color:#000;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;margin-top:6px}
+.shop-item .buy-btn:active{transform:scale(.95)}
+
+/* ═══ BOTTOM BAR ═══ */
+#bottom{background:var(--bg2);padding:4px 10px;border-top:1px solid var(--border);display:flex;justify-content:space-around}
+.bot-tab{text-align:center;padding:4px 8px;cursor:pointer;color:#888;font-size:10px;transition:.15s}
+.bot-tab.active{color:var(--neon);text-shadow:0 0 5px var(--neon)}
+.bot-tab .icon{font-size:16px;display:block}
+
+/* ═══ MODAL ═══ */
+#modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100}
+#modal-overlay.show{display:flex}
+#modal{background:var(--bg2);border:1px solid var(--neon);border-radius:10px;padding:20px;max-width:320px;width:90%;text-align:center}
+#modal h3{color:var(--neon);font-size:14px;margin-bottom:10px}
+#modal p{color:#888;font-size:11px;margin-bottom:15px;line-height:1.5}
+#modal .modal-btn{background:var(--neon);border:none;color:#000;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:bold;cursor:pointer;margin:4px}
+#modal .modal-btn.secondary{background:transparent;border:1px solid var(--border);color:var(--neon)}
+
+/* ═══ SCROLL ═══ */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes glow{0%,100%{box-shadow:0 0 15px rgba(0,255,255,.3)}50%{box-shadow:0 0 30px rgba(0,255,255,.5)}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+.glow{animation:glow 2s ease-in-out infinite}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.shake{animation:shake .3s ease-in-out}
 </style>
 </head>
 <body>
-<div id="game">
-  <div id="header">
-    <h1>⚡ CYBER REALM IDLE ⚡</h1>
-    <div id="resources">
-      <div class="res">💎 <span id="credits">0</span></div>
-      <div class="res">⚡ <span id="energy">0</span></div>
-      <div class="res">🧬 <span id="data">0</span></div>
-      <div class="res">🌀 <span id="entropy">0</span></div>
+<div id="app">
+  <!-- TOP -->
+  <div id="top">
+    <h1>⚡ CYBER REALM ⚡</h1>
+    <div id="top-right">
+      <button class="btn-icon" onclick="showTab('shop')">🛒</button>
+      <button class="btn-icon" onclick="showPrestige()">🌟</button>
+      <button class="btn-icon" onclick="showSettings()">⚙️</button>
     </div>
   </div>
-  <div id="flex">
-    <div id="left-panel">
-      <div style="color:#0ff;font-size:12px;margin-bottom:6px;text-align:center">⬆️ UPGRADES</div>
-      <div id="upgrades-list"></div>
-    </div>
-    <div id="main-area">
+
+  <!-- RESOURCES -->
+  <div id="resources">
+    <div class="res"><span class="icon">💎</span><span class="val" id="r-credits">0</span><span class="rate" id="r-credits-rate"></span></div>
+    <div class="res"><span class="icon">⚡</span><span class="val" id="r-energy">0</span><span class="rate" id="r-energy-rate"></span></div>
+    <div class="res"><span class="icon">🧬</span><span class="val" id="r-data">0</span><span class="rate" id="r-data-rate"></span></div>
+    <div class="res"><span class="icon">🌀</span><span class="val" id="r-entropy">0</span><span class="rate" id="r-entropy-rate"></span></div>
+    <div class="res"><span class="icon">💎</span><span class="val" id="r-gems">0</span><span class="rate" style="color:var(--purple)">premium</span></div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <!-- LEFT: Click area -->
+    <div id="left">
       <div id="particles"></div>
-      <button id="realm-btn">⚡<br>COLLECT<br>⚡</button>
-      <div id="click-value"></div>
-      <div id="cps">per second: <span id="cps-val">0</span></div>
-      <div style="margin-top:20px;width:250px">
-        <div class="progress-bg"><div class="progress-fill" id="realm-progress" style="width:0%"></div></div>
-        <div style="text-align:center;font-size:11px;color:#888;margin-top:4px">
-          Realm Level <span id="realm-level">1</span> — <span id="realm-name">Digital Nexus</span>
-        </div>
+      <button id="click-btn" onclick="clickRealm()">
+        <div class="inner"><span class="big">⚡</span>COLLECT</div>
+      </button>
+      <div id="earn-text"></div>
+      <div id="cps-text"></div>
+      <div id="progress-wrap">
+        <div id="progress-bg"><div id="progress-fill"></div></div>
+        <div id="progress-text">Realm Lv.1 — Digital Nexus</div>
       </div>
     </div>
-    <div id="right-panel">
-      <div style="color:#0ff;font-size:12px;margin-bottom:6px;text-align:center">📊 STATS</div>
-      <div id="stats-list"></div>
+
+    <!-- RIGHT: Tabs content -->
+    <div id="right">
+      <div id="tabs">
+        <div class="tab active" data-tab="upgrades" onclick="switchTab('upgrades')">⬆️ Upgrades</div>
+        <div class="tab" data-tab="bosses" onclick="switchTab('bosses')">👹 Bosses</div>
+        <div class="tab" data-tab="achievements" onclick="switchTab('achievements')">🏆 Achieve</div>
+        <div class="tab" data-tab="quests" onclick="switchTab('quests')">📜 Quests</div>
+      </div>
+      <div id="tab-content"></div>
     </div>
   </div>
-  <div id="log"></div>
+
+  <!-- BOTTOM -->
+  <div id="bottom">
+    <div class="bot-tab active" onclick="showTab('game')"><span class="icon">🎮</span>Game</div>
+    <div class="bot-tab" onclick="showTab('shop')"><span class="icon">🛒</span>Shop</div>
+    <div class="bot-tab" onclick="showTab('stats')"><span class="icon">📊</span>Stats</div>
+    <div class="bot-tab" onclick="showTab('settings')"><span class="icon">⚙️</span>Settings</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay">
+  <div id="modal">
+    <h3 id="modal-title"></h3>
+    <p id="modal-text"></p>
+    <div id="modal-btns"></div>
+  </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // GAME STATE
-// ═══════════════════════════════════════════
-let state = {
-  credits: 0,
-  energy: 0,
-  data: 0,
-  entropy: 0,
-  totalClicks: 0,
-  totalCreditsEarned: 0,
-  clickPower: 1,
-  cps: 0, // credits per second
-  realmLevel: 1,
-  realmProgress: 0,
-  realmGoal: 100,
-  upgrades: {}
+// ═══════════════════════════════════════════════════
+let S = {
+  credits:0, energy:0, data:0, entropy:0, gems:0,
+  totalClicks:0, totalCredits:0, totalBosses:0,
+  clickPower:1, cps:0, eps:0, dps:0, enps:0,
+  globalMult:1, dataMult:1, entropyMult:1,
+  realmLevel:1, realmProgress:0, realmGoal:100,
+  prestige:0, prestigePoints:0, totalPrestige:0,
+  upgrades:{}, achievements:[], quests:[],
+  premium:false, lastSave:Date.now(),
+  settings:{sound:true,particles:true,autoSave:true}
 };
 
 const REALM_NAMES = [
-  "Digital Nexus", "Neon Grid", "Quantum Core", "Cyber Hive",
-  "Dark Matrix", "Void Sector", "Infinite Loop", "Omega Realm",
-  "Alpha Singularity", "Cyber Eden"
+  "Digital Nexus","Neon Grid","Quantum Core","Cyber Hive",
+  "Dark Matrix","Void Sector","Infinite Loop","Omega Realm",
+  "Alpha Singularity","Cyber Eden","Neural Network","Phantom Zone",
+  "Binary Storm","Chrome Void","Pixel Abyss","Data Ocean"
 ];
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // UPGRADES
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 const UPGRADES = [
-  {id:"click1",name:"Neural Link",desc:"+1 click power",cost:10,effect:()=>state.clickPower+=1,max:100},
-  {id:"click2",name:"Laser Focus",desc:"+5 click power",cost:100,effect:()=>state.clickPower+=5,max:50},
-  {id:"auto1",name:"Nano Bot",desc:"0.5 cps",cost:50,effect:()=>state.cps+=0.5,max:50},
-  {id:"auto2",name:"Drone Swarm",desc:"2 cps",cost:200,effect:()=>state.cps+=2,max:30},
-  {id:"auto3",name:"AI Core",desc:"10 cps",cost:1000,effect:()=>state.cps+=10,max:20},
-  {id:"auto4",name:"Quantum Farm",desc:"50 cps",cost:5000,effect:()=>state.cps+=50,max:10},
-  {id:"mult1",name:"Data Compressor",desc:"x1.5 all income",cost:250,effect:()=>applyMult(1.5),max:5},
-  {id:"mult2",name:"Entropy Engine",desc:"x2 all income",cost:2500,effect:()=>applyMult(2),max:3},
-  {id:"energy1",name:"Solar Panel",desc:"+1 energy/click",cost:30,effect:()=>state.energy+=1,max:20},
-  {id:"data1",name:"Data Miner",desc:"+1 data/click",cost:25,effect:()=>state.data+=1,max:20},
-  {id:"data2",name:"Encryptor",desc:"x2 data income",cost:300,effect:()=>applyDataMult(2),max:5},
-  {id:"entropy1",name:"Chaos Injector",desc:"Rare bonus from clicks",cost:500,effect:()=>state.entropy+=1,max:10},
+  // Click power
+  {id:"c1",name:"Neural Link",desc:"+1 click power",cost:10,fn:()=>S.clickPower+=1,max:100,cat:"click"},
+  {id:"c2",name:"Laser Focus",desc:"+5 click power",cost:100,fn:()=>S.clickPower+=5,max:50,cat:"click"},
+  {id:"c3",name:"Plasma Core",desc:"+25 click power",cost:1000,fn:()=>S.clickPower+=25,max:30,cat:"click"},
+  {id:"c4",name:"Quantum Tap",desc:"+100 click power",cost:10000,fn:()=>S.clickPower+=100,max:20,cat:"click"},
+  {id:"c5",name:"Void Touch",desc:"+500 click power",cost:100000,fn:()=>S.clickPower+=500,max:10,cat:"click"},
+  // Auto income
+  {id:"a1",name:"Nano Bot",desc:"0.5 credits/sec",cost:50,fn:()=>S.cps+=0.5,max:50,cat:"auto"},
+  {id:"a2",name:"Drone Swarm",desc:"2 credits/sec",cost:200,fn:()=>S.cps+=2,max:30,cat:"auto"},
+  {id:"a3",name:"AI Core",desc:"10 credits/sec",cost:1000,fn:()=>S.cps+=10,max:20,cat:"auto"},
+  {id:"a4",name:"Quantum Farm",desc:"50 credits/sec",cost:5000,fn:()=>S.cps+=50,max:15,cat:"auto"},
+  {id:"a5",name:"Dyson Sphere",desc:"200 credits/sec",cost:25000,fn:()=>S.cps+=200,max:10,cat:"auto"},
+  {id:"a6",name:"Matrioshka Brain",desc:"1000 credits/sec",cost:100000,fn:()=>S.cps+=1000,max:5,cat:"auto"},
+  // Multipliers
+  {id:"m1",name:"Data Compressor",desc:"x1.5 all income",cost:250,fn:()=>S.globalMult*=1.5,max:5,cat:"mult"},
+  {id:"m2",name:"Entropy Engine",desc:"x2 all income",cost:2500,fn:()=>S.globalMult*=2,max:3,cat:"mult"},
+  {id:"m3",name:"Singularity Core",desc:"x3 all income",cost:25000,fn:()=>S.globalMult*=3,max:2,cat:"mult"},
+  // Energy
+  {id:"e1",name:"Solar Panel",desc:"+1 energy/click",cost:30,fn:()=>S.eps+=1,max:20,cat:"energy"},
+  {id:"e2",name:"Fusion Reactor",desc:"+5 energy/click",cost:300,fn:()=>S.eps+=5,max:15,cat:"energy"},
+  {id:"e3",name:"Dark Matter Gen",desc:"+20 energy/click",cost:3000,fn:()=>S.eps+=20,max:10,cat:"energy"},
+  // Data
+  {id:"d1",name:"Data Miner",desc:"+1 data/click",cost:25,fn:()=>S.dps+=1,max:20,cat:"data"},
+  {id:"d2",name:"Encryptor",desc:"x2 data income",cost:300,fn:()=>S.dataMult*=2,max:5,cat:"data"},
+  {id:"d3",name:"Quantum Database",desc:"+10 data/click",cost:2000,fn:()=>S.dps+=10,max:10,cat:"data"},
+  // Entropy
+  {id:"en1",name:"Chaos Injector",desc:"+1 entropy/click",cost:500,fn:()=>S.enps+=1,max:10,cat:"entropy"},
+  {id:"en2",name:"Entropy Amplifier",desc:"x2 entropy income",cost:5000,fn:()=>S.entropyMult*=2,max:3,cat:"entropy"},
 ];
 
-let globalMult = 1;
-let dataMult = 1;
+// ═══════════════════════════════════════════════════
+// BOSSES
+// ═══════════════════════════════════════════════════
+const BOSSES = [
+  {id:"b1",name:"Glitch Phantom",hp:100,credits:50,energy:10,data:5,icon:"👻"},
+  {id:"b2",name:"Firewall Golem",hp:500,credits:200,energy:50,data:20,icon:"🗿"},
+  {id:"b3",name:"Virus Swarm",hp:2000,credits:800,energy:150,data:80,icon:"🦠"},
+  {id:"b4",name:"Data Kraken",hp:8000,credits:3000,energy:500,data:300,icon:"🐙"},
+  {id:"b5",name:"Quantum Dragon",hp:30000,credits:12000,energy:1500,data:1000,icon:"🐉"},
+  {id:"b6",name:"Neural Overlord",hp:100000,credits:50000,energy:5000,data:3000,icon:"🧠"},
+  {id:"b7",name:"Void Emperor",hp:500000,credits:200000,energy:20000,data:10000,icon:"👑"},
+  {id:"b8",name:"Omega Singularity",hp:2000000,credits:1000000,energy:80000,data:50000,icon:"🌀"},
+];
 
-function applyMult(m){globalMult*=m;}
-function applyDataMult(m){dataMult*=m;}
+let currentBoss = null;
+let bossHP = 0;
 
-// ═══════════════════════════════════════════
-// DOM
-// ═══════════════════════════════════════════
-const $ = id => document.getElementById(id);
+// ═══════════════════════════════════════════════════
+// ACHIEVEMENTS
+// ═══════════════════════════════════════════════════
+const ACHIEVEMENTS = [
+  {id:"ac1",name:"First Click",desc:"Click the button once",icon:"👆",check:()=>S.totalClicks>=1,reward:()=>S.gems+=5},
+  {id:"ac2",name:"Clicker",desc:"Click 100 times",icon:"🖱️",check:()=>S.totalClicks>=100,reward:()=>S.gems+=10},
+  {id:"ac3",name:"Click Master",desc:"Click 1000 times",icon:"⚡",check:()=>S.totalClicks>=1000,reward:()=>S.gems+=25},
+  {id:"ac4",name:"Rich",desc:"Earn 10,000 credits",icon:"💰",check:()=>S.totalCredits>=10000,reward:()=>S.gems+=15},
+  {id:"ac5",name:"Wealthy",desc:"Earn 1,000,000 credits",icon:"💎",check:()=>S.totalCredits>=1e6,reward:()=>S.gems+=50},
+  {id:"ac6",name:"Boss Slayer",desc:"Defeat your first boss",icon:"⚔️",check:()=>S.totalBosses>=1,reward:()=>S.gems+=20},
+  {id:"ac7",name:"Boss Hunter",desc:"Defeat 10 bosses",icon:"🏆",check:()=>S.totalBosses>=10,reward:()=>S.gems+=50},
+  {id:"ac8",name:"Realm Explorer",desc:"Reach Realm Level 10",icon:"🌌",check:()=>S.realmLevel>=10,reward:()=>S.gems+=30},
+  {id:"ac9",name:"Prestige",desc:"Prestige for the first time",icon:"🌟",check:()=>S.totalPrestige>=1,reward:()=>S.gems+=100},
+  {id:"ac10",name:"Collector",desc:"Own 10 different upgrades",icon:"📦",check:()=>Object.keys(S.upgrades).length>=10,reward:()=>S.gems+=25},
+  {id:"ac11",name:"Speed Demon",desc:"Reach 100 credits/sec",icon:"🚀",check:()=>getCPS()>=100,reward:()=>S.gems+=40},
+  {id:"ac12",name:"Cyber God",desc:"Reach Realm Level 50",icon:"👑",check:()=>S.realmLevel>=50,reward:()=>S.gems+=200},
+];
 
-// ═══════════════════════════════════════════
-// CLICK HANDLER
-// ═══════════════════════════════════════════
-let clickCount = 0;
-$("realm-btn").addEventListener("click", () => {
-  const earned = Math.floor(state.clickPower * globalMult);
-  state.credits += earned;
-  state.totalClicks++;
-  state.totalCreditsEarned += earned;
-  state.realmProgress += earned;
+// ═══════════════════════════════════════════════════
+// QUESTS
+// ═══════════════════════════════════════════════════
+function generateQuests(){
+  return [
+    {id:"q1",name:"Click Frenzy",desc:"Click 50 times",target:50,progress:()=>Math.min(50,S.totalClicks),reward:{gems:5},type:"clicks"},
+    {id:"q2",name:"Credit Hoarder",desc:"Earn 5,000 credits",target:5000,progress:()=>Math.min(5000,S.totalCredits),reward:{gems:10},type:"credits"},
+    {id:"q3",name:"Upgrade Path",desc:"Buy 5 upgrades",target:5,progress:()=>Math.min(5,Object.values(S.upgrades).reduce((a,b)=>a+b,0)),reward:{gems:8},type:"upgrades"},
+    {id:"q4",name:"Boss Bane",desc:"Defeat 3 bosses",target:3,progress:()=>Math.min(3,S.totalBosses),reward:{gems:15},type:"bosses"},
+    {id:"q5",name:"Realm Walker",desc:"Reach Realm Level 5",target:5,progress:()=>Math.min(5,S.realmLevel),reward:{gems:12},type:"realm"},
+  ];
+}
+
+// ═══════════════════════════════════════════════════
+// SHOP (Premium)
+// ═══════════════════════════════════════════════════
+const SHOP_ITEMS = [
+  {id:"s1",name:"Starter Pack",desc:"100 Gems + x2 income for 1 hour",icon:"🎁",price:"$0.99",gems:100,mult:2,multTime:3600},
+  {id:"s2",name:"Pro Pack",desc:"500 Gems + x3 income for 2 hours",icon:"💎",price:"$2.99",gems:500,mult:3,multTime:7200},
+  {id:"s3",name:"Mega Pack",desc:"2000 Gems + x5 income for 4 hours",icon:"🌟",price:"$9.99",gems:2000,mult:5,multTime:14400},
+  {id:"s4",name:"VIP Pass",desc:"Permanent x1.5 income + 1000 Gems",icon:"👑",price:"$19.99",gems:1000,permMult:1.5},
+  {id:"s5",name:"Remove Ads",desc:"Permanent ad-free experience",icon:"🚫",price:"$4.99",noAds:true},
+  {id:"s6",name:"Supporter",desc:"Support the dev! 50 Gems",icon:"❤️",price:"$0.49",gems:50},
+];
+
+// ═══════════════════════════════════════════════════
+// CORE FUNCTIONS
+// ═══════════════════════════════════════════════════
+function getCPS(){ return S.cps * S.globalMult * (S.premium?1.5:1); }
+function getClickValue(){ return Math.floor(S.clickPower * S.globalMult * (S.premium?1.5:1)); }
+
+function clickRealm(){
+  const earned = getClickValue();
+  S.credits += earned; S.totalClicks++; S.totalCredits += earned;
+  S.realmProgress += earned;
+  S.energy += S.eps;
+  S.data += S.dps * S.dataMult;
+  S.entropy += S.enps * S.entropyMult;
 
   // Particles
-  showParticle(`+${earned} 💎`);
+  if(S.settings.particles) showParticle(`+${fmt(earned)}`);
 
-  // Realm level up
-  if (state.realmProgress >= state.realmGoal) {
-    state.realmProgress -= state.realmGoal;
-    state.realmLevel++;
-    state.realmGoal = Math.floor(state.realmGoal * 1.5);
-    log(`🌀 REALM LEVEL UP! Level ${state.realmLevel} — ${getRealmName()}`);
+  // Boss damage
+  if(currentBoss && bossHP > 0){
+    bossHP -= earned;
+    if(bossHP <= 0) defeatBoss();
   }
 
-  clickCount++;
+  // Realm level up
+  while(S.realmProgress >= S.realmGoal){
+    S.realmProgress -= S.realmGoal;
+    S.realmLevel++;
+    S.realmGoal = Math.floor(S.realmGoal * 1.4);
+    S.clickPower += Math.ceil(S.realmLevel * 0.5);
+    S.cps += S.realmLevel * 0.3;
+    log(`🌀 REALM UP! Lv.${S.realmLevel} — ${getRealmName()}`);
+    checkAchievements();
+  }
+
   updateUI();
-});
-
-function getRealmName() {
-  const idx = Math.min(state.realmLevel - 1, REALM_NAMES.length - 1);
-  return REALM_NAMES[idx];
 }
 
-// ═══════════════════════════════════════════
-// PARTICLES
-// ═══════════════════════════════════════════
-function showParticle(text) {
-  const p = document.createElement("div");
-  p.className = "particle";
-  p.textContent = text;
-  p.style.left = (40 + Math.random() * 20) + "%";
-  p.style.top = "40%";
-  $("particles").appendChild(p);
-  setTimeout(() => p.remove(), 1000);
+function getRealmName(){
+  return REALM_NAMES[Math.min(S.realmLevel-1, REALM_NAMES.length-1)];
 }
 
-// ═══════════════════════════════════════════
-// LOG
-// ═══════════════════════════════════════════
-let logLines = [];
-function log(msg) {
-  logLines.push(msg);
-  if (logLines.length > 50) logLines.shift();
-  $("log").innerHTML = logLines.map(l => `<div>${l}</div>`).join("");
-  $("log").scrollTop = $("log").scrollHeight;
+// ═══════════════════════════════════════════════════
+// BOSSES
+// ═══════════════════════════════════════════════════
+function spawnBoss(){
+  const idx = Math.min(Math.floor(S.realmLevel / 5), BOSSES.length - 1);
+  currentBoss = {...BOSSES[idx]};
+  bossHP = currentBoss.hp;
+  log(`👹 BOSS: ${currentBoss.name} appeared!`);
+  updateBossUI();
 }
 
-// ═══════════════════════════════════════════
-// UPGRADE UI
-// ═══════════════════════════════════════════
-function renderUpgrades() {
-  const list = $("upgrades-list");
-  list.innerHTML = UPGRADES.map(u => {
-    const owned = state.upgrades[u.id] || 0;
-    const maxed = owned >= u.max;
-    const canBuy = state.credits >= u.cost && !maxed;
-    return `<div class="upgrade ${maxed?'owned':''}" data-id="${u.id}" ${canBuy?'':'style="opacity:0.4"'}>
-      <div class="name">${u.name} [${owned}/${u.max}]</div>
-      <div class="desc">${u.desc}</div>
-      <div class="cost">${maxed?'MAXED':u.cost+' 💎'}</div>
-    </div>`;
-  }).join("");
+function defeatBoss(){
+  S.credits += currentBoss.credits;
+  S.energy += currentBoss.energy;
+  S.data += currentBoss.data;
+  S.totalBosses++;
+  log(`⚔️ DEFEATED ${currentBoss.name}! +${fmt(currentBoss.credits)} credits`);
+  showParticle(`+${fmt(currentBoss.credits)} 💎`);
+  currentBoss = null;
+  bossHP = 0;
+  checkAchievements();
+  updateBossUI();
+}
 
-  list.querySelectorAll(".upgrade:not(.owned)").forEach(el => {
-    el.addEventListener("click", () => buyUpgrade(el.dataset.id));
+// ═══════════════════════════════════════════════════
+// ACHIEVEMENTS
+// ═══════════════════════════════════════════════════
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a => {
+    if(!S.achievements.includes(a.id) && a.check()){
+      S.achievements.push(a.id);
+      a.reward();
+      log(`🏆 ACHIEVEMENT: ${a.name}!`);
+    }
   });
 }
 
-function buyUpgrade(id) {
-  const u = UPGRADES.find(x => x.id === id);
-  if (!u) return;
-  const owned = state.upgrades[id] || 0;
-  if (owned >= u.max) return;
-  if (state.credits < u.cost) return;
+// ═══════════════════════════════════════════════════
+// PRESTIGE
+// ═══════════════════════════════════════════════════
+function calcPrestigePoints(){
+  return Math.floor(Math.sqrt(S.totalCredits / 1e6) + S.realmLevel * 0.5 + S.totalBosses * 0.1);
+}
 
-  state.credits -= u.cost;
-  state.upgrades[id] = owned + 1;
-  u.effect();
-  log(`✅ Purchased ${u.name} (${owned+1}/${u.max})`);
-  renderUpgrades();
+function doPrestige(){
+  const pts = calcPrestigePoints();
+  if(pts < 1) return;
+  S.prestige++;
+  S.prestigePoints += pts;
+  S.totalPrestige++;
+  // Reset
+  S.credits=0; S.energy=0; S.data=0; S.entropy=0;
+  S.clickPower=1+S.prestigePoints*0.1; S.cps=0;
+  S.globalMult=1; S.dataMult=1; S.entropyMult=1;
+  S.realmLevel=1; S.realmProgress=0; S.realmGoal=100;
+  S.upgrades={}; S.eps=0; S.dps=0; S.enps=0;
+  currentBoss=null; bossHP=0;
+  log(`🌟 PRESTIGE! +${pts} points (total: ${S.prestigePoints})`);
   updateUI();
 }
 
-// ═══════════════════════════════════════════
-// STATS UI
-// ═══════════════════════════════════════════
-function renderStats() {
-  $("stats-list").innerHTML = [
-    ["Total Clicks", state.totalClicks],
-    ["Total Credits", formatNum(state.totalCreditsEarned)],
-    ["Click Power", formatNum(state.clickPower)],
-    ["Credits/sec", formatNum(state.cps)],
-    ["Global Mult", globalMult.toFixed(1) + "x"],
-    ["Data Mult", dataMult.toFixed(1) + "x"],
-    ["Realm Level", state.realmLevel],
-    ["Entropy", state.entropy],
-  ].map(([l,v]) => `<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-value">${v}</span></div>`).join("");
+// ═══════════════════════════════════════════════════
+// UI
+// ═══════════════════════════════════════════════════
+function updateUI(){
+  $('r-credits').textContent = fmt(S.credits);
+  $('r-energy').textContent = fmt(S.energy);
+  $('r-data').textContent = fmt(S.data);
+  $('r-entropy').textContent = fmt(S.entropy);
+  $('r-gems').textContent = fmt(S.gems);
+  $('r-credits-rate').textContent = getCPS()>0 ? `+${fmt(getCPS())}/s` : '';
+  $('earn-text').textContent = `+${fmt(getClickValue())} per click`;
+  $('cps-text').textContent = `per second: ${fmt(getCPS())}`;
+  $('progress-fill').style.width = Math.min(100, (S.realmProgress/S.realmGoal)*100)+'%';
+  $('progress-text').textContent = `Realm Lv.${S.realmLevel} — ${getRealmName()}`;
+  renderTab();
 }
 
-// ═══════════════════════════════════════════
-// FORMAT
-// ═══════════════════════════════════════════
-function formatNum(n) {
-  if (n >= 1e12) return (n/1e12).toFixed(1) + "T";
-  if (n >= 1e9) return (n/1e9).toFixed(1) + "B";
-  if (n >= 1e6) return (n/1e6).toFixed(1) + "M";
-  if (n >= 1e4) return (n/1e3).toFixed(1) + "K";
+function renderTab(){
+  const tab = document.querySelector('.tab.active')?.dataset.tab || 'upgrades';
+  const c = $('tab-content');
+  if(tab==='upgrades') renderUpgrades(c);
+  else if(tab==='bosses') renderBosses(c);
+  else if(tab==='achievements') renderAchievements(c);
+  else if(tab==='quests') renderQuests(c);
+}
+
+function renderUpgrades(c){
+  c.innerHTML = '<div class="section-title">⬆️ Upgrades</div>' +
+    UPGRADES.map(u => {
+      const owned = S.upgrades[u.id]||0;
+      const maxed = owned >= u.max;
+      const cost = Math.floor(u.cost * Math.pow(1.15, owned));
+      const canBuy = S.credits >= cost && !maxed;
+      return `<div class="upgrade ${maxed?'maxed':''}" onclick="buyUpgrade('${u.id}')">
+        <div class="u-head"><span class="u-name">${u.name}</span><span class="u-lvl">${owned}/${u.max}</span></div>
+        <div class="u-desc">${u.desc}</div>
+        <div class="u-cost ${canBuy?'affordable':''}">${maxed?'MAXED':fmt(cost)+' 💎'}</div>
+      </div>`;
+    }).join('');
+}
+
+function renderBosses(c){
+  if(!currentBoss){
+    c.innerHTML = '<div class="section-title">👹 Bosses</div>' +
+      '<p style="color:#888;font-size:11px;margin-bottom:10px">No boss active. Reach Realm Level 5+ to encounter bosses!</p>' +
+      '<button class="boss-btn" onclick="spawnBoss()">⚔️ Summon Boss</button>';
+  } else {
+    const pct = Math.max(0, (bossHP/currentBoss.hp)*100);
+    c.innerHTML = `<div class="section-title">👹 Boss Fight</div>
+      <div class="boss-card">
+        <div class="boss-name">${currentBoss.icon} ${currentBoss.name}</div>
+        <div class="boss-hp-bar"><div class="boss-hp-fill" style="width:${pct}%"></div></div>
+        <div class="boss-stats"><span>HP: ${fmt(bossHP)} / ${fmt(currentBoss.hp)}</span><span>${pct.toFixed(1)}%</span></div>
+        <div class="boss-reward">Reward: ${fmt(currentBoss.credits)} 💎 ${currentBoss.energy} ⚡ ${currentBoss.data} 🧬</div>
+        <button class="boss-btn" onclick="clickRealm()">⚔️ ATTACK (${fmt(getClickValue())} dmg)</button>
+      </div>`;
+  }
+}
+
+function renderAchievements(c){
+  c.innerHTML = '<div class="section-title">🏆 Achievements ('+S.achievements.length+'/'+ACHIEVEMENTS.length+')</div>' +
+    ACHIEVEMENTS.map(a => {
+      const done = S.achievements.includes(a.id);
+      return `<div class="achv ${done?'done':''}">
+        <span class="achv-icon">${done?'✅':a.icon}</span>
+        <div class="achv-info"><div class="achv-name">${a.name}</div><div class="achv-desc">${a.desc}</div></div>
+        <span class="achv-reward">${done?'Claimed':a.reward.toString().includes('gems')?'💎':''}</span>
+      </div>`;
+    }).join('');
+}
+
+function renderQuests(c){
+  if(S.quests.length === 0) S.quests = generateQuests();
+  c.innerHTML = '<div class="section-title">📜 Quests</div>' +
+    S.quests.map(q => {
+      const prog = q.progress();
+      const done = prog >= q.target;
+      return `<div class="quest">
+        <div class="quest-title">${q.name}</div>
+        <div class="quest-desc">${q.desc}</div>
+        <div class="quest-progress"><div class="quest-progress-fill" style="width:${Math.min(100,prog/q.target*100)}%"></div></div>
+        <div class="quest-reward">${fmt(prog)}/${fmt(q.target)} — Reward: ${q.reward.gems} 💎</div>
+        ${done?`<button class="quest-claim" onclick="claimQuest('${q.id}')">Claim Reward</button>`:''}
+      </div>`;
+    }).join('');
+}
+
+function claimQuest(id){
+  const q = S.quests.find(x=>x.id===id);
+  if(!q || q.progress()<q.target) return;
+  S.gems += q.reward.gems;
+  S.quests = S.quests.filter(x=>x.id!==id);
+  log(`📜 Quest complete! +${q.reward.gems} gems`);
+  updateUI();
+}
+
+// ═══════════════════════════════════════════════════
+// UPGRADE BUY
+// ═══════════════════════════════════════════════════
+function buyUpgrade(id){
+  const u = UPGRADES.find(x=>x.id===id);
+  if(!u) return;
+  const owned = S.upgrades[id]||0;
+  if(owned >= u.max) return;
+  const cost = Math.floor(u.cost * Math.pow(1.15, owned));
+  if(S.credits < cost) return;
+  S.credits -= cost;
+  S.upgrades[id] = owned + 1;
+  u.fn();
+  log(`✅ ${u.name} (${owned+1}/${u.max})`);
+  checkAchievements();
+  updateUI();
+}
+
+// ═══════════════════════════════════════════════════
+// TABS & NAV
+// ═══════════════════════════════════════════════════
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.dataset.tab===t));
+  renderTab();
+}
+
+function showTab(t){
+  document.querySelectorAll('.bot-tab').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const c = $('tab-content');
+  if(t==='shop') renderShop(c);
+  else if(t==='stats') renderStats(c);
+  else if(t==='settings') renderSettings(c);
+  else { $('tabs').style.display=''; renderTab(); }
+}
+
+function renderShop(c){
+  $('tabs').style.display='none';
+  c.innerHTML = '<div class="section-title">🛒 Premium Shop</div>' +
+    SHOP_ITEMS.map(i => `<div class="shop-item">
+      <div class="item-icon">${i.icon}</div>
+      <div class="item-name">${i.name}</div>
+      <div class="item-desc">${i.desc}</div>
+      <div class="item-price">${i.price}</div>
+      <button class="buy-btn" onclick="buyPremium('${i.id}')">Buy</button>
+    </div>`).join('') +
+    '<div style="text-align:center;margin-top:15px"><button class="btn-icon" onclick="donate()">❤️ Donate via Crypto</button></div>';
+}
+
+function renderStats(c){
+  $('tabs').style.display='none';
+  c.innerHTML = '<div class="section-title">📊 Statistics</div>' +
+    `[["Total Clicks",S.totalClicks],["Total Credits",fmt(S.totalCredits)],["Click Power",fmt(S.clickPower)],
+      ["Credits/sec",fmt(getCPS())],["Global Mult",S.globalMult.toFixed(1)+"x"],["Realm Level",S.realmLevel],
+      ["Bosses Defeated",S.totalBosses],["Prestige",S.totalPrestige],["Prestige Points",S.prestigePoints.toFixed(1)],
+      ["Gems",S.gems],["Achievements",S.achievements.length+"/"+ACHIEVEMENTS.length]].map(([l,v])=>
+      `<div class="achv"><span class="achv-info"><div class="achv-name">${l}</div></div><span style="color:var(--neon)">${v}</span></div>`
+    ).join('');
+}
+
+function renderSettings(c){
+  $('tabs').style.display='none';
+  c.innerHTML = '<div class="section-title">⚙️ Settings</div>' +
+    `<div class="achv"><span class="achv-info"><div class="achv-name">Particles</div></div>
+      <input type="checkbox" ${S.settings.particles?'checked':''} onchange="S.settings.particles=this.checked"></div>` +
+    `<div class="achv"><span class="achv-info"><div class="achv-name">Sound</div></div>
+      <input type="checkbox" ${S.settings.sound?'checked':''} onchange="S.settings.sound=this.checked"></div>` +
+    `<div class="achv"><span class="achv-info"><div class="achv-name">Auto Save</div></div>
+      <input type="checkbox" ${S.settings.autoSave?'checked':''} onchange="S.settings.autoSave=this.checked"></div>` +
+    `<button class="boss-btn" style="margin-top:10px" onclick="saveGame()">💾 Save Game</button>` +
+    `<button class="boss-btn" style="margin-top:5px;background:var(--red)" onclick="resetGame()">🗑️ Reset Game</button>` +
+    `<button class="boss-btn" style="margin-top:5px;background:var(--purple)" onclick="exportGame()">📤 Export Save</button>` +
+    `<button class="boss-btn" style="margin-top:5px;background:var(--blue)" onclick="importGame()">📥 Import Save</button>`;
+}
+
+// ═══════════════════════════════════════════════════
+// PREMIUM / DONATE
+// ═══════════════════════════════════════════════════
+function buyPremium(id){
+  const item = SHOP_ITEMS.find(x=>x.id===id);
+  if(!item) return;
+  // Simulate purchase (in real app, integrate Stripe/PayPal)
+  showModal('Purchase', `${item.name} — ${item.price}\n\nIn production, this would open a payment gateway. For now, enjoy the free version!`, [
+    {text:'OK',fn:()=>closeModal()}
+  ]);
+  // Give free gems for testing
+  if(item.gems){ S.gems += item.gems; log(`💎 +${item.gems} gems!`); updateUI(); }
+}
+
+function donate(){
+  showModal('Donate', 'Support Cyber Realm Idle development!\n\nBTC: bc1q...\nETH: 0x...\nUSDT: T...\n\nThank you! ❤️', [
+    {text:'Close',fn:()=>closeModal()}
+  ]);
+}
+
+// ═══════════════════════════════════════════════════
+// SAVE / LOAD
+// ═══════════════════════════════════════════════════
+function saveGame(){
+  S.lastSave = Date.now();
+  localStorage.setItem('cyberRealmIdle', JSON.stringify(S));
+  log('💾 Game saved!');
+}
+
+function loadGame(){
+  const data = localStorage.getItem('cyberRealmIdle');
+  if(data){
+    try{
+      const saved = JSON.parse(data);
+      Object.assign(S, saved);
+      log('📂 Game loaded!');
+    }catch(e){ log('⚠️ Save corrupted'); }
+  }
+}
+
+function resetGame(){
+  showModal('Reset Game', 'Are you sure? All progress will be lost!', [
+    {text:'Cancel',fn:()=>closeModal()},
+    {text:'Reset',fn:()=>{localStorage.removeItem('cyberRealmIdle');location.reload();}}
+  ]);
+}
+
+function exportGame(){
+  const data = btoa(JSON.stringify(S));
+  navigator.clipboard?.writeText(data);
+  log('📤 Save copied to clipboard!');
+}
+
+function importGame(){
+  const data = prompt('Paste your save code:');
+  if(!data) return;
+  try{
+    const saved = JSON.parse(atob(data));
+    Object.assign(S, saved);
+    saveGame();
+    updateUI();
+    log('📥 Save imported!');
+  }catch(e){ log('⚠️ Invalid save code'); }
+}
+
+// ═══════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════
+function showModal(title, text, btns){
+  $('modal-title').textContent = title;
+  $('modal-text').textContent = text;
+  $('modal-btns').innerHTML = btns.map(b => `<button class="modal-btn ${b.cls||''}" onclick="(${b.fn})()">${b.text}</button>`).join('');
+  $('modal-overlay').classList.add('show');
+}
+function closeModal(){ $('modal-overlay').classList.remove('show'); }
+
+// ═══════════════════════════════════════════════════
+// PRESTIGE UI
+// ═══════════════════════════════════════════════════
+function showPrestige(){
+  const pts = calcPrestigePoints();
+  showModal('🌟 Prestige', `Prestige Points: ${pts.toFixed(1)}\nTotal Prestige: ${S.totalPrestige}\nCurrent Bonus: +${(S.prestigePoints*10).toFixed(0)}% click power\n\nPrestige to reset progress and gain permanent bonuses!`, [
+    {text:'Cancel',fn:()=>closeModal()},
+    {text:`Prestige (+${pts.toFixed(1)} pts)`,fn:()=>{closeModal();doPrestige();}}
+  ]);
+}
+
+function showSettings(){
+  showTab('settings');
+  document.querySelectorAll('.bot-tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.bot-tab')[3].classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════
+function fmt(n){
+  if(n>=1e15)return(n/1e15).toFixed(1)+"Q";
+  if(n>=1e12)return(n/1e12).toFixed(1)+"T";
+  if(n>=1e9)return(n/1e9).toFixed(1)+"B";
+  if(n>=1e6)return(n/1e6).toFixed(1)+"M";
+  if(n>=1e4)return(n/1e3).toFixed(1)+"K";
   return Math.floor(n).toString();
 }
 
-// ═══════════════════════════════════════════
-// UPDATE UI
-// ═══════════════════════════════════════════
-function updateUI() {
-  $("credits").textContent = formatNum(state.credits);
-  $("energy").textContent = formatNum(state.energy);
-  $("data").textContent = formatNum(state.data);
-  $("entropy").textContent = formatNum(state.entropy);
-  $("cps-val").textContent = formatNum(state.cps * globalMult);
-  $("realm-level").textContent = state.realmLevel;
-  $("realm-name").textContent = getRealmName();
-  $("realm-progress").style.width = Math.min(100, (state.realmProgress / state.realmGoal)*100) + "%";
-  renderStats();
+function log(msg){
+  const d = document.createElement('div');
+  d.textContent = msg;
+  // Could add a log panel later
 }
 
-// ═══════════════════════════════════════════
+function showParticle(text){
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.textContent = text;
+  p.style.left = (30+Math.random()*40)+'%';
+  p.style.top = '35%';
+  p.style.color = 'var(--neon2)';
+  $('particles').appendChild(p);
+  setTimeout(()=>p.remove(), 1000);
+}
+
+// ═══════════════════════════════════════════════════
 // GAME LOOP
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 let lastTime = Date.now();
-setInterval(() => {
+setInterval(()=>{
   const now = Date.now();
-  const dt = (now - lastTime) / 1000;
+  const dt = (now - lastTime)/1000;
   lastTime = now;
 
   // Auto income
-  const income = state.cps * globalMult * dt;
-  if (income > 0) {
-    state.credits += income;
-    state.totalCreditsEarned += income;
-    state.realmProgress += income;
+  const income = getCPS() * dt;
+  if(income > 0){
+    S.credits += income;
+    S.totalCredits += income;
+    S.realmProgress += income;
   }
 
-  // Realm level up check
-  while (state.realmProgress >= state.realmGoal) {
-    state.realmProgress -= state.realmGoal;
-    state.realmLevel++;
-    state.realmGoal = Math.floor(state.realmGoal * 1.5);
-    log(`🌀 REALM LEVEL UP! Level ${state.realmLevel} — ${getRealmName()}`);
-    // Bonus on level up
-    state.clickPower += Math.ceil(state.realmLevel * 0.5);
-    state.cps += state.realmLevel * 0.2;
+  // Boss spawn
+  if(!currentBoss && S.realmLevel >= 5 && Math.random() < 0.001 * dt){
+    spawnBoss();
+  }
+
+  // Realm level up
+  while(S.realmProgress >= S.realmGoal){
+    S.realmProgress -= S.realmGoal;
+    S.realmLevel++;
+    S.realmGoal = Math.floor(S.realmGoal * 1.4);
+    S.clickPower += Math.ceil(S.realmLevel * 0.5);
+    S.cps += S.realmLevel * 0.3;
+    log(`🌀 REALM UP! Lv.${S.realmLevel}`);
+    checkAchievements();
+  }
+
+  // Auto save
+  if(S.settings.autoSave && now - S.lastSave > 30000){
+    saveGame();
   }
 
   updateUI();
 }, 100);
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
-renderUpgrades();
+// ═══════════════════════════════════════════════════
+loadGame();
 updateUI();
-log("⚡ Welcome to Cyber Realm Idle!");
-log("⚡ Tap the button to collect credits!");
-log("⚡ Buy upgrades to increase production!");
+log('⚡ Welcome to Cyber Realm Idle!');
+log('⚡ Tap COLLECT to earn credits!');
+log('⚡ Buy upgrades, defeat bosses, prestige!');
 </script>
 </body>
 </html>
