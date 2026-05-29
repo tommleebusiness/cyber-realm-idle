@@ -5,31 +5,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.json">
 <title>Cyber Realm Idle</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0a0a1a;--bg2:#0d1025;--n:#0ff;--n2:#0f0;--g:#ffd700;--r:#f04;--p:#a0f}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-family:'Segoe UI',monospace;font-size:12px;user-select:none}
 #app{display:grid;grid-template-rows:auto auto 1fr auto;height:100vh}
-
 #top{background:linear-gradient(180deg,#0a1628,var(--bg2));padding:8px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #0ff3}
 #top h1{font-size:16px;letter-spacing:3px;text-shadow:0 0 10px var(--n)}
-.btn{background:#0ff2;border:1px solid #0ff5;color:var(--n);padding:5px 10px;border-radius:4px;font-size:11px;cursor:pointer}
-.btn:active{transform:scale(.95)}
-
+.ib{background:#0ff2;border:1px solid #0ff5;color:var(--n);padding:5px 10px;border-radius:4px;font-size:11px;cursor:pointer}
+.ib:active{transform:scale(.95)}
 #res{background:var(--bg2);padding:5px 10px;display:flex;gap:8px;justify-content:center;border-bottom:1px solid #0ff2;font-size:11px;flex-wrap:wrap}
 .r{display:flex;align-items:center;gap:3px}
-.r .v{color:var(--g);font-weight:bold;min-width:35px}
-.r .r2{color:var(--n2);font-size:9px;opacity:.7}
-
+.v{color:var(--g);font-weight:bold;min-width:35px}
+.rate{color:var(--n2);font-size:9px;opacity:.7}
 #main{display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
 #left{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;position:relative}
 #right{overflow-y:auto;padding:8px;border-left:1px solid #0ff2}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:#0ff3}
-
-#btn{width:120px;height:120px;border-radius:50%;border:2px solid var(--n);background:radial-gradient(circle,#1a2a4a,#0a0a2a);cursor:pointer;box-shadow:0 0 20px #0ff4,0 0 40px #0ff2;color:var(--n);font-size:16px;transition:.08s;display:flex;align-items:center;justify-content:center;margin:15px auto;font-family:inherit}
+#btn{width:120px;height:120px;border-radius:50%;border:2px solid var(--n);background:radial-gradient(circle,#1a2a4a,#0a0a2a);cursor:pointer;box-shadow:0 0 20px #0ff4,0 0 40px #0ff2;color:var(--n);font-size:16px;transition:.08s;display:flex;align-items:center;justify-content:center;margin:15px auto}
 #btn:active{transform:scale(.92);box-shadow:0 0 40px #0ff8}
 #btn div{text-align:center}
 #btn .big{font-size:32px;display:block;line-height:1}
@@ -39,11 +34,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-f
 #prog-bg{background:#1a1a2e;border-radius:3px;height:6px;overflow:hidden}
 #prog-fill{height:100%;background:linear-gradient(90deg,var(--n),var(--n2));border-radius:3px;transition:.3s;width:0%}
 #prog-t{text-align:center;font-size:9px;color:#666;margin-top:3px}
-
 #tabs{display:flex;border-bottom:1px solid #0ff2;margin-bottom:6px}
 .t{flex:1;text-align:center;padding:5px;font-size:10px;cursor:pointer;color:#666;border-bottom:2px solid transparent}
 .t.a{color:var(--n);border-color:var(--n)}
-
 .sec{font-size:10px;color:var(--n);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
 .up{background:#0ff1;border:1px solid #0ff3;border-radius:4px;padding:6px;margin-bottom:4px;cursor:pointer}
 .up:active{transform:scale(.97)}
@@ -54,7 +47,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-f
 .up .c{color:var(--g);font-size:10px}
 .up .c.ok{color:var(--n2)}
 .up.m{opacity:.35;cursor:default}
-
 .boss{background:linear-gradient(135deg,#f041,#a0f1);border:1px solid #f045;border-radius:6px;padding:8px;margin-bottom:6px}
 .boss .bn{color:var(--r);font-weight:bold;font-size:12px}
 .boss .hp{background:#1a1a2e;border-radius:3px;height:6px;margin:4px 0}
@@ -63,14 +55,12 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-f
 .boss .rw{color:var(--g);font-size:10px;margin-top:3px}
 .boss button{background:linear-gradient(135deg,var(--r),var(--g));border:none;color:#000;padding:5px;border-radius:3px;font-size:10px;cursor:pointer;width:100%;margin-top:4px;font-weight:bold}
 .boss button:disabled{opacity:.4}
-
 .ach{display:flex;align-items:center;gap:6px;padding:4px;background:#0ff1;border:1px solid #0ff2;border-radius:3px;margin-bottom:3px}
 .ach.do{border-color:var(--g);background:#ffd70010}
 .ach .ic{font-size:16px}
 .ach .inf{flex:1}
 .ach .an{font-size:10px;color:var(--n)}
 .ach .ad{font-size:9px;color:#666}
-
 .quest{background:#0ff1;border:1px solid #0ff2;border-radius:4px;padding:6px;margin-bottom:4px}
 .quest .qt{color:var(--p);font-weight:bold;font-size:11px}
 .quest .qd{color:#666;font-size:10px}
@@ -79,7 +69,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-f
 .quest .qr{color:var(--g);font-size:10px}
 .quest button{background:var(--p);border:none;color:#fff;padding:3px 8px;border-radius:2px;font-size:9px;cursor:pointer;margin-top:3px}
 .quest button:disabled{opacity:.4}
-
 .shop{background:linear-gradient(135deg,#0ff1,#a0f1);border:1px solid #0ff3;border-radius:6px;padding:8px;margin-bottom:6px;text-align:center}
 .shop .si{font-size:20px}
 .shop .sn{color:var(--n);font-weight:bold;font-size:11px;margin:2px 0}
@@ -87,18 +76,15 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-f
 .shop .sp{color:var(--g);font-size:12px;font-weight:bold;margin:4px 0}
 .shop button{background:linear-gradient(135deg,var(--n),#4af);border:none;color:#000;padding:5px 12px;border-radius:3px;font-size:10px;font-weight:bold;cursor:pointer}
 .shop button:active{transform:scale(.95)}
-
 #bot{background:var(--bg2);padding:4px;display:flex;justify-content:space-around;border-top:1px solid #0ff2}
 .b{text-align:center;padding:3px 6px;font-size:9px;cursor:pointer;color:#666}
 .b.a{color:var(--n)}
-
 #ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:100}
 #ov.s{display:flex}
 #mo{background:var(--bg2);border:1px solid var(--n);border-radius:8px;padding:15px;max-width:300px;width:90%;text-align:center}
 #mo h3{color:var(--n);font-size:13px;margin-bottom:8px}
-#mo p{color:#888;font-size:11px;margin-bottom:12px}
+#mo p{color:#888;font-size:11px;margin-bottom:12px;line-height:1.5}
 #mo button{background:var(--n);border:none;color:#000;padding:6px 15px;border-radius:3px;font-size:11px;font-weight:bold;cursor:pointer;margin:3px}
-
 #parts{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
 .pt{position:absolute;font-size:12px;font-weight:bold;animation:fly 1s ease-out forwards}
 @keyframes fly{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
@@ -108,16 +94,16 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-f
 <div id="app">
   <div id="top"><h1>⚡ CYBER REALM ⚡</h1>
     <div style="display:flex;gap:6px">
-      <button class="btn" id="bShop">🛒</button>
-      <button class="btn" id="bPres">🌟</button>
+      <button class="ib" id="bShop">🛒</button>
+      <button class="ib" id="bPres">🌟</button>
     </div>
   </div>
   <div id="res">
-    <span class="r">💎<span class="v" id="vCred">0</span><span class="r2" id="vCps"></span></span>
+    <span class="r">💎<span class="v" id="vCred">0</span><span class="rate" id="vCps"></span></span>
     <span class="r">⚡<span class="v" id="vNrg">0</span></span>
     <span class="r">🧬<span class="v" id="vDat">0</span></span>
     <span class="r">🌀<span class="v" id="vEnt">0</span></span>
-    <span class="r">💎<span class="v" id="vGem">0</span><span class="r2" style="color:var(--p)">prem</span></span>
+    <span class="r">💎<span class="v" id="vGem">0</span><span class="rate" style="color:var(--p)">prem</span></span>
   </div>
   <div id="main">
     <div id="left">
@@ -138,189 +124,90 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--n);font-f
     </div>
   </div>
   <div id="bot">
-    <div class="b a" data-v="game">🎮</div>
-    <div class="b" data-v="shop">🛒</div>
-    <div class="b" data-v="stats">📊</div>
-    <div class="b" data-v="set">⚙️</div>
+    <div class="b a" data-v="game">🎮 Game</div>
+    <div class="b" data-v="shop">🛒 Shop</div>
+    <div class="b" data-v="stats">📊 Stats</div>
+    <div class="b" data-v="set">⚙️ Config</div>
   </div>
 </div>
 <div id="ov"><div id="mo"><h3 id="moT"></h3><p id="moP"></p><div id="moB"></div></div></div>
 
 <script>
-(function(){
 "use strict";
+var S={cred:0,credTot:0,nrg:0,dat:0,ent:0,gem:0,clicks:0,bosses:0,pres:0,presPts:0,cpow:1,cps:0,nps:0,dps:0,eps:0,gmul:1,dmul:1,rlv:1,rprog:0,rgoal:100,upg:{},ach:[],quests:[],curBoss:null,bossHP:0,lastSave:Date.now()};
+var RN=["Digital Nexus","Neon Grid","Quantum Core","Cyber Hive","Dark Matrix","Void Sector","Infinite Loop","Omega Realm","Alpha Sing","Cyber Eden"];
+var UPG=[{id:"c1",n:"Neural Link",d:"+1 tap",c:10,f:function(){S.cpow+=1},mx:100},{id:"c2",n:"Laser Focus",d:"+5 tap",c:100,f:function(){S.cpow+=5},mx:50},{id:"c3",n:"Plasma Core",d:"+25 tap",c:1000,f:function(){S.cpow+=25},mx:30},{id:"a1",n:"Nano Bot",d:"0.5/s",c:50,f:function(){S.cps+=0.5},mx:50},{id:"a2",n:"Drone Swarm",d:"2/s",c:200,f:function(){S.cps+=2},mx:30},{id:"a3",n:"AI Core",d:"10/s",c:1000,f:function(){S.cps+=10},mx:20},{id:"a4",n:"Quantum Farm",d:"50/s",c:5000,f:function(){S.cps+=50},mx:15},{id:"m1",n:"Compressor",d:"x1.5 all",c:250,f:function(){S.gmul*=1.5},mx:5},{id:"m2",n:"Entropy Eng",d:"x2 all",c:2500,f:function(){S.gmul*=2},mx:3},{id:"n1",n:"Solar",d:"+1 ⚡/tap",c:30,f:function(){S.nps+=1},mx:20},{id:"d1",n:"Data Miner",d:"+1 🧬/tap",c:25,f:function(){S.dps+=1},mx:20},{id:"d2",n:"Encryptor",d:"x2 data",c:300,f:function(){S.dmul*=2},mx:5},{id:"e1",n:"Chaos Inj",d:"+1 🌀/tap",c:500,f:function(){S.eps+=1},mx:10}];
+var BOSSES=[{n:"Glitch Phantom",hp:100,cr:50,icon:"👻"},{n:"Firewall Golem",hp:500,cr:200,icon:"🗿"},{n:"Virus Swarm",hp:2000,cr:800,icon:"🦠"},{n:"Data Kraken",hp:8000,cr:3000,icon:"🐙"},{n:"Quantum Dragon",hp:30000,cr:12000,icon:"🐉"},{n:"Neural Overlord",hp:1e5,cr:5e4,icon:"🧠"},{n:"Void Emperor",hp:5e5,cr:2e5,icon:"👑"},{n:"Omega Singularity",hp:2e6,cr:1e6,icon:"🌀"}];
+var ACHS=[{id:"a1",n:"First Click",d:"Tap once",i:"👆",ck:function(){return S.clicks>=1}},{id:"a2",n:"Clicker",d:"Tap 100",i:"🖱️",ck:function(){return S.clicks>=100}},{id:"a3",n:"Rich",d:"Earn 10K",i:"💰",ck:function(){return S.credTot>=1e4}},{id:"a4",n:"Boss Slayer",d:"Defeat 1 boss",i:"⚔️",ck:function(){return S.bosses>=1}},{id:"a5",n:"Boss Hunter",d:"Defeat 10 bosses",i:"🏆",ck:function(){return S.bosses>=10}},{id:"a6",n:"Realm Walker",d:"Realm Lv.10",i:"🌌",ck:function(){return S.rlv>=10}},{id:"a7",n:"Prestige",d:"Prestige once",i:"🌟",ck:function(){return S.pres>=1}},{id:"a8",n:"Speed Demon",d:"100/s",i:"🚀",ck:function(){return getCPS()>=100}}];
 
-// ═══ STATE ═══
-var S = {
-  cred:0, credTot:0, nrg:0, dat:0, ent:0, gem:0,
-  clicks:0, bosses:0, pres:0, presPts:0,
-  cpow:1, cps:0, nps:0, dps:0, eps:0,
-  gmul:1, dmul:1, emul:1,
-  rlv:1, rprog:0, rgoal:100,
-  upg:{}, ach:[], quests:[], curBoss:null, bossHP:0,
-  lastSave:Date.now()
-};
-
-var RN = ["Digital Nexus","Neon Grid","Quantum Core","Cyber Hive","Dark Matrix","Void Sector","Infinite Loop","Omega Realm","Alpha Sing","Cyber Eden"];
-
-// ═══ UPGRADES ═══
-var UPG = [
-  {id:"c1",n:"Neural Link",d:"+1 tap",c:10,f:function(){S.cpow+=1},mx:100,t:"click"},
-  {id:"c2",n:"Laser Focus",d:"+5 tap",c:100,f:function(){S.cpow+=5},mx:50,t:"click"},
-  {id:"c3",n:"Plasma Core",d:"+25 tap",c:1000,f:function(){S.cpow+=25},mx:30,t:"click"},
-  {id:"a1",n:"Nano Bot",d:"0.5/s",c:50,f:function(){S.cps+=0.5},mx:50,t:"auto"},
-  {id:"a2",n:"Drone Swarm",d:"2/s",c:200,f:function(){S.cps+=2},mx:30,t:"auto"},
-  {id:"a3",n:"AI Core",d:"10/s",c:1000,f:function(){S.cps+=10},mx:20,t:"auto"},
-  {id:"a4",n:"Quantum Farm",d:"50/s",c:5000,f:function(){S.cps+=50},mx:15,t:"auto"},
-  {id:"m1",n:"Compressor",d:"x1.5 all",c:250,f:function(){S.gmul*=1.5},mx:5,t:"mult"},
-  {id:"m2",n:"Entropy Eng",d:"x2 all",c:2500,f:function(){S.gmul*=2},mx:3,t:"mult"},
-  {id:"n1",n:"Solar",d:"+1 ⚡/tap",c:30,f:function(){S.nps+=1},mx:20,t:"n"},
-  {id:"d1",n:"Data Miner",d:+1 🧬/tap",c:25,f:function(){S.dps+=1},mx:20,t:"d"},
-  {id:"d2",n:"Encryptor",d:"x2 data",c:300,f:function(){S.dmul*=2},mx:5,t:"d"},
-  {id:"e1",n:"Chaos Inj",d:"+1 🌀/tap",c:500,f:function(){S.eps+=1},mx:10,t:"e"},
-];
-
-// ═══ BOSSES ═══
-var BOSSES = [
-  {n:"Glitch Phantom",hp:100,cr:50,icon:"👻"},
-  {n:"Firewall Golem",hp:500,cr:200,icon:"🗿"},
-  {n:"Virus Swarm",hp:2000,cr:800,icon:"🦠"},
-  {n:"Data Kraken",hp:8000,cr:3000,icon:"🐙"},
-  {n:"Quantum Dragon",hp:30000,cr:12000,icon:"🐉"},
-  {n:"Neural Overlord",hp:100000,cr:50000,icon:"🧠"},
-  {n:"Void Emperor",hp:500000,cr:200000,icon:"👑"},
-  {n:"Omega Singularity",hp:2000000,cr:1000000,icon:"🌀"},
-];
-
-// ═══ ACHIEVEMENTS ═══
-var ACHS = [
-  {id:"a1",n:"First Click",d:"Tap once",i:"👆",ck:function(){return S.clicks>=1}}, // 5 gems
-  {id:"a2",n:"Clicker",d:"Tap 100 times",i:"🖱️",ck:function(){return S.clicks>=100}},
-  {id:"a3",n:"Rich",d:"Earn 10K credits",i:"💰",ck:function(){return S.credTot>=10000}},
-  {id:"a4",n:"Boss Slayer",d:"Defeat 1 boss",i:"⚔️",ck:function(){return S.bosses>=1}},
-  {id:"a5",n:"Boss Hunter",d:"Defeat 10 bosses",i:"🏆",ck:function(){return S.bosses>=10}},
-  {id:"a6",n:"Realm Walker",d:"Reach Realm Lv.10",i:"🌌",ck:function(){return S.rlv>=10}},
-  {id:"a7",n:"Prestige",d:"Prestige once",i:"🌟",ck:function(){return S.pres>=1}},
-  {id:"a8",n:"Speed Demon",d:"100 credits/sec",i:"🚀",ck:function(){return getCPS()>=100}},
-];
-
-// ═══ HELPERS ═══
 function getCPS(){return S.cps*S.gmul;}
-function fmt(n){
-  if(n>=1e12)return(n/1e12).toFixed(1)+"T";
-  if(n>=1e9)return(n/1e9).toFixed(1)+"B";
-  if(n>=1e6)return(n/1e6).toFixed(1)+"M";
-  if(n>=1e4)return(n/1e3).toFixed(1)+"K";
-  return Math.floor(n).toString();
-}
+function fmt(n){if(n>=1e12)return(n/1e12).toFixed(1)+"T";if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e4)return(n/1e3).toFixed(1)+"K";return Math.floor(n).toString();}
 function $(id){return document.getElementById(id);}
-function dialog(t,p,btns){
-  $("moT").textContent=t;$("moP").textContent=p;
-  $("moB").innerHTML="";
-  btns.forEach(function(b){$("moB").innerHTML+='<button onclick="'+b.f+'">'+b.t+'</button>'});
-  $("ov").classList.add("s");
-}
+function dialog(t,p,bts){$("moT").textContent=t;$("moP").textContent=p;$("moB").innerHTML="";bts.forEach(function(b){var bt=document.createElement("button");bt.textContent=b.t;bt.addEventListener("click",function(){b.f();});$("moB").appendChild(bt);});$("ov").classList.add("s");}
 function cls(){$("ov").classList.remove("s");}
 
-// ═══ CLICK ═══
+// Click handler
 $("btn").addEventListener("click",function(){
   var tv=Math.floor(S.cpow*S.gmul);
   S.cred+=tv;S.credTot+=tv;S.clicks++;S.rprog+=tv;
   S.nrg+=S.nps;S.dat+=S.dps*S.dmul;S.ent+=S.eps;
   $("earn").textContent="+"+fmt(tv)+" 💎";
-
   if(S.curBoss&&S.bossHP>0){S.bossHP-=tv;if(S.bossHP<=0)defeatBoss();}
-
-  while(S.rprog>=S.rgoal){
-    S.rprog-=S.rgoal;S.rlv++;S.rgoal=Math.floor(S.rgoal*1.4);
-    S.cpow+=Math.ceil(S.rlv*0.5);S.cps+=S.rlv*0.3;
-    logUp(S.rlv);
-  }
-
-  if(!S.curBoss&&S.rlv>=5&&Math.random()<0.002)spawnBoss();
-  checkAch();
-  draw();
+  while(S.rprog>=S.rgoal){S.rprog-=S.rgoal;S.rlv++;S.rgoal=Math.floor(S.rgoal*1.4);S.cpow+=Math.ceil(S.rlv*0.5);S.cps+=S.rlv*0.3;logUp(S.rlv);}
+  if(!S.curBoss&&S.rlv>=5&&Math.random()<0.003)spawnBoss();
+  checkAch();draw();
 });
 
-function spawnBoss(){
-  var idx=Math.min(Math.floor(S.rlv/5),BOSSES.length-1);
-  S.curBoss={...BOSSES[idx]};S.bossHP=S.curBoss.hp;
-}
+function spawnBoss(){var idx=Math.min(Math.floor(S.rlv/5),BOSSES.length-1);S.curBoss={...BOSSES[idx]};S.bossHP=S.curBoss.hp;}
+function defeatBoss(){S.cred+=S.curBoss.cr;S.bosses++;flyP("+ "+fmt(S.curBoss.cr)+" 💎");S.curBoss=null;S.bossHP=0;checkAch();}
+function logUp(lv){dialog("🌀 REALM UP!","Level "+lv+" — "+RN[Math.min(lv-1,RN.length(1))],[{t:"OK",f:function(){cls();}}]);}
+function checkAch(){ACHS.forEach(function(a){if(S.ach.indexOf(a.id)<0&&a.ck()){S.ach.push(a.id);S.gem+=10;}});}
 
-function defeatBoss(){
-  S.cred+=S.curBoss.cr;S.bosses++;
-  flyP("+"+fmt(S.curBoss.cr)+" 💎");
-  S.curBoss=null;S.bossHP=0;
-  checkAch();
-}
-
-// ═══ LOG ═══
-function logUp(lv){$("moT").textContent="🌀 REALM UP!";$("moP").textContent="Level "+lv+" — "+RN[Math.min(lv-1,RN.length-1)];$("moB").innerHTML="<button onclick='cls()'>OK</button>";$("ov").classList.add("s");}
-
-// ═══ ACHIEVEMENTS ═══
-function checkAch(){
-  ACHS.forEach(function(a){
-    if(S.ach.indexOf(a.id)<0&&a.ck()){
-      S.ach.push(a.id);S.gem+=10;
-    }
-  });
-}
-
-// ═══ PRESTIGE ═══
+// Prestige
 $("bPres").addEventListener("click",function(){
   var pts=Math.floor(Math.sqrt(S.credTot/1e6)+S.rlv*0.5);
   if(pts<1)return;
-  dialog("🌟 Prestige","Gain "+pts+" prestige points?\nResets progress but gives +"+Math.floor(pts*10)+"% tap power forever.",
-    [{t:"Cancel",f:"cls()"},{t:"Prestige!",f:"doPres()"}]);
+  dialog("🌟 Prestige","Gain "+pts+" points? Resets progress but +"+Math.floor(pts*10)+"% tap forever.",[
+    {t:"Cancel",f:function(){cls();}},
+    {t:"Prestige!",f:function(){doPres();}}
+  ]);
 });
 function doPres(){
   var pts=Math.floor(Math.sqrt(S.credTot/1e6)+S.rlv*0.5);
+  if(pts<1){cls();return;}
   S.pres++;S.presPts+=pts;
-  S.cred=0;S.credTot=0;S.nrg=0;S.dat=0;S.ent=0;
-  S.clicks=0;S.cpow=1+S.presPts*0.1;S.cps=0;
-  S.gmul=1;S.dmul=1;S.eps=0;S.nps=0;S.dps=0;
-  S.rlv=1;S.rprog=0;S.rgoal=100;S.upg={};
-  S.curBoss=null;S.bossHP=0;
+  S.cred=0;S.credTot=0;S.nrg=0;S.dat=0;S.ent=0;S.clicks=0;
+  S.cpow=1+S.presPts*0.1;S.cps=0;S.gmul=1;S.dmul=1;S.eps=0;S.nps=0;S.dps=0;
+  S.rlv=1;S.rprog=0;S.rgoal=100;S.upg={};S.curBoss=null;S.bossHP=0;
   cls();draw();
 }
 
-// ═══ SHOP ═══
-var SHOP=[
-  {n:"Starter",d:"100 Gems",p:"$0.99",g:100},
-  {n:"Pro Pack",d:"500 Gems + x2/h",p:"$2.99",g:500},
-  {n:"Mega Pack",d:"2000 Gems + x3/h",p:"$9.99",g:2000},
-  {n:"VIP",d:"x1.5 forever + 1K Gems",p:"$19.99",g:1000},
-];
+// Tabs
+document.querySelectorAll(".t").forEach(function(t){t.addEventListener("click",function(){document.querySelectorAll(".t").forEach(function(x){x.classList.remove("a");});t.classList.add("a");draw();});});
 
-$("bShop").addEventListener("click",function(){showShop();});
-document.querySelector('[data-v="shop"]').addEventListener("click",function(){showShop();});
-
-function logUp(s){/* stub */}
-
-function showUpgrades(){
-  var h='<div class="sec">⬆️ Upgrades</div>';
-  UPG.forEach(function(u){
-    var o=S.upg[u.id]||0,mx=o>=u.mx;
-    var cost=Math.floor(u.c*Math.pow(1.15,o));
-    var ok=S.cred>=cost&&!mx;
-    h+='<div class="up'+(mx?' m':'')+'">'; // will be fixed
+// Bottom nav
+document.querySelectorAll(".b").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll(".b").forEach(function(x){x.classList.remove("a");});
+    b.classList.add("a");
+    var v=b.dataset.v;
+    if(v==="game"||v==="shop")draw();
+    else if(v==="stats")showStats();
+    else if(v==="set")showConfig();
   });
-  // Sorry for the incomplete function - let me fix this
-}
+});
+
+// Shop button
+$("bShop").addEventListener("click",function(){showShop();});
 
 // ═══ DRAW ═══
 function draw(){
-  $("vCred").textContent=fmt(S.cred);
-  $("vNrg").textContent=fmt(S.nrg);
-  $("vDat").textContent=fmt(S.dat);
-  $("vEnt").textContent=fmt(S.ent);
-  $("vGem").textContent=fmt(S.gem);
+  $("vCred").textContent=fmt(S.cred);$("vNrg").textContent=fmt(S.nrg);
+  $("vDat").textContent=fmt(S.dat);$("vEnt").textContent=fmt(S.ent);$("vGem").textContent=fmt(S.gem);
   $("vCps").textContent=getCPS()>0?"+"+fmt(getCPS())+"/s":"";
-  $("cps").textContent="per sec: "+fmt(getCPS())+" | total taps: "+S.clicks;
+  $("cps").textContent="per sec: "+fmt(getCPS())+" | taps: "+S.clicks;
   $("prog-fill").style.width=Math.min(100,(S.rprog/S.rgoal)*100)+"%";
   $("prog-t").textContent="Realm Lv."+S.rlv+" — "+RN[Math.min(S.rlv-1,RN.length-1)];
-
-  // Tab content
   var tab=document.querySelector(".t.a").dataset.t;
   var tc=$("tc");
   if(tab==="up")drawUp(tc);
@@ -335,38 +222,47 @@ function drawUp(tc){
     var o=S.upg[u.id]||0,mx=o>=u.mx;
     var cost=Math.floor(u.c*Math.pow(1.15,o));
     var ok=S.cred>=cost&&!mx;
-    h+='<div class="up'+(mx?' m':'')+'" onclick="buyU(\''+u.id+'\')">';
+    h+='<div class="up'+(mx?' m':'')+'" data-uid="'+u.id+'">';
     h+='<div class="h"><span class="nm">'+u.n+'</span><span class="lv">'+o+'/'+u.mx+'</span></div>';
     h+='<div class="d">'+u.d+'</div>';
-    h+='<div class="c'+(ok?' ok':'')+'">'+(mx?'MAXED':fmt(cost)+' 💎')+'</div>';
-    h+='</div>';
+    h+='<div class="c'+(ok?' ok':'')+'">'+(mx?'MAXED':fmt(cost)+' 💎')+'</div></div>';
   });
   tc.innerHTML=h;
-}
-
-function buyU(id){
-  var u=UPG.find(function(x){return x.id===id});
-  if(!u)return;
-  var o=S.upg[id]||0;
-  if(o>=u.mx)return;
-  var cost=Math.floor(u.c*Math.pow(1.15,o));
-  if(S.cred<cost)return;
-  S.cred-=cost;S.upg[id]=o+1;u.f();checkAch();draw();
+  tc.querySelectorAll(".up").forEach(function(el){
+    el.addEventListener("click",function(){
+      if(el.classList.contains("m"))return;
+      var uid=el.dataset.uid;
+      var u=UPG.find(function(x){return x.id===uid});
+      if(!u)return;
+      var o=S.upg[uid]||0;
+      var cost=Math.floor(u.c*Math.pow(1.15,o));
+      if(S.cred<cost)return;
+      S.cred-=cost;S.upg[uid]=o+1;u.f();checkAch();draw();
+    });
+  });
 }
 
 function drawBoss(tc){
   if(!S.curBoss){
     tc.innerHTML='<div class="sec">👹 Bosses</div><p style="color:#866;font-size:11px">Reach Realm Lv.5+ to fight bosses!</p>'+
-      '<button class="btn" style="margin-top:8px" onclick="spawnBoss()">⚔️ Summon</button>';
+      '<button class="ib" id="sumBoss">⚔️ Summon Boss</button>';
+    $("sumBoss").addEventListener("click",function(){spawnBoss();draw();});
   }else{
     var pct=Math.max(0,(S.bossHP/S.curBoss.hp)*100);
     tc.innerHTML='<div class="sec">👹 Boss Fight</div><div class="boss">'+
       '<div class="bn">'+S.curBoss.icon+' '+S.curBoss.n+'</div>'+
       '<div class="hp"><div class="hp-f" style="width:'+pct+'%"></div></div>'+
       '<div class="st"><span>HP: '+fmt(S.bossHP)+'/'+fmt(S.curBoss.hp)+'</span><span>'+pct.toFixed(1)+'%</span></div>'+
-      '<div class="rw">'+fmt(S.curBoss.cr)+' 💎 reward</div>'+
-      '<button onclick="clickRealm()">⚔️ ATTACK ('+fmt(Math.floor(S.cpow*S.gmul))+' dmg)</button>'+
-      '</div>';
+      '<div class="rw">Reward: '+fmt(S.curBoss.cr)+' 💎</div>'+
+      '<button id="atkBoss">⚔️ ATTACK ('+fmt(Math.floor(S.cpow*S.gmul))+' dmg)</button></div>';
+    $("atkBoss").addEventListener("click",function(){
+      var dmg=Math.floor(S.cpow*S.gmul);
+      S.bossHP-=dmg;S.rprog+=dmg;S.cred+=dmg;S.credTot+=dmg;
+      S.nrg+=S.nps;S.dat+=S.dps*S.dmul;S.ent+=S.eps;
+      if(S.bossHP<=0)defeatBoss();
+      while(S.rprog>=S.rgoal){S.rprog-=S.rgoal;S.rlv++;S.rgoal=Math.floor(S.rgoal*1.4);S.cpow+=Math.ceil(S.rlv*0.5);S.cps+=S.rlv*0.3;logUp(S.rlv);}
+      draw();
+    });
   }
 }
 
@@ -383,9 +279,9 @@ function drawAch(tc){
 function drawQuest(tc){
   if(!S.quests||S.quests.length===0){
     S.quests=[
-      {id:"q1",n:"Tap 50 times",d:"Tap "+50+" times",ck:function(){return S.clicks>=50},rw:5},
-      {id:"q2",n:"Earn 5K",d:"Collect "+fmt(5000)+" credits",ck:function(){return S.credTot>=5000},rw:10},
-      {id:"q3",n:"Defeat 3 bosses",d:"Kill "+3+" bosses",ck:function(){return S.bosses>=3},rw:15},
+      {id:"q1",n:"Tap 50 times",d:"Tap 50 times total",ck:function(){return S.clicks>=50},rw:5},
+      {id:"q2",n:"Earn 5K",d:"Collect 5,000 credits",ck:function(){return S.credTot>=5000},rw:10},
+      {id:"q3",n:"Defeat 3 bosses",d:"Kill 3 bosses",ck:function(){return S.bosses>=3},rw:15},
     ];
   }
   tc.innerHTML='<div class="sec">📜 Quests</div>'+
@@ -393,107 +289,108 @@ function drawQuest(tc){
       var done=q.ck();
       return '<div class="quest"><div class="qt">'+q.n+'</div><div class="qd">'+q.d+'</div>'+
         '<div class="qr">Reward: '+q.rw+' 💎</div>'+
-        (done?'<button onclick="claimQ(\''+q.id+'\')">Claim</button>':'')+
-        '</div>';
+        (done?'<button data-qid="'+q.id+'">Claim</button>':'')+'</div>';
     }).join('');
-}
-
-function claimQ(id){
-  var q=S.quests.find(function(x){return x.id===id});
-  if(!q||!q.ck())return;
-  S.gem+=q.rw;
-  S.quests=S.quests.filter(function(x){return x.id!==id;});
-  draw();
-}
-
-function showShop(){
-  var h='<div class="sec">🛒 Premium Shop</div>';
-  SHOP.forEach(function(s){
-    h+='<div class="shop"><div class="si">💎</div><div class="sn">'+s.n+'</div>'+
-      '<div class="sd">'+s.d+'</div><div class="sp">'+s.p+'</div>'+
-      '<button onclick="buyS('+s.g+')">Buy</button></div>';
+  tc.querySelectorAll("[data-qid]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var q=S.quests.find(function(x){return x.id===btn.dataset.qid});
+      if(!q||!q.ck())return;
+      S.gem+=q.rw;S.quests=S.quests.filter(function(x){return x.id!==q.id;});draw();
+    });
   });
-  h+='<div style="text-align:center;margin-top:10px"><button class="btn" onclick="cls()">Close</button></div>';
-  $("tc").innerHTML=h;
-  document.querySelectorAll(".t").forEach(function(t){t.classList.remove("a");});
 }
-
-function buyS(gems){
-  // Simulated purchase
-  dialog("Purchase","Payment integration coming soon!\n\nFor testing: +"+gems+" gems added.",[
-    {t:"OK",f:"addGem("+gems+")"}
-  ]);
-}
-function addGem(g){S.gem+=g;cls();draw();}
 
 function showStats(){
+  document.querySelectorAll(".t").forEach(function(t){t.classList.remove("a");});
+  document.querySelectorAll(".b").forEach(function(b){b.classList.remove("a");});
+  document.querySelector('[data-v="stats"]').classList.add("a");
   var h='<div class="sec">📊 Statistics</div>';
   [["Total Clicks",S.clicks],["Total Credits",fmt(S.credTot)],["Tap Power",fmt(S.cpow)],["Credits/sec",fmt(getCPS())],["Realm Level",S.rlv],["Bosses Defeated",S.bosses],["Prestige",S.pres],["Gems",S.gem]].forEach(function(r){
     h+='<div class="ach"><div class="inf"><div class="an">'+r[0]+'</div></div><span style="color:var(--n)">'+r[1]+'</span></div>';
   });
-  h+='<div style="margin-top:10px"><button class="btn" onclick="saveGame()">💾 Save</button> '+
-    '<button class="btn" style="background:#f044" onclick="resetGame()">🗑️ Reset</button></div>';
+  h+='<div style="margin-top:8px"><button class="ib" id="bSave">💾 Save</button> <button class="ib" style="background:#f044" id="bReset">🗑️ Reset</button></div>';
   $("tc").innerHTML=h;
+  $("bSave").addEventListener("click",function(){saveGame();});
+  $("bReset").addEventListener("click",function(){
+    dialog("Reset?","Delete all progress?",[
+      {t:"Cancel",f:function(){cls();}},
+      {t:"Reset",f:function(){localStorage.removeItem("cyberRealmIdle");location.reload();}}
+    ]);
+  });
 }
 
-function saveGame(){S.lastSave=Date.now();localStorage.setItem("cyberRealmIdle",JSON.stringify(S));}
-function loadGame(){
-  var d=localStorage.getItem("cyberRealmIdle");
-  if(d){try{var v=JSON.parse(d);Object.assign(S,v);}catch(e){}}
+function showConfig(){
+  document.querySelectorAll(".t").forEach(function(t){t.classList.remove("a");});
+  document.querySelectorAll(".b").forEach(function(b){b.classList.remove("a");});
+  document.querySelector('[data-v="set"]').classList.add("a");
+  var h='<div class="sec">⚙️ Settings</div>';
+  h+='<div class="ach"><div class="inf"><div class="an">Prestige Points</div></div><span style="color:var(--g)">'+S.presPts.toFixed(1)+'</span></div>';
+  h+='<div class="ach"><div class="inf"><div class="an">Total Prestige</div></div><span>'+S.pres+'</span></div>';
+  h+='<div style="margin-top:8px"><button class="ib" id="bExp">📤 Export Save</button> <button class="ib" id="bImp">📥 Import Save</button></div>';
+  $("tc").innerHTML=h;
+  $("bExp").addEventListener("click",function(){
+    var d=btoa(JSON.stringify(S));
+    prompt("Copy this save code:",d);
+  });
+  $("bImp").addEventListener("click",function(){
+    var d=prompt("Paste save code:");
+    if(!d)return;
+    try{var v=JSON.parse(atob(d));Object.assign(S,v);saveGame();draw();}catch(e){alert("Invalid save");}
+  });
 }
-function resetGame(){
-  dialog("Reset?","Delete all progress?",[
-    {t:"Cancel",f:"cls()"},{t:"Reset",f:"doReset()"}
-  ]);
+
+function showShop(){
+  document.querySelectorAll(".t").forEach(function(t){t.classList.remove("a");});
+  document.querySelectorAll(".b").forEach(function(b){b.classList.remove("a");});
+  document.querySelector('[data-v="shop"]').classList.add("a");
+  var items=[
+    {n:"Starter Pack",d:"100 Gems",p:"$0.99",g:100},
+    {n:"Pro Pack",d:"500 Gems + x2/hr",p:"$2.99",g:500},
+    {n:"Mega Pack",d:"2000 Gems + x3/hr",p:"$9.99",g:2000},
+    {n:"VIP Pass",d:"x1.5 forever + 1K Gems",p:"$19.99",g:1000},
+  ];
+  var h='<div class="sec">🛒 Premium Shop</div>';
+  items.forEach(function(i){
+    h+='<div class="shop"><div class="si">💎</div><div class="sn">'+i.n+'</div>'+
+      '<div class="sd">'+i.d+'</div><div class="sp">'+i.p+'</div>'+
+      '<button data-g="'+i.g+'">Buy</button></div>';
+  });
+  h+='<hr style="border-color:#0ff2;margin:10px 0"><div class="sec">❤️ Support</div>'+
+    '<p style="color:#866;font-size:11px;padding:5px">BTC: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh<br>ETH: 0x...<br>Support the developer! ❤️</p>'+
+    '<button data-g="50" class="ib" style="width:100%">💝 Donate 50 Gems</button>';
+  $("tc").innerHTML=h;
+  $("tc").querySelectorAll("[data-g]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      dialog("Payment","Payment gateway coming soon!\n+ "+btn.dataset.g+" gems (test mode).&nbsp;",[
+        {t:"OK",f:function(){S.gem+=parseInt(btn.dataset.g);cls();draw();}}
+      ]);
+    });
+  });
 }
-function doReset(){localStorage.removeItem("cyberRealmIdle");location.reload();}
 
 function flyP(t){
-  var p=document.createElement("div");
-  p.className="pt";p.textContent=t;
-  p.style.left=(30+Math.random()*40)+"%";p.style.top="35%";
-  $("parts").appendChild(p);
+  var p=document.createElement("div");p.className="pt";p.textContent=t;
+  p.style.left=(30+Math.random()*40)+"%";p.style.top="35%";$("parts").appendChild(p);
   setTimeout(function(){p.remove();},1000);
 }
 
-// ═══ TABS ═══
-document.querySelectorAll(".t").forEach(function(t){
-  t.addEventListener("click",function(){
-    document.querySelectorAll(".t").forEach(function(x){x.classList.remove("a");});
-    t.classList.add("a");draw();
-  });
-});
+// Save/Load
+function saveGame(){S.lastSave=Date.now();localStorage.setItem("cyberRealmIdle",JSON.stringify(S));}
+function loadGame(){var d=localStorage.getItem("cyberRealmIdle");if(d){try{Object.assign(S,JSON.parse(d));}catch(e){}}}
 
-// ═══ BOTTOM NAV ═══
-document.querySelectorAll(".b").forEach(function(b){
-  b.addEventListener("click",function(){
-    document.querySelectorAll(".b").forEach(function(x){x.classList.remove("a");});
-    b.classList.add("a");
-    var v=b.dataset.v;
-    if(v==="game"){draw();}
-    else if(v==="shop"){showShop();}
-    else if(v==="stats"){showStats();}
-    else if(v==="set"){showStats();}
-  });
-});
-
-// ═══ GAME LOOP ═══
+// Game loop
 var lastT=Date.now();
 setInterval(function(){
-  var now=Date.now();
-  var dt=(now-lastT)/1000;
-  lastT=now;
+  var dt=(Date.now()-lastT)/1000;lastT=Date.now();
   if(getCPS()>0){var inc=getCPS()*dt;S.cred+=inc;S.credTot+=inc;S.rprog+=inc;}
   while(S.rprog>=S.rgoal){S.rprog-=S.rgoal;S.rlv++;S.rgoal=Math.floor(S.rgoal*1.4);S.cpow+=Math.ceil(S.rlv*0.5);S.cps+=S.rlv*0.3;logUp(S.rlv);}
   if(!S.curBoss&&S.rlv>=5&&Math.random()<0.001*dt)spawnBoss();
-  if(now-S.lastSave>30000)saveGame();
+  if(Date.now()-S.lastSave>30000)saveGame();
   draw();
 },200);
 
-// ═══ INIT ═══
-loadGame();
-draw();
-})();
+// Init
+loadGame();draw();
 </script>
 </body>
 </html>
