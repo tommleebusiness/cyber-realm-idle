@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Cyber Realm Idle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#0ff;font-family:'Courier New',monospace;overflow:hidden;height:100vh}
+#game{display:flex;flex-direction:column;height:100vh}
+
+/* Header */
+#header{background:linear-gradient(180deg,#0a1628,#0a0a1a);padding:8px;text-align:center;border-bottom:2px solid #0ff}
+#header h1{font-size:18px;text-shadow:0 0 10px #0ff,0 0 20px #0ff;letter-spacing:3px}
+#resources{display:flex;justify-content:center;gap:12px;padding:6px;font-size:12px}
+.res{display:flex;align-items:center;gap:4px}
+.res span{color:#ff0;text-shadow:0 0 5px #ff0}
+
+/* Main area */
+#flex{flex:1;display:flex;overflow:hidden}
+#left-panel{width:200px;background:rgba(0,255,255,0.03);border-right:1px solid #0ff3;padding:8px;overflow-y:auto}
+#main-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;position:relative}
+#right-panel{width:200px;background:rgba(0,255,255,0.03);border-left:1px solid #0ff3;padding:8px;overflow-y:auto}
+
+#realm-btn{width:140px;height:140px;border-radius:50%;border:3px solid #0ff;background:radial-gradient(circle,#0a1628,#1a0a3c);color:#0ff;font-size:14px;cursor:pointer;box-shadow:0 0 20px #0ff5,inset 0 0 30px #0ff2;transition:0.1s;display:flex;align-items:center;justify-content:center;margin:20px auto}
+#realm-btn:active{transform:scale(0.95);box-shadow:0 0 30px #fff,inset 0 0 40px #0ff5}
+#realm-btn:hover{box-shadow:0 0 30px #0ff,inset 0 0 40px #0ff3}
+
+#click-value{font-size:12px;color:#0f0;text-shadow:0 0 5px #0f0;min-height:20px;text-align:center;margin-top:8px}
+#cps{font-size:11px;color:#888;text-align:center;margin-top:4px}
+
+/* Upgrades */
+.upgrade{background:rgba(0,255,255,0.05);border:1px solid #0ff3;border-radius:4px;padding:6px;margin-bottom:6px;font-size:11px;cursor:pointer;transition:0.2s}
+.upgrade:hover{background:rgba(0,255,255,0.12);border-color:#0ff}
+.upgrade.owned{opacity:0.5;cursor:default}
+.upgrade .name{color:#0ff;font-weight:bold}
+.upgrade .cost{color:#ff0}
+.upgrade .desc{color:#888;font-size:10px}
+.upgrade.locked{display:none}
+
+.tab-btn{background:rgba(0,255,255,0.08);border:1px solid #0ff5;color:#0ff;padding:4px 8px;font-size:11px;cursor:pointer;margin:2px;border-radius:3px}
+.tab-btn.active{background:rgba(0,255,255,0.2);box-shadow:0 0 5px #0ff}
+
+/* Stats */
+.stat-row{display:flex;justify-content:space-between;font-size:10px;padding:2px 0;border-bottom:1px solid #0ff1}
+.stat-label{color:#888}
+.stat-value{color:#0ff}
+
+/* Progress bar */
+.progress-bg{background:#1a1a2e;border-radius:3px;height:8px;margin:4px 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,#0ff,#0f0);border-radius:3px;transition:0.3s}
+
+/* Footer / log */
+#log{background:rgba(0,0,0,0.3);padding:6px;font-size:10px;color:#0f0;height:80px;overflow-y:auto;border-top:1px solid #0ff3}
+#log div{padding:1px 0}
+
+/* Animations */
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+.float{animation:float 2s ease-in-out infinite}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+#realm-btn{animation:pulse 3s ease-in-out infinite}
+
+/* Particles */
+#particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.particle{position:absolute;color:#0ff;font-size:14px;animation:particleFade 1s ease-out forwards}
+@keyframes particleFade{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0.5)}}
+
+/* Tabs */
+#tabs{display:flex;gap:4px;margin-bottom:8px}
+
+/* Scroll */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:#0ff3;border-radius:2px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="header">
+    <h1>⚡ CYBER REALM IDLE ⚡</h1>
+    <div id="resources">
+      <div class="res">💎 <span id="credits">0</span></div>
+      <div class="res">⚡ <span id="energy">0</span></div>
+      <div class="res">🧬 <span id="data">0</span></div>
+      <div class="res">🌀 <span id="entropy">0</span></div>
+    </div>
+  </div>
+  <div id="flex">
+    <div id="left-panel">
+      <div style="color:#0ff;font-size:12px;margin-bottom:6px;text-align:center">⬆️ UPGRADES</div>
+      <div id="upgrades-list"></div>
+    </div>
+    <div id="main-area">
+      <div id="particles"></div>
+      <button id="realm-btn">⚡<br>COLLECT<br>⚡</button>
+      <div id="click-value"></div>
+      <div id="cps">per second: <span id="cps-val">0</span></div>
+      <div style="margin-top:20px;width:250px">
+        <div class="progress-bg"><div class="progress-fill" id="realm-progress" style="width:0%"></div></div>
+        <div style="text-align:center;font-size:11px;color:#888;margin-top:4px">
+          Realm Level <span id="realm-level">1</span> — <span id="realm-name">Digital Nexus</span>
+        </div>
+      </div>
+    </div>
+    <div id="right-panel">
+      <div style="color:#0ff;font-size:12px;margin-bottom:6px;text-align:center">📊 STATS</div>
+      <div id="stats-list"></div>
+    </div>
+  </div>
+  <div id="log"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════
+let state = {
+  credits: 0,
+  energy: 0,
+  data: 0,
+  entropy: 0,
+  totalClicks: 0,
+  totalCreditsEarned: 0,
+  clickPower: 1,
+  cps: 0, // credits per second
+  realmLevel: 1,
+  realmProgress: 0,
+  realmGoal: 100,
+  upgrades: {}
+};
+
+const REALM_NAMES = [
+  "Digital Nexus", "Neon Grid", "Quantum Core", "Cyber Hive",
+  "Dark Matrix", "Void Sector", "Infinite Loop", "Omega Realm",
+  "Alpha Singularity", "Cyber Eden"
+];
+
+// ═══════════════════════════════════════════
+// UPGRADES
+// ═══════════════════════════════════════════
+const UPGRADES = [
+  {id:"click1",name:"Neural Link",desc:"+1 click power",cost:10,effect:()=>state.clickPower+=1,max:100},
+  {id:"click2",name:"Laser Focus",desc:"+5 click power",cost:100,effect:()=>state.clickPower+=5,max:50},
+  {id:"auto1",name:"Nano Bot",desc:"0.5 cps",cost:50,effect:()=>state.cps+=0.5,max:50},
+  {id:"auto2",name:"Drone Swarm",desc:"2 cps",cost:200,effect:()=>state.cps+=2,max:30},
+  {id:"auto3",name:"AI Core",desc:"10 cps",cost:1000,effect:()=>state.cps+=10,max:20},
+  {id:"auto4",name:"Quantum Farm",desc:"50 cps",cost:5000,effect:()=>state.cps+=50,max:10},
+  {id:"mult1",name:"Data Compressor",desc:"x1.5 all income",cost:250,effect:()=>applyMult(1.5),max:5},
+  {id:"mult2",name:"Entropy Engine",desc:"x2 all income",cost:2500,effect:()=>applyMult(2),max:3},
+  {id:"energy1",name:"Solar Panel",desc:"+1 energy/click",cost:30,effect:()=>state.energy+=1,max:20},
+  {id:"data1",name:"Data Miner",desc:"+1 data/click",cost:25,effect:()=>state.data+=1,max:20},
+  {id:"data2",name:"Encryptor",desc:"x2 data income",cost:300,effect:()=>applyDataMult(2),max:5},
+  {id:"entropy1",name:"Chaos Injector",desc:"Rare bonus from clicks",cost:500,effect:()=>state.entropy+=1,max:10},
+];
+
+let globalMult = 1;
+let dataMult = 1;
+
+function applyMult(m){globalMult*=m;}
+function applyDataMult(m){dataMult*=m;}
+
+// ═══════════════════════════════════════════
+// DOM
+// ═══════════════════════════════════════════
+const $ = id => document.getElementById(id);
+
+// ═══════════════════════════════════════════
+// CLICK HANDLER
+// ═══════════════════════════════════════════
+let clickCount = 0;
+$("realm-btn").addEventListener("click", () => {
+  const earned = Math.floor(state.clickPower * globalMult);
+  state.credits += earned;
+  state.totalClicks++;
+  state.totalCreditsEarned += earned;
+  state.realmProgress += earned;
+
+  // Particles
+  showParticle(`+${earned} 💎`);
+
+  // Realm level up
+  if (state.realmProgress >= state.realmGoal) {
+    state.realmProgress -= state.realmGoal;
+    state.realmLevel++;
+    state.realmGoal = Math.floor(state.realmGoal * 1.5);
+    log(`🌀 REALM LEVEL UP! Level ${state.realmLevel} — ${getRealmName()}`);
+  }
+
+  clickCount++;
+  updateUI();
+});
+
+function getRealmName() {
+  const idx = Math.min(state.realmLevel - 1, REALM_NAMES.length - 1);
+  return REALM_NAMES[idx];
+}
+
+// ═══════════════════════════════════════════
+// PARTICLES
+// ═══════════════════════════════════════════
+function showParticle(text) {
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.textContent = text;
+  p.style.left = (40 + Math.random() * 20) + "%";
+  p.style.top = "40%";
+  $("particles").appendChild(p);
+  setTimeout(() => p.remove(), 1000);
+}
+
+// ═══════════════════════════════════════════
+// LOG
+// ═══════════════════════════════════════════
+let logLines = [];
+function log(msg) {
+  logLines.push(msg);
+  if (logLines.length > 50) logLines.shift();
+  $("log").innerHTML = logLines.map(l => `<div>${l}</div>`).join("");
+  $("log").scrollTop = $("log").scrollHeight;
+}
+
+// ═══════════════════════════════════════════
+// UPGRADE UI
+// ═══════════════════════════════════════════
+function renderUpgrades() {
+  const list = $("upgrades-list");
+  list.innerHTML = UPGRADES.map(u => {
+    const owned = state.upgrades[u.id] || 0;
+    const maxed = owned >= u.max;
+    const canBuy = state.credits >= u.cost && !maxed;
+    return `<div class="upgrade ${maxed?'owned':''}" data-id="${u.id}" ${canBuy?'':'style="opacity:0.4"'}>
+      <div class="name">${u.name} [${owned}/${u.max}]</div>
+      <div class="desc">${u.desc}</div>
+      <div class="cost">${maxed?'MAXED':u.cost+' 💎'}</div>
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll(".upgrade:not(.owned)").forEach(el => {
+    el.addEventListener("click", () => buyUpgrade(el.dataset.id));
+  });
+}
+
+function buyUpgrade(id) {
+  const u = UPGRADES.find(x => x.id === id);
+  if (!u) return;
+  const owned = state.upgrades[id] || 0;
+  if (owned >= u.max) return;
+  if (state.credits < u.cost) return;
+
+  state.credits -= u.cost;
+  state.upgrades[id] = owned + 1;
+  u.effect();
+  log(`✅ Purchased ${u.name} (${owned+1}/${u.max})`);
+  renderUpgrades();
+  updateUI();
+}
+
+// ═══════════════════════════════════════════
+// STATS UI
+// ═══════════════════════════════════════════
+function renderStats() {
+  $("stats-list").innerHTML = [
+    ["Total Clicks", state.totalClicks],
+    ["Total Credits", formatNum(state.totalCreditsEarned)],
+    ["Click Power", formatNum(state.clickPower)],
+    ["Credits/sec", formatNum(state.cps)],
+    ["Global Mult", globalMult.toFixed(1) + "x"],
+    ["Data Mult", dataMult.toFixed(1) + "x"],
+    ["Realm Level", state.realmLevel],
+    ["Entropy", state.entropy],
+  ].map(([l,v]) => `<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-value">${v}</span></div>`).join("");
+}
+
+// ═══════════════════════════════════════════
+// FORMAT
+// ═══════════════════════════════════════════
+function formatNum(n) {
+  if (n >= 1e12) return (n/1e12).toFixed(1) + "T";
+  if (n >= 1e9) return (n/1e9).toFixed(1) + "B";
+  if (n >= 1e6) return (n/1e6).toFixed(1) + "M";
+  if (n >= 1e4) return (n/1e3).toFixed(1) + "K";
+  return Math.floor(n).toString();
+}
+
+// ═══════════════════════════════════════════
+// UPDATE UI
+// ═══════════════════════════════════════════
+function updateUI() {
+  $("credits").textContent = formatNum(state.credits);
+  $("energy").textContent = formatNum(state.energy);
+  $("data").textContent = formatNum(state.data);
+  $("entropy").textContent = formatNum(state.entropy);
+  $("cps-val").textContent = formatNum(state.cps * globalMult);
+  $("realm-level").textContent = state.realmLevel;
+  $("realm-name").textContent = getRealmName();
+  $("realm-progress").style.width = Math.min(100, (state.realmProgress / state.realmGoal)*100) + "%";
+  renderStats();
+}
+
+// ═══════════════════════════════════════════
+// GAME LOOP
+// ═══════════════════════════════════════════
+let lastTime = Date.now();
+setInterval(() => {
+  const now = Date.now();
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+
+  // Auto income
+  const income = state.cps * globalMult * dt;
+  if (income > 0) {
+    state.credits += income;
+    state.totalCreditsEarned += income;
+    state.realmProgress += income;
+  }
+
+  // Realm level up check
+  while (state.realmProgress >= state.realmGoal) {
+    state.realmProgress -= state.realmGoal;
+    state.realmLevel++;
+    state.realmGoal = Math.floor(state.realmGoal * 1.5);
+    log(`🌀 REALM LEVEL UP! Level ${state.realmLevel} — ${getRealmName()}`);
+    // Bonus on level up
+    state.clickPower += Math.ceil(state.realmLevel * 0.5);
+    state.cps += state.realmLevel * 0.2;
+  }
+
+  updateUI();
+}, 100);
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+renderUpgrades();
+updateUI();
+log("⚡ Welcome to Cyber Realm Idle!");
+log("⚡ Tap the button to collect credits!");
+log("⚡ Buy upgrades to increase production!");
+</script>
+</body>
+</html>
