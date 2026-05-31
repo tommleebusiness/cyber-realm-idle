@@ -2,47 +2,150 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a1a">
 <title>Cyber Realm Idle</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a1a;color:#0ff;font-family:monospace;overflow:hidden;height:100vh;display:flex;flex-direction:column}
-header{background:#0d1025;padding:8px;text-align:center;border-bottom:1px solid #0ff3}
-header h1{font-size:16px;letter-spacing:3px;text-shadow:0 0 8px #0ff}
-.res-bar{display:flex;justify-content:center;gap:12px;padding:5px;background:#0d1025;border-bottom:1px solid #0ff2;font-size:11px;flex-wrap:wrap}
-.res-bar span{color:#ffd700;font-weight:bold}
-#area{flex:1;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
-#tap-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-#tap-btn{width:120px;height:120px;border-radius:50%;border:2px solid #0ff;background:radial-gradient(circle,#1a2a4a,#0a0a2a);color:#0ff;font-size:14px;cursor:pointer;box-shadow:0 0 20px #0ff4;transition:.08s;display:flex;align-items:center;justify-content:center;font-family:inherit}
-#tap-btn:active{transform:scale(.92)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:#0a0a1a;color:#0ff;font-family:'Segoe UI',monospace;height:100%;overflow:hidden}
+body{display:flex;flex-direction:column;-webkit-user-select:none;user-select:none}
+*{touch-action:manipulation}
+
+header{background:linear-gradient(180deg,#0a1628,#0d1025);padding:10px;text-align:center;border-bottom:2px solid #0ff4;flex-shrink:0}
+header h1{font-size:18px;letter-spacing:4px;text-shadow:0 0 12px #0ff}
+
+.res-bar{display:flex;justify-content:space-around;padding:6px;background:#0d1025;border-bottom:1px solid #0ff3;flex-shrink:0;font-size:12px}
+.r{display:flex;align-items:center;gap:3px}
+.v{color:#ffd700;font-weight:bold}
+.rate{color:#0f0;font-size:10px}
+
+#area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#tap-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:0}
+
+#tap-btn{width:150px;height:150px;border-radius:50%;border:3px solid #0ff;
+background:radial-gradient(circle at 35% 35%,rgba(0,255,255,.15),#0a0a2a 70%);
+color:#0ff;font-size:16px;cursor:pointer;
+box-shadow:0 0 30px rgba(0,255,255,.3),inset 0 0 20px rgba(0,255,255,.1);
+transition:.06s;display:flex;align-items:center;justify-content:center;
+font-family:inherit;-webkit-tap-highlight-color:transparent}
+#tap-btn:active{transform:scale(.9);box-shadow:0 0 50px rgba(0,255,255,.6),inset 0 0 30px rgba(0,255,255,.2)}
 #tap-btn div{text-align:center}
-#tap-btn .big{font-size:28px;display:block}
-#tap-info{font-size:10px;color:#0f0;margin:6px 0;min-height:14px}
-#cps{font-size:9px;color:#666;margin-bottom:6px}
-#prog{width:180px;margin:6px auto}
-#prog-bg{background:#1a1a2e;border-radius:3px;height:5px}
-#prog-fill{height:100%;background:linear-gradient(90deg,#0ff,#0f0);border-radius:3px;width:0%;transition:.3s}
-#prog-t{font-size:9px;color:#666;text-align:center;margin-top:3px}
-#panel{overflow-y:auto;padding:8px;border-left:1px solid #0ff2}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:#0ff3}
-.tabs{display:flex;border-bottom:1px solid #0ff2;margin-bottom:6px}
-.tab{flex:1;text-align:center;padding:4px;font-size:9px;cursor:pointer;color:#666;border-bottom:2px solid transparent}
-.tab.on{color:#0ff;border-color:#0ff}
-.sec{font-size:9px;color:#0ff;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.up{background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.15);border-radius:4px;padding:5px;margin-bottom:3px;cursor:pointer}
-.up .h{display:flex;justify-content:space-between;margin-bottom:1px}
-.up .nm{font-weight:bold;font-size:10px}
-.up .lv{color:#ffd700;font-size:9px}
-.up .d{color:#666;font-size:9px}
-.up .c{color:#ffd700;font-size:9px}
+#tap-btn .big{font-size:36px;display:block;line-height:1}
+#tap-info{font-size:12px;color:#0f0;margin:8px 0;min-height:18px;text-align:center}
+#cps{font-size:11px;color:#666;text-align:center}
+#prog{width:220px;margin:10px auto}
+#prog-bg{background:#1a1a2e;border-radius:4px;height:8px;overflow:hidden}
+#prog-fill{height:100%;background:linear-gradient(90deg,#0ff,#0f0);border-radius:4px;width:0%;transition:.3s}
+#prog-t{text-align:center;font-size:11px;color:#666;margin-top:4px}
+
+#parts{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.pt{position:absolute;font-size:14px;font-weight:bold;color:#0f0;animation:fly .9s ease-out forwards;pointer-events:none}
+@keyframes fly{to{opacity:0;transform:translateY(-80px)}}
+
+footer{display:flex;background:#0d1025;border-top:1px solid #0ff3;flex-shrink:0}
+footer .ft{flex:1;text-align:center;padding:8px 4px;font-size:11px;cursor:pointer;color:#555;transition:.15s}
+footer .ft.on{color:#0ff;text-shadow:0 0 5px #0ff}
+
+#panel{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a1a;z-index:50;display:none;flex-direction:column}
+#panel.open{display:flex}
+#panel-head{display:flex;align-items:center;padding:10px;border-bottom:1px solid #0ff3;background:#0d1025}
+#panel-head h2{flex:1;font-size:14px;letter-spacing:2px;text-shadow:0 0 8px #0ff}
+#close-panel{background:none;border:1px solid #0ff5;color:#0ff;padding:6px 12px;border-radius:4px;font-size:11px;cursor:pointer}
+
+.tabs{display:flex;border-bottom:1px solid #0ff2;background:#0d1025;overflow-x:auto;flex-shrink:0}
+.tab{min-width:80px;text-align:center;padding:10px 8px;font-size:12px;cursor:pointer;color:#666;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.tab.on{color:#0ff;border-color:#0ff;text-shadow:0 0 5px #0ff}
+
+#pc{flex:1;overflow-y:auto;padding:10px}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:#0ff3;border-radius:2px}
+
+.sec{font-size:10px;color:#0ff;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;margin-top:4px}
+.up{background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.15);border-radius:8px;padding:10px;margin-bottom:6px;cursor:pointer;transition:.12s}
+.up:active{background:rgba(0,255,255,.12);transform:scale(.98)}
+.up .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.up .nm{color:#0ff;font-weight:bold;font-size:13px}
+.up .lv{color:#ffd700;font-size:11px}
+.up .d{color:#888;font-size:11px;margin-bottom:4px}
+.up .c{color:#ffd700;font-size:12px}
+.up .c.ok{color:#0f0}
 .up.m{opacity:.3;cursor:default}
-#parts{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.pt{position:absolute;font-size:11px;color:#0f0;animation:fly 1s forwards}
-@keyframes fly{to{opacity:0;transform:translateY(-60px)}}
-footer{background:#0d1025;padding:3px;display:flex;justify-content:space-around;border-top:1px solid #0ff2}
-.ft{text-align:center;padding:2px 4px;font-size:9px;cursor:pointer;color:#666}
-.ft.on{color:#0ff}
+
+.boss{background:linear-gradient(135deg,rgba(255,0,68,.08),rgba(255,100,0,.08));border:1px solid #f045;border-radius:8px;padding:12px;margin-bottom:8px}
+.boss .bn{color:#f04;font-weight:bold;font-size:14px;margin-bottom:4px}
+.boss .hp-bar{background:#1a1a2e;border-radius:3px;height:8px;margin:4px 0;overflow:hidden}
+.boss .hp-f{height:100%;background:linear-gradient(90deg,#f04,#ff4400);border-radius:3px;transition:.2s}
+.boss .st{display:flex;justify-content:space-between;font-size:10px;color:#888}
+.boss .rw{color:#ffd700;font-size:11px;margin-top:4px}
+.boss .btn-atk{width:100%;padding:8px;margin-top:6px;background:linear-gradient(135deg,#f04,#ff4400);border:none;border-radius:4px;color:#fff;font-weight:bold;font-size:13px;cursor:pointer}
+
+.ach{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(0,255,255,.03);border:1px solid rgba(0,255,255,.08);border-radius:4px;margin-bottom:4px}
+.ach.do{border-color:#ffd700;background:rgba(255,215,0,.05)}
+.ach .ic{font-size:20px}
+.ach .inf{flex:1}
+.ach .an{font-size:12px;color:#0ff}
+.ach .ad{font-size:10px;color:#888}
+.ach .ar{color:#ffd700;font-size:10px}
+
+.shop-item{background:linear-gradient(135deg,rgba(0,255,255,.05),rgba(170,0,255,.05));border:1px solid #0ff3;border-radius:8px;padding:12px;margin-bottom:8px;text-align:center}
+.shop-item .si{font-size:28px;margin-bottom:4px}
+.shop-item .sn{color:#0ff;font-weight:bold;font-size:14px}
+.shop-item .sd{color:#888;font-size:12px;margin:4px 0}
+.shop-item .sp{color:#ffd700;font-size:16px;font-weight:bold}
+.shop-item button{margin-top:6px;background:linear-gradient(135deg,#0ff,#4af);border:none;color:#000;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:bold;cursor:pointer}
+.shop-item button:active{transform:scale(.95)}
+
+.stat-row{display:flex;justify-content:space-between;padding:8px 4px;border-bottom:1px solid rgba(0,255,255,.05);font-size:12px}
+.stat-row .sl{color:#888}
+.stat-row .sv{color:#0ff;font-weight:bold}
+
+.danger{background:#f043;border:1px solid #f045;color:#f04;padding:8px;border-radius:4px;font-size:11px;cursor:pointer;margin-top:8px;width:100%}
+.danger:active{transform:scale(.97)}
+
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px solid rgba(0,255,255,.05);font-size:12px}
+.settings-row label{color:#0ff}
+.settings-row input[type=checkbox]{width:20px;height:20px;accent-color:#0ff}
+
+/* ===== MOBILE FIXES ===== */
+@media(max-width:480px){
+  header{padding:6px}
+  header h1{font-size:14px;letter-spacing:2px}
+  .res-bar{font-size:10px;padding:4px;gap:4px;justify-content:space-around}
+  .r{flex-direction:column;gap:1px;font-size:9px}
+  #tap-btn{width:130px;height:130px;font-size:14px}
+  #tap-btn .big{font-size:30px}
+  .tab{min-width:60px;padding:8px 6px;font-size:11px}
+  .up{padding:8px}
+  .up .nm{font-size:12px}
+  .boss .bn{font-size:13px}
+}
+
+@media(min-width:768px){
+  #tap-btn{width:180px;height:180px;font-size:18px}
+  #tap-btn .big{font-size:44px}
+  .res-bar{font-size:14px;padding:8px}
+  .tab{min-width:100px;padding:12px 10px;font-size:13px}
+}
+
+/* Desktop: side by side */
+@media(min-width:800px) and (min-height:500px){
+  body{overflow:auto}
+  #area{flex-direction:row;overflow:auto}
+  #tap-zone{flex:1;border-right:1px solid #0ff2}
+  #panel{position:relative;top:auto;left:auto;width:auto;height:auto;display:flex;z-index:auto;flex:1;border-left:none}
+  #panel-head,#close-panel{display:none}
+  footer{display:none}
+  .tabs{position:sticky;top:0;z-index:10}
+}
+
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.overlay.show{display:flex}
+.overlay-box{background:#0d1025;border:1px solid #0ff;border-radius:12px;padding:20px;max-width:340px;width:100%;text-align:center}
+.overlay-box h3{color:#0ff;font-size:16px;margin-bottom:10px}
+.overlay-box p{color:#888;font-size:13px;margin-bottom:15px;line-height:1.5}
+.overlay-box button{background:#0ff;border:none;color:#000;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:bold;cursor:pointer;margin:4px}
 </style>
 </head>
 <body>
@@ -50,11 +153,11 @@ footer{background:#0d1025;padding:3px;display:flex;justify-content:space-around;
 <header><h1>⚡ CYBER REALM ⚡</h1></header>
 
 <div class="res-bar">
-  💎<span id="rc">0</span>
-  ⚡<span id="rn">0</span>
-  🧬<span id="rd">0</span>
-  🌀<span id="re">0</span>
-  💎<span id="rg">0</span><small style="color:#a0f">prem</small>
+  <div class="r">💎 <span class="v" id="rc">0</span><span class="rate" id="rcR"></span></div>
+  <div class="r">⚡ <span class="v" id="rn">0</span></div>
+  <div class="r">🧬 <span class="v" id="rd">0</span></div>
+  <div class="r">🌀 <span class="v" id="re">0</span></div>
+  <div class="r">💎 <span class="v" id="rg">0</span><span class="rate" style="color:#a0f">prem</span></div>
 </div>
 
 <div id="area">
@@ -62,256 +165,392 @@ footer{background:#0d1025;padding:3px;display:flex;justify-content:space-around;
     <div id="parts"></div>
     <button id="tap-btn"><div><span class="big">⚡</span>TAP</div></button>
     <div id="tap-info"></div>
-    <div id="cps">per sec: 0</div>
-    <div id="prog"><div id="prog-bg"><div id="prog-fill"></div></div><div id="prog-t">Realm Lv.1</div></div>
-  </div>
-
-  <div id="panel">
-    <div class="tabs">
-      <div class="tab on" data-t="up">⬆️</div>
-      <div class="tab" data-t="bo">👹</div>
-      <div class="tab" data-t="ac">🏆</div>
-      <div class="tab" data-t="sh">🛒</div>
+    <div id="cps">per sec: 0 | taps: 0</div>
+    <div id="prog">
+      <div id="prog-bg"><div id="prog-fill"></div></div>
+      <div id="prog-t">Realm Lv.1 — Digital Nexus</div>
     </div>
-    <div id="pc"></div>
   </div>
 </div>
 
 <footer>
-  <div class="ft on" data-v="g">🎮 Game</div>
-  <div class="ft" data-v="s">🛒 Shop</div>
-  <div class="ft" data-v="i">📊 Stats</div>
-  <div class="ft" data-v="c">⚙️ Set</div>
+  <div class="ft on" data-v="game">🎮 Game</div>
+  <div class="ft" data-v="upgrades">⬆️ Up</div>
+  <div class="ft" data-v="boss">👹 Boss</div>
+  <div class="ft" data-v="shop">🛒 Shop</div>
+  <div class="ft" data-v="stats">📊 Stats</div>
 </footer>
+
+<div id="panel">
+  <div id="panel-head">
+    <h2 id="panel-title">⬆️ Upgrades</h2>
+    <button id="close-panel">✕ Close</button>
+  </div>
+  <div class="tabs" id="panel-tabs">
+    <div class="tab on" data-t="up">⬆️</div>
+    <div class="tab" data-t="bo">👹</div>
+    <div class="tab" data-t="ac">🏆</div>
+    <div class="tab" data-t="qu">📜</div>
+    <div class="tab" data-t="sh">🛒</div>
+  </div>
+  <div id="pc"></div>
+</div>
+
+<div class="overlay" id="ov">
+  <div class="overlay-box">
+    <h3 id="ovT"></h3>
+    <p id="ovP"></p>
+    <div id="ovB"></div>
+  </div>
+</div>
 
 <script>
 (function(){
+"use strict";
 
-// State
-var S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,
-rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0};
-
-var RN=["Digital Nexus","Neon Grid","Quantum Core","Cyber Hive","Dark Matrix","Void Sector","Inf Loop","Omega Realm","Alpha Sing","Cyber Eden"];
-
-// Upgrades: id, name, desc, cost base, max, fn
-var UP=[
-{n:"Neural Link",d:"+1 tap",cb:10,fn:function(){S.cp+=1},mx:100},
-{n:"Laser Focus",d:"+5 tap",cb:100,fn:function(){S.cp+=5},mx:50},
-{n:"Nano Bot",d:"0.5/s",cb:50,fn:function(){S.ps+=0.5},mx:50},
-{n:"Drone Swarm",d:"2/s",cb:200,fn:function(){S.ps+=2},mx:30},
-{n:"AI Core",d:"10/s",cb:1000,fn:function(){S.ps+=10},mx:20},
-{n:"Compressor",d:"x1.5 all",cb:250,fn:function(){S.gm*=1.5},mx:5},
-{n:"Solar",d:"+1 ⚡/t",cb:30,fn:function(){S.ns+=1},mx:20},
-{n:"Data Miner",d:"+1 🧬/t",cb:25,fn:function(){S.ds+=1},mx:20},
-{n:"Encryptor",d:"x2 data",cb:300,fn:function(){S.dm*=2},mx:5},
-{n:"Chaos Inj",d:"+1 🌀/t",cb:500,fn:function(){S.es+=1},mx:10},
-{n:"Quantum Farm",d:"50/s",cb:5000,fn:function(){S.ps+=50},mx:15},
-{n:"Entropy Eng",d:"x2 all",cb:2500,fn:function(){S.gm*=2},mx:3},
-];
-
-// Bosses
-var BS=[{n:"Glitch",hp:100,cr:50,ic:"👻"},{n:"Golem",hp:500,cr:200,ic:"🗿"},{n:"Swarm",hp:2000,cr:800,ic:"🦠"},{n:"Kraken",hp:8000,cr:3000,ic:"🐙"},{n:"Dragon",hp:30000,cr:12000,ic:"🐉"}];
-
-// Tap
-document.getElementById("tap-btn").onclick=function(){
-  var v=Math.floor(S.cp*S.gm);
-  S.c+=v;S.ct+=v;S.cl++;S.rp+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
-  document.getElementById("tap-info").textContent="+"+f(v)+" 💎";
-  if(S.cb&&S.bh>0){S.bh-=v;if(S.bh<=0)winBoss();}
-  while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
-  if(!S.cb&&S.rl>=5&&Math.random()<0.01)sumBoss();
-  fly("+"+f(v));
-  draw();
+// ═══ STATE ═══
+var S={
+  c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,
+  cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,
+  rl:1,rp:0,rg:100,
+  up:{},ac:[],cb:null,bh:0,
+  lastSave:Date.now()
 };
 
-// Bosses
-function sumBoss(){var i=Math.min(Math.floor(S.rl/5),BS.length-1);S.cb=BS[i];S.bh=S.cb.hp;}
-function winBoss(){S.c+=S.cb.cr;S.bs++;fly("+"+f(S.cb.cr)+" 💎");S.cb=null;S.bh=0;}
+var RN=["Digital Nexus","Neon Grid","Quantum Core","Cyber Hive","Dark Matrix","Void Sector","Inf Loop","Omega Realm","Alpha Sing","Cyber Eden","Neural Net","Phantom Zone","Binary Storm","Chrome Void","Data Ocean","Void Core"];
 
-// File system helpers
-var fs=(function(){
-  var sdb={};
-  return{
-    read:function(k,def){try{var v=localStorage.getItem("cri_"+k);return v?JSON.parse(v):def;}catch(e){return def;}},
-    write:function(k,v){try{localStorage.setItem("cri_"+k,JSON.stringify(v));}catch(e){}}
-  };
-})();
+// ═══ UPGRADES ═══
+var UPG=[
+  {n:"Neural Link",d:"+1 tap",cb:10,fn:function(){S.cp+=1},mx:100},
+  {n:"Laser Focus",d:"+5 tap",cb:100,fn:function(){S.cp+=5},mx:50},
+  {n:"Plasma Core",d:"+25 tap",cb:1000,fn:function(){S.cp+=25},mx:30},
+  {n:"Nano Bot",d:"0.5/s",cb:50,fn:function(){S.ps+=0.5},mx:50},
+  {n:"Drone Swarm",d:"2/s",cb:200,fn:function(){S.ps+=2},mx:30},
+  {n:"AI Core",d:"10/s",cb:1000,fn:function(){S.ps+=10},mx:20},
+  {n:"Quantum Farm",d:"50/s",cb:5000,fn:function(){S.ps+=50},mx:15},
+  {n:"Matrioshka",d:"200/s",cb:25000,fn:function(){S.ps+=200},mx:10},
+  {n:"Data Compressor",d:"x1.5 all",cb:250,fn:function(){S.gm*=1.5},mx:5},
+  {n:"Entropy Engine",d:"x2 all",cb:2500,fn:function(){S.gm*=2},mx:3},
+  {n:"Solar Panel",d:"+1 ⚡/t",cb:30,fn:function(){S.ns+=1},mx:20},
+  {n:"Data Miner",d:"+1 🧬/t",cb:25,fn:function(){S.ds+=1},mx:20},
+  {n:"Encryptor",d:"x2 data",cb:300,fn:function(){S.dm*=2},mx:5},
+  {n:"Chaos Injector",d:"+1 🌀/t",cb:500,fn:function(){S.es+=1},mx:10},
+];
 
-// Draw
-function draw(){
-  document.getElementById("rc").textContent=f(S.c);
-  document.getElementById("rn").textContent=f(S.n);
-  document.getElementById("rd").textContent=f(S.d);
-  document.getElementById("re").textContent=f(S.e);
-  document.getElementById("rg").textContent=f(S.g);
-  document.getElementById("cps").textContent="per sec: "+f(S.ps*S.gm)+" | taps: "+S.cl;
-  document.getElementById("prog-fill").style.width=Math.min(100,(S.rp/S.rg)*100)+"%";
-  document.getElementById("prog-t").textContent="Realm Lv."+S.rl;
-  var t=document.querySelector(".tab.on").dataset.t;
-  var p=document.getElementById("pc");
-  if(t==="up")drawUp(p);
-  else if(t==="bo")drawBoss(p);
-  else if(t==="ac")drawAch(p);
-  else if(t==="sh")drawShop(p);
+// ═══ BOSSES ═══
+var BS=[
+  {n:"Glitch Phantom",hp:100,cr:50,ic:"👻"},
+  {n:"Firewall Golem",hp:500,cr:200,ic:"🗿"},
+  {n:"Virus Swarm",hp:2000,cr:800,ic:"🦠"},
+  {n:"Data Kraken",hp:8000,cr:3000,ic:"🐙"},
+  {n:"Quantum Dragon",hp:30000,cr:12000,ic:"🐉"},
+  {n:"Neural Overlord",hp:100000,cr:50000,ic:"🧠"},
+  {n:"Void Emperor",hp:500000,cr:200000,ic:"👑"},
+  {n:"Omega Singularity",hp:2000000,cr:1000000,ic:"🌀"},
+];
+
+// ═══ ACHIEVEMENTS ═══
+var ACHS=[
+  {id:"a1",n:"First Click",d:"Tap once",i:"👆",ck:function(){return S.cl>=1}},
+  {id:"a2",n:"Clicker",d:"Tap 100 times",i:"🖱️",ck:function(){return S.cl>=100}},
+  {id:"a3",n:"Rich",d:"Earn 10K credits",i:"💰",ck:function(){return S.ct>=10000}},
+  {id:"a4",n:"Boss Slayer",d:"Defeat 1 boss",i:"⚔️",ck:function(){return S.bs>=1}},
+  {id:"a5",n:"Boss Hunter",d:"Defeat 10 bosses",i:"🏆",ck:function(){return S.bs>=10}},
+  {id:"a6",n:"Realm Walker",d:"Realm Lv.10",i:"🌌",ck:function(){return S.rl>=10}},
+  {id:"a7",n:"Prestige",d:"Prestige once",i:"🌟",ck:function(){return S.pr>=1}},
+  {id:"a8",n:"Speed Demon",d:"100/s income",i:"🚀",ck:function(){return getCPS()>=100}},
+];
+
+// ═══ HELPERS ═══
+function getCPS(){return S.ps*S.gm;}
+function f(n){if(n>=1e12)return(n/1e12).toFixed(1)+"T";if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e4)return(n/1e3).toFixed(1)+"K";return Math.floor(n);}
+function $(id){return document.getElementById(id);}
+function showPanel(show){$("panel").classList.toggle("open",show);}
+
+function dialog(t,p,btns){
+  $("ovT").textContent=t;$("ovP").textContent=p;$("ovB").innerHTML="";
+  btns.forEach(function(b){var el=document.createElement("button");el.textContent=b.t;el.addEventListener("click",function(){b.f()});$("ovB").appendChild(el);});
+  $("ov").classList.add("show");
+}
+function cls(){$("ov").classList.remove("show");}
+
+// ═══ TAP ═══
+$("tap-btn").addEventListener("click",function(){
+  var v=Math.floor(S.cp*S.gm);
+  S.c+=v;S.ct+=v;S.cl++;S.rp+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
+  $("tap-info").textContent="+"+f(v)+" 💎";
+  if(S.cb&&S.bh>0){S.bh-=v;if(S.bh<=0)winBoss();}
+  while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
+  if(!S.cb&&S.rl>=5&&Math.random()<0.003)spawnBoss();
+  checkAch();
+  fly("+"+f(v));
+  draw();
+});
+
+$("tap-btn").addEventListener("touchstart",function(e){e.preventDefault();},{passive:false});
+
+function spawnBoss(){var i=Math.min(Math.floor(S.rl/5),BS.length-1);S.cb={...BS[i]};S.bh=S.cb.hp;}
+function winBoss(){S.c+=S.cb.cr;S.bs++;fly("+"+f(S.cb.cr)+" 💎");S.cb=null;S.bh=0;checkAch();}
+
+function checkAch(){ACHS.forEach(function(a){if(S.ac.indexOf(a.id)<0&&a.ck()){S.ac.push(a.id);S.g+=10;}});}
+
+// ═══ PRESTIGE ═══
+function doPrestige(){
+  var pts=Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5);
+  if(pts<1){cls();return;}
+  S.pr++;S.pp+=pts;
+  S.c=0;S.ct=0;S.n=0;S.d=0;S.e=0;S.cl=0;
+  S.cp=1+S.pp*0.1;S.ps=0;S.gm=1;S.dm=1;S.ns=0;S.ds=0;S.es=0;
+  S.rl=1;S.rp=0;S.rg=100;S.up={};S.cb=null;S.bh=0;
+  cls();draw();
 }
 
-function drawUp(p){
+// ═══ DRAW ═══
+function draw(){
+  $("rc").textContent=f(S.c);$("rn").textContent=f(S.n);
+  $("rd").textContent=f(S.d);$("re").textContent=f(S.e);$("rg").textContent=f(S.g);
+  $("rcR").textContent=getCPS()>0?"+"+f(getCPS())+"/s":"";
+  $("cps").textContent="per sec: "+f(getCPS())+" | taps: "+f(S.cl);
+  $("prog-fill").style.width=Math.min(100,(S.rp/S.rg)*100)+"%";
+  $("prog-t").textContent="Realm Lv."+S.rl+" — "+RN[Math.min(S.rl-1,RN.length-1)];
+}
+
+function fly(t){
+  var p=document.createElement("div");p.className="pt";p.textContent=t;
+  p.style.left=(30+Math.random()*40)+"%";p.style.top="35%";
+  $("parts").appendChild(p);setTimeout(function(){p.remove();},900);
+}
+
+// ═══ PANEL TABS ═══
+var currentTab="up";
+$("panel-tabs").addEventListener("click",function(e){
+  var t=e.target.closest(".tab");if(!t)return;
+  $("panel-tabs").querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});
+  t.classList.add("on");currentTab=t.dataset.t;renderPanel();
+});
+$("close-panel").addEventListener("click",function(){showPanel(false);});
+
+function renderPanel(){
+  var p=$("pc");p.innerHTML="";
+  if(currentTab==="up")drawUp(p);
+  else if(currentTab==="bo")drawBoss(p);
+  else if(currentTab==="ac")drawAch(p);
+  else if(currentTab==="qu")drawQuest(p);
+  else if(currentTab==="sh")drawShop(p); // not used in tabs, shop is separate
+}
+
+function drawUp(pc){
   var h='<div class="sec">⬆️ Upgrades</div>';
-  for(var i=0;i<UP.length;i++){
-    var u=UP[i];var o=S.up[i]||0;var mx=o>=u.mx;
+  for(var i=0;i<UPG.length;i++){
+    var u=UPG[i];var o=S.up[i]||0;var mx=o>=u.mx;
     var cost=Math.floor(u.cb*Math.pow(1.15,o));
     var ok=S.c>=cost&&!mx;
     h+='<div class="up'+(mx?' m':'')+'" data-i="'+i+'">';
     h+='<div class="h"><span class="nm">'+u.n+'</span><span class="lv">'+o+'/'+u.mx+'</span></div>';
     h+='<div class="d">'+u.d+'</div>';
-    h+='<div class="c'+(ok?' style="color:#0f0"':'')+'">'+(mx?'MAX':f(cost)+'💎')+'</div></div>';
+    h+='<div class="c'+(ok?' ok':'')+'">'+(mx?'MAX':f(cost)+' 💎')+'</div></div>';
   }
-  p.innerHTML=h;
-  var els=p.querySelectorAll(".up");
-  for(var j=0;j<els.length;j++){
-    els[j].onclick=function(e){
-      var i=parseInt(this.dataset.i);
+  pc.innerHTML=h;
+  pc.querySelectorAll(".up").forEach(function(el){
+    el.addEventListener("click",function(){
       if(this.classList.contains("m"))return;
-      var u=UP[i];var o=S.up[i]||0;
-      var cost=Math.floor(u.cb*Math.pow(1.15,o));
+      var i=parseInt(this.dataset.i);var u=UPG[i];
+      var o=S.up[i]||0;var cost=Math.floor(u.cb*Math.pow(1.15,o));
       if(S.c<cost)return;
-      S.c-=cost;S.up[i]=o+1;u.fn();draw();
-    };
-  }
-}
-
-function drawBoss(p){
-  if(!S.cb){
-    p.innerHTML='<div class="sec">👹 Bosses</div><p style="color:#666;font-size:10px">Reach Realm Lv.5+</p>';
-  }else{
-    var pct=Math.max(0,(S.bh/S.cb.hp)*100);
-    p.innerHTML='<div class="sec">👹 '+S.cb.ic+' '+S.cb.n+'</div>'+
-      '<div style="background:#1a1a2e;border-radius:3px;height:6px;margin:4px 0"><div style="width:'+pct+'%;height:100%;background:linear-gradient(90deg,#f04,#ffd700);border-radius:3px"></div></div>'+
-      '<div style="display:flex;justify-content:space-between;font-size:9px;color:#666"><span>HP:'+f(S.bh)+'/'+f(S.cb.hp)+'</span><span>'+pct.toFixed(0)+'%</span></div>'+
-      '<div style="font-size:10px;color:#ffd700;margin:4px 0">Reward: '+f(S.cb.cr)+' 💎</div>'+
-      '<button style="background:#f04;color:#fff;border:none;padding:5px;border-radius:3px;width:100%;cursor:pointer" id="atkBtn">⚔️ ATTACK</button>';
-    document.getElementById("atkBtn").onclick=function(){
-      var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
-      if(S.bh<=0)winBoss();
-      while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
-      draw();
-    };
-  }
-}
-
-function drawAch(p){
-  var achs=[
-    {id:"c10",d:"Tap 10 times",ck:function(){return S.cl>=10}},
-    {id:"c100",d:"Tap 100 times",ck:function(){return S.cl>=100}},
-    {id:"b1",d:"Defeat 1 boss",ck:function(){return S.bs>=1}},
-    {id:"b5",d:"Defeat 5 bosses",ck:function(){return S.bs>=5}},
-    {id:"r10",d:"Realm Lv.10",ck:function(){return S.rl>=10}},
-  ];
-  var h='<div class="sec">🏆 Achievements ('+S.ac.length+'/'+achs.length+')</div>';
-  for(var i=0;i<achs.length;i++){
-    var a=ck[i];var done=S.ac.indexOf(a.id)>=0;
-    h+='<div style="display:flex;align-items:center;gap:6px;padding:3px;background:rgba(0,255,255,.03);border-radius:3px;margin-bottom:2px'+(done?';border:1px solid #ffd700':'')+'">';
-    h+='<span>'+(done?'✅':'⬜')+'</span><span style="font-size:10px'+(done?';color:#ffd700':'')+'">'+a.d+'</span>';
-    h+='</div>';
-    if(!done&&a.ck()){S.ac.push(a.id);S.g+=10;}
-  }
-  p.innerHTML=h;
-}
-
-function drawShop(p){
-  var h='<div class="sec">🛒 Premium</div>';
-  h+='<div class="up"><div class="h"><span class="nm">100 Gems</span><span class="lv">$0.99</span></div><button style="background:#0ff;color:#000;border:none;padding:3px 10px;border-radius:3px;cursor:pointer;margin-top:3px" data-g="100">Buy</button></div>';
-  h+='<div class="up"><div class="h"><span class="nm">500 Gems</span><span class="lv">$2.99</span></div><button style="background:#0ff;color:#000;border:none;padding:3px 10px;border-radius:3px;cursor:pointer;margin-top:3px" data-g="500">Buy</button></div>';
-  h+='<div class="up"><div class="h"><span class="nm">2000 Gems</span><span class="lv">$9.99</span></div><button style="background:#0ff;color:#000;border:none;padding:3px 10px;border-radius:3px;cursor:pointer;margin-top:3px" data-g="2000">Buy</button></div>';
-  p.innerHTML=h;
-  p.querySelectorAll("button[data-g]").forEach(function(b){
-    b.onclick=function(){S.g+=parseInt(this.dataset.g);draw();};
+      S.c-=cost;S.up[i]=o+1;u.fn();checkAch();renderPanel();draw();
+    });
   });
 }
 
-// Save
-function save(){localStorage.setItem("cri_save",JSON.stringify(S));}
-function load(){
-  var d=localStorage.getItem("cri_save");
-  if(d){try{var v=JSON.parse(d);for(var k in v)S[k]=v[k];}catch(e){}}
+function drawBoss(pc){
+  if(!S.cb){
+    pc.innerHTML='<div class="sec">👹 Bosses</div><p style="color:#666;font-size:12px;margin:8px 0">Reach Realm Lv.5+ to encounter bosses!</p>'+
+      '<button class="btn-atk" id="sumBtn" style="background:linear-gradient(135deg,#f04,#ff4400);color:#fff;border:none;padding:10px;border-radius:5px;font-size:13px;font-weight:bold;cursor:pointer;width:100%">⚔️ Summon Boss</button>';
+    $("sumBtn").addEventListener("click",function(){spawnBoss();renderPanel();});
+  }else{
+    var pct=Math.max(0,(S.bh/S.cb.hp)*100);
+    pc.innerHTML='<div class="sec">👹 '+S.cb.ic+' '+S.cb.n+'</div>'+
+      '<div class="hp-bar"><div class="hp-f" style="width:'+pct+'%"></div></div>'+
+      '<div class="st"><span>HP: '+f(S.bh)+'/'+f(S.cb.hp)+'</span><span>'+pct.toFixed(0)+'%</span></div>'+
+      '<div class="rw">Reward: '+f(S.cb.cr)+' 💎</div>'+
+      '<button class="btn-atk" id="atkBtn">⚔️ ATTACK ('+f(Math.floor(S.cp*S.gm))+' dmg)</button>';
+    $("atkBtn").addEventListener("click",function(){
+      var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;
+      S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
+      if(S.bh<=0)winBoss();
+      while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
+      renderPanel();draw();
+    });
+  }
 }
 
-// Format
-function f(n){if(n>=1e12)return(n/1e12).toFixed(1)+"T";if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e4)return(n/1e3).toFixed(1)+"K";return Math.floor(n);}
-
-function fly(t){
-  var p=document.createElement("div");p.className="pt";p.textContent=t;
-  p.style.left=(30+Math.random()*40)+"%";p.style.top="40%";
-  document.getElementById("parts").appendChild(p);
-  setTimeout(function(){p.remove();},900);
+function drawAch(pc){
+  var h='<div class="sec">🏆 Achievements ('+S.ac.length+'/'+ACHS.length+')</div>';
+  for(var i=0;i<ACHS.length;i++){
+    var a=ACHS[i];var done=S.ac.indexOf(a.id)>=0;
+    h+='<div class="ach'+(done?' do':'')+'"><span class="ic">'+(done?'✅':a.i)+'</span>'+
+      '<div class="inf"><div class="an">'+a.n+'</div><div class="ad">'+a.d+'</div></div>'+
+      '<span class="ar">'+(done?'Done':'💎10')+'</span></div>';
+  }
+  pc.innerHTML=h;
 }
 
-// Tabs
-document.querySelectorAll(".tab").forEach(function(t){
-  t.onclick=function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");draw();};
-});
+function drawQuest(pc){
+  if(!S.quests||S.quests.length===0){
+    S.quests=[
+      {id:"q1",n:"Tap 50 times",d:"Tap 50 times total",ck:function(){return S.cl>=50},rw:5},
+      {id:"q2",n:"Earn 5K",d:"Collect 5,000 credits",ck:function(){return S.ct>=5000},rw:10},
+      {id:"q3",n:"Defeat 3 bosses",d:"Kill 3 bosses",ck:function(){return S.bs>=3},rw:15},
+      {id:"q4",n:"Realm Lv.5",d:"Reach Realm Level 5",ck:function(){return S.rl>=5},rw:8},
+    ];
+  }
+  var h='<div class="sec">📜 Quests</div>';
+  for(var i=0;i<S.quests.length;i++){
+    var q=S.quests[i];var done=q.ck();
+    h+='<div class="up"><div class="h"><span class="nm">'+q.n+'</span><span class="lv">'+(done?'✅':'')+'</span></div>'+
+      '<div class="d">'+q.d+'</div><div class="c">Reward: '+q.rw+' 💎</div>'+
+      (done?'<button style="margin-top:4px;width:100%;background:#a0f;border:none;color:#fff;padding:5px;border-radius:3px;cursor:pointer" data-qid="'+q.id+'">Claim</button>':'')+'</div>';
+  }
+  pc.innerHTML=h;
+  pc.querySelectorAll("[data-qid]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var q=S.quests.find(function(x){return x.id===btn.dataset.qid});
+      if(!q||!q.ck())return;
+      S.g+=q.rw;S.quests=S.quests.filter(function(x){return x.id!==q.id;});renderPanel();draw();
+    });
+  });
+}
 
-// Footer
+function drawShopFull(pc){
+  var items=[
+    {n:"Starter Pack",d:"100 Gems — Perfect for beginners",p:"$0.99",g:100},
+    {n:"Pro Pack",d:"500 Gems + x2 income for 2 hours",p:"$2.99",g:500},
+    {n:"Mega Pack",d:"2000 Gems + x3 income for 4 hours",p:"$9.99",g:2000},
+    {n:"VIP Pass🔥",d:"Permanent x1.5 income + 1000 Gems",p:"$19.99",g:1000},
+  ];
+  var h='<div class="sec">🛒 Premium Shop</div>';
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    h+='<div class="shop-item"><div class="si">💎</div><div class="sn">'+it.n+'</div>'+
+      '<div class="sd">'+it.d+'</div><div class="sp">'+it.p+'</div>'+
+      '<button data-g="'+it.g+'">Buy</button></div>';
+  }
+  h+='<div style="text-align:center;margin-top:15px"><button class="btn" style="width:100%;padding:10px;font-size:13px" id="donBtn">❤️ Donate / Support</button></div>';
+  pc.innerHTML=h;
+  pc.querySelectorAll("[data-g]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      dialog("Payment","Payment integration coming soon!\n\n+ "+btn.dataset.g+" gems added (test mode).",[
+        {t:"OK",f:function(){S.g+=parseInt(btn.dataset.g);cls();draw();}}
+      ]);
+    });
+  });
+  $("donBtn").addEventListener("click",function(){
+    dialog("Support the Dev!","Cyber Realm Idle is free & ad-free.\n\nBTC: bc1q...\nETH: 0x...\n\nThank you! ❤️",[
+      {t:"Close",f:function(){cls();}}
+    ]);
+  });
+}
+
+function showStats(){
+  showPanel(true);
+  $("panel-title").textContent="📊 Statistics";
+  $("panel-tabs").style.display="none";
+  var h='<div class="sec">📊 Statistics</div>';
+  [["Total Clicks",f(S.cl)],["Total Credits",f(S.ct)],["Tap Power",f(S.cp)],["Credits/sec",f(getCPS())],["Global Mult",S.gm.toFixed(1)+"x"],["Realm Level",S.rl],["Bosses Defeated",S.bs],["Prestige",S.pr],["Prestige Pts",S.pp.toFixed(1)],["Gems",S.g],["Achievements",S.ac.length+"/"+ACHS.length]].forEach(function(r){
+    h+='<div class="stat-row"><span class="sl">'+r[0]+'</span><span class="sv">'+r[1]+'</span></div>';
+  });
+  h+='<button class="btn" style="width:100%;margin-top:10px;padding:10px;font-size:13px" id="svBtn">💾 Save Game</button>';
+  h+='<button class="danger" id="rsBtn">🗑️ Delete All Progress</button>';
+  $("pc").innerHTML=h;
+  $("svBtn").addEventListener("click",function(){save();});
+  $("rsBtn").addEventListener("click",function(){
+    dialog("Delete ALL?","This cannot be undone!",[
+      {t:"Cancel",f:function(){cls();}},
+      {t:"Delete",f:function(){localStorage.removeItem("cri_save");location.reload();}}
+    ]);
+  });
+}
+
+function showSettings(){
+  showPanel(true);
+  $("panel-title").textContent="⚙️ Settings";
+  $("panel-tabs").style.display="none";
+  var h='<div class="sec">⚙️ Settings</div>';
+  h+='<div class="settings-row"><label>Prestige Points</label><span style="color:#ffd700">'+S.pp.toFixed(1)+'</span></div>';
+  h+='<div class="settings-row"><label>Total Prestige</label><span>'+S.pr+'</span></div>';
+  h+='<div class="settings-row"><label>Click Bonus</label><span style="color:#0f0">+'+Math.floor(S.pp*10)+'%</span></div>';
+  h+='<button class="btn" style="width:100%;margin-top:10px;padding:10px;font-size:13px;background:#ffd7003;border-color:#ffd700" id="prBtn">🌟 Prestige ('+Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5)+' pts)</button>';
+  h+='<button class="btn" style="width:100%;margin-top:6px;padding:10px;font-size:13px" id="exBtn">📤 Export Save</button>';
+  h+='<button class="btn" style="width:100%;margin-top:6px;padding:10px;font-size:13px" id="imBtn">📥 Import Save</button>';
+  h+='<button class="danger" style="margin-top:10px" id="delBtn">🗑️ Delete All Progress</button>';
+  $("pc").innerHTML=h;
+
+  $("prBtn").addEventListener("click",function(){
+    var pts=Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5);
+    if(pts<1)return;
+    dialog("🌟 Prestige","Reset progress to gain "+pts+" prestige points?\nPermanent tap bonus: +"+Math.floor(pts*10)+"%",[
+      {t:"Cancel",f:function(){cls();showPanel(false);}},
+      {t:"Prestige!",f:function(){doPrestige();showPanel(false);}}
+    ]);
+  });
+  $("exBtn").addEventListener("click",function(){prompt("Copy this save code:",btoa(JSON.stringify(S)));});
+  $("imBtn").addEventListener("click",function(){
+    var d=prompt("Paste save code:");if(!d)return;
+    try{var v=JSON.parse(atob(d));Object.assign(S,v);save();showPanel(false);draw();}catch(e){alert("Invalid save");}
+  });
+  $("delBtn").addEventListener("click",function(){
+    dialog("Delete ALL?","This cannot be undone!",[
+      {t:"Cancel",f:function(){cls();}},
+      {t:"DELETE",f:function(){localStorage.removeItem("cri_save");location.reload();}}
+    ]);
+  });
+}
+
+function showShop(){
+  showPanel(true);
+  $("panel-title").textContent="🛒 Shop";
+  $("panel-tabs").style.display="none";
+  drawShopFull($("pc"));
+}
+
+function showUpgrades(){
+  showPanel(true);
+  $("panel-title").textContent="⬆️ Upgrades";
+  $("panel-tabs").style.display="";
+  currentTab="up";
+  $("panel-tabs").querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="up");});
+  renderPanel();
+}
+
+// ═══ NAV ═══
 document.querySelectorAll(".ft").forEach(function(ft){
-  ft.onclick=function(){
-    document.querySelectorAll(".ft").forEach(function(x){x.classList.remove("on");});
-    ft.classList.add("on");
+  ft.addEventListener("click",function(){
+    document.querySelectorAll(".ft").forEach(function(x){x.classList.remove("a");});
+    ft.classList.add("a");
     var v=ft.dataset.v;
-    if(v==="g"){draw();}
-    else if(v==="s"){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});document.querySelector("[data-t=sh]").classList.add("on");drawShop(document.getElementById("pc"));}
-    else if(v==="i"){
-      document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});
-      var html='<div class="sec">📊 Stats</div>';
-      [["Clicks",S.cl],["Total Credits",f(S.ct)],["Tap Power",f(S.cp)],["Per Sec",f(S.ps*S.gm)],["Realm",S.rl],["Bosses",S.bs],["Gems",S.g]].forEach(function(r){
-        html+='<div style="display:flex;justify-content:space-between;font-size:10px;padding:2px 0;border-bottom:1px solid rgba(0,255,255,.05)"><span style="color:#666">'+r[0]+'</span><span>'+r[1]+'</span></div>';
-      });
-      html+='<button style="background:rgba(0,255,255,.2);border:none;color:#0ff;padding:5px;border-radius:3px;width:100%;margin-top:8px;cursor:pointer" id="svBtn">💾 Save</button>';
-      html+='<button style="background:rgba(255,0,68,.3);border:none;color:#fff;padding:5px;border-radius:3px;width:100%;margin-top:4px;cursor:pointer" id="rsBtn">🗑️ Reset</button>';
-      document.getElementById("pc").innerHTML=html;
-      document.getElementById("svBtn").onclick=function(){save();};
-      document.getElementById("rsBtn").onclick=function(){localStorage.removeItem("cri_save");location.reload();};
-    }
-    else if(v==="c"){
-      document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});
-      var pp=document.getElementById("pc");
-      pp.innerHTML='<div class="sec">⚙️ Config</div>'+
-        '<button style="background:rgba(0,255,255,.2);border:none;color:#0ff;padding:5px;border-radius:3px;width:100%;margin:4px 0;cursor:pointer" id="exBtn">📤 Export Save</button>'+
-        '<button style="background:rgba(0,255,255,.2);border:none;color:#0ff;padding:5px;border-radius:3px;width:100%;margin:4px 0;cursor:pointer" id="imBtn">📥 Import Save</button>'+
-        '<button style="background:rgba(255,215,0,.2);border:none;color:#ffd700;padding:5px;border-radius:3px;width:100%;margin:4px 0;cursor:pointer" id="prBtn">🌟 Prestige</button>';
-      document.getElementById("exBtn").onclick=function(){prompt("Copy save:",btoa(JSON.stringify(S)));};
-      document.getElementById("imBtn").onclick=function(){
-        var d=prompt("Paste save:");if(!d)return;
-        try{var v=JSON.parse(atob(d));for(var k in v)S[k]=v[k];draw();}catch(e){alert("Invalid");}
-      };
-      document.getElementById("prBtn").onclick=function(){
-        var pts=Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5);
-        if(pts<1)return;
-        if(confirm("Prestige for "+pts+" points?")){
-          S.pr++;S.pp+=pts;
-          S.c=0;S.ct=0;S.n=0;S.d=0;S.e=0;S.cl=0;
-          S.cp=1+S.pp*0.1;S.ps=0;S.gm=1;S.dm=1;S.ns=0;S.ds=0;S.es=0;
-          S.rl=1;S.rp=0;S.rg=100;S.up={};S.cb=null;S.bh=0;
-          draw();
-        }
-      };
-    }
-  };
+    if(v==="game"){showPanel(false);draw();}
+    else if(v==="upgrades"){showUpgrades();}
+    else if(v==="boss"){showPanel(true);$("panel-title").textContent="👹 Bosses";$("panel-tabs").style.display="";currentTab="bo";$("panel-tabs").querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="bo");});renderPanel();}
+    else if(v==="shop"){showShop();}
+    else if(v==="stats"){showStats();}
+  });
 });
 
-// Loop
+// ═══ SAVE/LOAD ═══
+function save(){S.lastSave=Date.now();localStorage.setItem("cri_save",JSON.stringify(S));}
+function load(){try{var d=localStorage.getItem("cri_save");if(d){var v=JSON.parse(d);Object.assign(S,v);}}catch(e){}}
+
+// ═══ LOOP ═══
 setInterval(function(){
-  if(S.ps>0){var inc=S.ps*S.gm;S.c+=inc;S.ct+=inc;S.rp+=inc;}
+  var dt=0.3;
+  if(getCPS()>0){var inc=getCPS()*dt;S.c+=inc;S.ct+=inc;S.rp+=inc;}
   while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
-  if(!S.cb&&S.rl>=5&&Math.random()<0.002)sumBoss();
+  if(Date.now()-S.lastSave>15000)save();
   draw();
 },300);
 
-setInterval(function(){save();},10000);
-
-// Init
-load();
-draw();
-
+// ═══ INIT ═══
+load();draw();
 })();
 </script>
 </body>
