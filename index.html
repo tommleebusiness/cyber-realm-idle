@@ -1,111 +1,104 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0a0a1a">
-<title>Cyber Realm Idle v3</title>
-<style>
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#050510"><title>Cyber Realm Idle</title><style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{background:#050510;color:#0ff;font-family:'Segoe UI',system-ui,sans-serif;height:100%;overflow:hidden}
-body{display:flex;flex-direction:column;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+body{display:flex;flex-direction:column;touch-action:manipulation;-webkit-user-select:none}
 
-/* LOGIN */
-#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;background:radial-gradient(ellipse at 50% 30%,rgba(0,255,255,.08),transparent 70%)}
-#login-screen h1{font-size:2em;letter-spacing:4px;text-shadow:0 0 20px #0ff;margin-bottom:8px}
-#login-screen .sub{color:#0f0;font-size:.9em;margin-bottom:20px}
-.login-form{width:100%;max-width:320px}
-.login-form input{width:100%;padding:14px;margin-bottom:10px;background:rgba(0,255,255,.05);border:1px solid #0ff3;border-radius:8px;color:#0ff;font-size:16px;outline:none;transition:.2s}
-.login-form input:focus{border-color:#0ff;box-shadow:0 0 12px #0ff3}
-.login-form input::placeholder{color:#0ff5}
+/* ═══ ЭКРАНЫ ═══ */
+#login-scr,#game-scr,#chat-scr{display:none;flex-direction:column;height:100%}
+#login-scr.act,#game-scr.act,#chat-scr.act{display:flex}
+
+#login-scr{align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 50% 30%,rgba(0,255,255,.08),transparent 70%)}
+#login-scr h1{font-size:2em;letter-spacing:4px;text-shadow:0 0 20px #0ff;margin-bottom:8px}
+#login-scr .sub{color:#0f0;font-size:.9em;margin-bottom:20px}
+.fld{width:100%;max-width:320px}
+.fld input{width:100%;padding:14px;margin-bottom:10px;background:rgba(0,255,255,.05);border:1px solid #0ff3;border-radius:8px;color:#0ff;font-size:16px;outline:none;transition:.2s}
+.fld input:focus{border-color:#0ff;box-shadow:0 0 12px #0ff3}
+.fld input::placeholder{color:#0ff5}
 .btn{width:100%;padding:14px;background:linear-gradient(135deg,#0ff,#4af);border:none;border-radius:8px;color:#000;font-size:16px;font-weight:bold;cursor:pointer;transition:.15s;margin-top:4px}
 .btn:active{transform:scale(.96)}
-.btn-sec{width:100%;padding:14px;background:transparent;border:1px solid #0ff5;color:#0ff;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;margin-top:4px}
-.auth-msg{text-align:center;font-size:12px;margin-top:10px;min-height:18px}
-.auth-msg.ok{color:#0f0}.auth-msg.err{color:#f04}
+.btn2{width:100%;padding:14px;background:transparent;border:1px solid #0ff5;color:#0ff;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;margin-top:4px}
+.msg{text-align:center;font-size:12px;margin-top:10px;min-height:18px}
+.msg.ok{color:#0f0}.msg.err{color:#f04}
 
-/* GAME */
-#game-screen{display:none;flex-direction:column;height:100%}
+/* ═══ ИГРА ═══ */
 header{background:linear-gradient(180deg,#0a1628,#0d1025);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0ff4;flex-shrink:0}
 header h1{font-size:14px;letter-spacing:3px;text-shadow:0 0 8px #0ff}
-.user-info{display:flex;align-items:center;gap:8px;font-size:11px}
-.user-info .name{color:#ffd700;font-weight:bold}
-.logout-btn{background:none;border:1px solid #f045;color:#f04;padding:4px 8px;border-radius:3px;font-size:10px;cursor:pointer}
-.res-bar{display:flex;justify-content:space-around;padding:5px;background:#0d1025;border-bottom:1px solid #0ff3;flex-shrink:0;font-size:11px;flex-wrap:wrap}
+.uinfo{display:flex;align-items:center;gap:8px;font-size:11px}
+.uinfo .nm{color:#ffd700;font-weight:bold}
+.dot{width:8px;height:8px;border-radius:50%;background:#0f0;display:inline-block;margin-right:4px}
+.lout{background:none;border:1px solid #f045;color:#f04;padding:3px 8px;border-radius:3px;font-size:10px;cursor:pointer}
+.res{display:flex;justify-content:space-around;padding:5px;background:#0d1025;border-bottom:1px solid #0ff3;flex-shrink:0;font-size:11px;flex-wrap:wrap}
 .r{display:flex;align-items:center;gap:3px}
 .v{color:#ffd700;font-weight:bold}
-.rate{color:#0f0;font-size:9px}
+.rt{color:#0f0;font-size:9px}
 
 #area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
-#tap-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:0}
+#tape{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:0}
 
-#tap-btn{width:160px;height:160px;border-radius:50%;border:3px solid #0ff;
+#tpbtn{width:160px;height:160px;border-radius:50%;border:3px solid #0ff;
 background:radial-gradient(circle at 35% 35%,rgba(0,255,255,.2),#0a0a2a 70%);
-color:#0ff;font-size:14px;cursor:pointer;
-box-shadow:0 0 30px rgba(0,255,255,.3),inset 0 0 20px rgba(0,255,255,.1);
-font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-#tap-btn .inner{text-align:center}
-#tap-btn .big{font-size:38px;display:block;line-height:1}
-#tap-btn .tap-text{font-size:14px;letter-spacing:2px}
-#tap-btn.pressed{transform:scale(.88);box-shadow:0 0 60px rgba(0,255,255,.7)}
-#tap-btn.pressed .big{transform:scale(1.15)}
-.tap-ripple{position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;border:2px solid rgba(0,255,255,.5);animation:ripple .5s ease-out forwards;pointer-events:none}
-@keyframes ripple{to{width:200px;height:200px;margin-top:-100px;margin-left:-100px;opacity:0}}
-
-#tap-info{font-size:13px;color:#0f0;margin:6px 0;min-height:18px;text-align:center}
-#cps{font-size:10px;color:#666;text-align:center}
+color:#0ff;font-size:14px;cursor:pointer;box-shadow:0 0 30px rgba(0,255,255,.3),inset 0 0 20px rgba(0,255,255,.1);
+font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation;overflow:visible;position:relative}
+#tpbtn .in{text-align:center}
+#tpbtn .bg{font-size:38px;display:block;line-height:1}
+#tpbtn .tx{font-size:14px;letter-spacing:2px}
+#tpbtn.active{transform:scale(.88);box-shadow:0 0 60px rgba(0,255,255,.7)}
+#tpbtn.active .bg{transform:scale(1.15)}
+.ripple{position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;border:2px solid rgba(0,255,255,.5);animation:rip .5s ease-out forwards;pointer-events:none}
+@keyframes rip{to{width:200px;height:200px;margin-top:-100px;margin-left:-100px;opacity:0}}
+#tpinfo{font-size:13px;color:#0f0;margin:6px 0;min-height:18px;text-align:center}
+#tcps{font-size:10px;color:#666;text-align:center}
 #prog{width:200px;margin:8px auto}
 #prog-bg{background:#1a1a2e;border-radius:4px;height:6px;overflow:hidden}
-#prog-fill{height:100%;background:linear-gradient(90deg,#0ff,#0f0);border-radius:4px;width:0%;transition:.3s}
+#prog-fi{height:100%;background:linear-gradient(90deg,#0ff,#0f0);border-radius:4px;width:0%;transition:.3s}
 #prog-t{text-align:center;font-size:10px;color:#666;margin-top:3px}
 
-#parts{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:10}
+#pts{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:10}
 .pt{position:absolute;font-size:14px;font-weight:bold;animation:fly .8s ease-out forwards;pointer-events:none;z-index:11}
 .pt.big{font-size:20px;color:#ffd700;text-shadow:0 0 8px #ffd700}
 @keyframes fly{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-100px) scale(.5)}}
 
 footer{display:flex;background:#0d1025;border-top:1px solid #0ff3;flex-shrink:0}
-footer .ft{flex:1;text-align:center;padding:10px 4px;font-size:10px;cursor:pointer;color:#555;transition:.15s;-webkit-tap-highlight-color:transparent}
-footer .ft.on{color:#0ff;text-shadow:0 0 5px #0ff}
-footer .ft:active{background:rgba(0,255,255,.1)}
+footer .tab{flex:1;text-align:center;padding:10px 4px;font-size:11px;cursor:pointer;color:#555;transition:.15s;-webkit-tap-highlight-color:transparent}
+footer .tab.on{color:#0ff;text-shadow:0 0 5px #0ff}
+footer .tab:active{background:rgba(0,255,255,.1)}
 
-/* PANEL */
+/* ═══ ПАНЕЛЬ ═══ */
 #panel{position:fixed;top:0;left:0;width:100%;height:100%;background:#050510;z-index:50;display:none;flex-direction:column}
-#panel.open{display:flex}
-#panel-head{display:flex;align-items:center;padding:8px 10px;border-bottom:1px solid #0ff3;background:#0d1025;min-height:40px}
-#panel-head h2{flex:1;font-size:13px;letter-spacing:2px;text-shadow:0 0 8px #0ff}
-#cPan{background:none;border:1px solid #0ff5;color:#0ff;padding:5px 10px;border-radius:4px;font-size:11px;cursor:pointer}
-.tabs{display:flex;border-bottom:1px solid #0ff2;background:#0d1025;overflow-x:auto;flex-shrink:0}
-.tab{min-width:60px;text-align:center;padding:8px 6px;font-size:11px;cursor:pointer;color:#666;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent}
-.tab.on{color:#0ff;border-color:#0ff}
-.tab:active{background:rgba(0,255,255,.1)}
-#pc{flex:1;overflow-y:auto;padding:8px;-webkit-overflow-scrolling:touch}
+#panel.act{display:flex}
+#ph{display:flex;align-items:center;padding:8px 10px;border-bottom:1px solid #0ff3;background:#0d1025;min-height:40px}
+#ph h2{flex:1;font-size:13px;letter-spacing:2px;text-shadow:0 0 8px #0ff}
+#ph button{background:none;border:1px solid #0ff5;color:#0ff;padding:5px 10px;border-radius:4px;font-size:11px;cursor:pointer}
+.ptabs{display:flex;border-bottom:1px solid #0ff2;background:#0d1025;overflow-x:auto;flex-shrink:0}
+.ptab{min-width:70px;text-align:center;padding:10px 8px;font-size:12px;cursor:pointer;color:#666;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.ptab.on{color:#0ff;border-color:#0ff}
+.ptab:active{background:rgba(0,255,255,.1)}
+#pc{flex:1;overflow-y:auto;padding:10px;-webkit-overflow-scrolling:touch}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:#0ff3;border-radius:2px}
 
-.sec{font-size:9px;color:#0ff;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;margin-top:2px}
-.up{background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.15);border-radius:6px;padding:8px;margin-bottom:4px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+/* ═══ КОМПОНЕНТЫ ═══ */
+.sec{font-size:10px;color:#0ff;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;margin-top:4px}
+.up{background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.15);border-radius:8px;padding:10px;margin-bottom:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .up:active{background:rgba(0,255,255,.12)}
-.up .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.up .nm{color:#0ff;font-weight:bold;font-size:12px}
-.up .lv{color:#ffd700;font-size:10px}
-.up .d{color:#777;font-size:10px;margin-bottom:2px}
-.up .c{color:#ffd700;font-size:11px}
+.up .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.up .nm{color:#0ff;font-weight:bold;font-size:13px}
+.up .lv{color:#ffd700;font-size:11px}
+.up .d{color:#777;font-size:11px;margin-bottom:3px}
+.up .c{color:#ffd700;font-size:12px}
 .up .c.ok{color:#0f0}
 .up.m{opacity:.3;cursor:default}
 
-.boss-card{background:linear-gradient(135deg,rgba(255,0,68,.08),rgba(255,100,0,.06));border:1px solid #f045;border-radius:8px;padding:10px;margin-bottom:6px}
-.boss-card .bn{color:#f04;font-weight:bold;font-size:13px;margin-bottom:3px}
-.boss-card .hp-bar{background:#1a1a2e;border-radius:3px;height:6px;margin:3px 0;overflow:hidden}
-.boss-card .hp-f{height:100%;background:linear-gradient(90deg,#f04,#ff4400);border-radius:3px;transition:.2s}
-.boss-card .st{display:flex;justify-content:space-between;font-size:9px;color:#777}
-.boss-card .rw{color:#ffd700;font-size:10px;margin-top:3px}
-.btn-atk{width:100%;padding:8px;margin-top:4px;background:linear-gradient(135deg,#f04,#ff4400);border:none;border-radius:4px;color:#fff;font-weight:bold;font-size:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.btn-atk:active{transform:scale(.97)}
+.boss{background:linear-gradient(135deg,rgba(255,0,68,.08),rgba(255,100,0,.06));border:1px solid #f045;border-radius:8px;padding:10px;margin-bottom:6px}
+.boss .bn{color:#f04;font-weight:bold;font-size:13px;margin-bottom:3px}
+.boss .hp{background:#1a1a2e;border-radius:3px;height:6px;margin:3px 0;overflow:hidden}
+.boss .hp-f{height:100%;background:linear-gradient(90deg,#f04,#ff4400);border-radius:3px;transition:.2s}
+.boss .st{display:flex;justify-content:space-between;font-size:9px;color:#777}
+.boss .rw{color:#ffd700;font-size:10px;margin-top:3px}
+.atk-btn{width:100%;padding:10px;margin-top:6px;background:linear-gradient(135deg,#f04,#ff4400);border:none;border-radius:4px;color:#fff;font-weight:bold;font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.atk-btn:active{transform:scale(.97)}
 
-.ach{display:flex;align-items:center;gap:6px;padding:6px;background:rgba(0,255,255,.03);border:1px solid rgba(0,255,255,.08);border-radius:3px;margin-bottom:3px}
+.ach{display:flex;align-items:center;gap:6px;padding:6px;background:rgba(0,255,255,.03);border:1px solid rgba(0,255,255,.08);border-radius:4px;margin-bottom:3px}
 .ach.do{border-color:#ffd700;background:rgba(255,215,0,.05)}
 .ach .ic{font-size:18px}
 .ach .inf{flex:1}
@@ -113,286 +106,235 @@ footer .ft:active{background:rgba(0,255,255,.1)}
 .ach .ad{font-size:9px;color:#777}
 .ach .ar{color:#ffd700;font-size:9px}
 
-.stat-row{display:flex;justify-content:space-between;padding:6px 3px;border-bottom:1px solid rgba(0,255,255,.05);font-size:11px}
-.stat-row .sl{color:#777}
-.stat-row .sv{color:#0ff;font-weight:bold}
+.strow{display:flex;justify-content:space-between;padding:6px 3px;border-bottom:1px solid rgba(0,255,255,.05);font-size:11px}
+.strow .sl{color:#777}
+.strow .sv{color:#0ff;font-weight:bold}
 
-.shop-item{background:linear-gradient(135deg,rgba(0,255,255,.05),rgba(170,0,255,.05));border:1px solid #0ff3;border-radius:8px;padding:10px;margin-bottom:6px;text-align:center}
-.shop-item .si{font-size:24px;margin-bottom:3px}
-.shop-item .sn{color:#0ff;font-weight:bold;font-size:13px}
-.shop-item .sd{color:#777;font-size:11px;margin:3px 0}
-.shop-item .sp{color:#ffd700;font-size:14px;font-weight:bold}
-.shop-item button{margin-top:4px;background:linear-gradient(135deg,#0ff,#4af);border:none;color:#000;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.shop-item button:active{transform:scale(.95)}
+.shop{background:linear-gradient(135deg,rgba(0,255,255,.05),rgba(170,0,255,.05));border:1px solid #0ff3;border-radius:8px;padding:10px;margin-bottom:6px;text-align:center}
+.shop .si{font-size:24px;margin-bottom:3px}
+.shop .sn{color:#0ff;font-weight:bold;font-size:13px}
+.shop .sd{color:#777;font-size:11px;margin:3px 0}
+.shop .sp{color:#ffd700;font-size:14px;font-weight:bold}
+.shop button{margin-top:4px;background:linear-gradient(135deg,#0ff,#4af);border:none;color:#000;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.shop button:active{transform:scale(.95)}
 
 .danger{background:#f043;border:1px solid #f045;color:#f04;padding:6px;border-radius:4px;font-size:11px;cursor:pointer;margin-top:6px;width:100%;-webkit-tap-highlight-color:transparent}
 
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
-.overlay.show{display:flex}
+.overlay.act{display:flex}
 .overlay-box{background:#0d1025;border:1px solid #0ff;border-radius:12px;padding:15px;max-width:320px;width:100%;text-align:center}
 .overlay-box h3{color:#0ff;font-size:14px;margin-bottom:8px}
-.overlay-box p{color:#888;font-size:12px;margin-bottom:12px;line-height:1.5}
+.overlay-box p{color:#888;font-size:12px;margin-bottom:15px;line-height:1.5}
 .overlay-box button{background:#0ff;border:none;color:#000;padding:6px 15px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;margin:3px;-webkit-tap-highlight-color:transparent}
 .overlay-box button:active{transform:scale(.95)}
 
 /* CHAT */
-#chat-screen{display:none;flex-direction:column;height:100%}
-#chat-header{display:flex;align-items:center;padding:8px;border-bottom:1px solid #0ff3;background:#0d1025;min-height:40px}
-#chat-header h2{flex:1;font-size:13px;letter-spacing:2px}
-#cChat{background:none;border:1px solid #0ff5;color:#0ff;padding:5px 10px;border-radius:4px;font-size:11px;cursor:pointer}
-.chat-tabs{display:flex;border-bottom:1px solid #0ff2;flex-shrink:0}
-.chat-tab{flex:1;text-align:center;padding:8px;font-size:11px;cursor:pointer;color:#666;border-bottom:2px solid transparent}
-.chat-tab.on{color:#0ff;border-color:#0ff}
-#chat-msgs{flex:1;overflow-y:auto;padding:8px;-webkit-overflow-scrolling:touch}
-.chat-msg{margin-bottom:6px;padding:8px;background:rgba(0,255,255,.03);border-radius:6px;border-left:2px solid #0ff}
-.chat-msg .author{color:#ffd700;font-weight:bold;font-size:10px}
-.chat-msg .text{color:#ccc;font-size:12px;margin-top:2px;word-break:break-word}
-.chat-msg .time{color:#555;font-size:9px;margin-top:2px;text-align:right}
-.chat-msg.own{border-left-color:#ffd700;background:rgba(255,215,0,.05)}
-#chat-input-wrap{display:flex;padding:8px;border-top:1px solid #0ff2;gap:6px;flex-shrink:0}
-#chat-input{flex:1;padding:10px;background:rgba(0,255,255,.05);border:1px solid #0ff3;border-radius:4px;color:#0ff;font-size:13px;outline:none}
-#chat-input:focus{border-color:#0ff}
-#chat-send{padding:10px 14px;background:#0ff;border:none;border-radius:4px;color:#000;font-weight:bold;font-size:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-#chat-send:active{transform:scale(.95)}
-#owl-indicator{font-size:10px;color:#a0f;text-align:center;padding:4px;display:none;background:rgba(170,0,255,.05)}
+#chtabs{display:flex;border-bottom:1px solid #0ff2;flex-shrink:0}
+.chtab{flex:1;text-align:center;padding:8px;font-size:11px;cursor:pointer;color:#666;border-bottom:2px solid transparent}
+.chtab.on{color:#0ff;border-color:#0ff}
+#chmsgs{flex:1;overflow-y:auto;padding:8px;-webkit-overflow-scrolling:touch}
+.chmsg{margin-bottom:6px;padding:8px;background:rgba(0,255,255,.03);border-radius:6px;border-left:2px solid #0ff}
+.chmsg .auth{color:#ffd700;font-weight:bold;font-size:10px}
+.chmsg .txt{color:#ccc;font-size:12px;margin-top:2px;word-break:break-word}
+.chmsg .time{color:#555;font-size:9px;margin-top:2px;text-align:right}
+.chmsg.me{border-left-color:#ffd700;background:rgba(255,215,0,.05)}
+#chowli{font-size:10px;color:#a0f;text-align:center;padding:4px;display:none;background:rgba(170,0,255,.05)}
+#chinp{display:flex;padding:8px;border-top:1px solid #0ff2;gap:6px;flex-shrink:0}
+#chinp input{flex:1;padding:10px;background:rgba(0,255,255,.05);border:1px solid #0ff3;border-radius:4px;color:#0ff;font-size:13px;outline:none}
+#chinp input:focus{border-color:#0ff}
+#chinp button{padding:10px 14px;background:#0ff;border:none;border-radius:4px;color:#000;font-weight:bold;font-size:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#chinp button:active{transform:scale(.95)}
 
 /* BOSS FIGHT */
-#boss-fight{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,16,.95);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-#boss-fight.show{display:flex}
-#bf-sprite{font-size:64px;animation:bossBounce 1s ease-in-out infinite}
-@keyframes bossBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-#bf-name{color:#f04;font-size:18px;font-weight:bold;text-shadow:0 0 12px #f04;margin:10px 0}
-.floating-dmg{position:absolute;font-size:20px;font-weight:bold;color:#f04;animation:floatDmg .8s ease-out forwards;pointer-events:none;z-index:201}
-@keyframes floatDmg{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px)}}
+#bfight{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,16,.95);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#bfight.act{display:flex}
+#bfs{font-size:64px;animation:bbounce 1s ease-in-out infinite}
+@keyframes bbounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+#bfn{color:#f04;font-size:18px;font-weight:bold;text-shadow:0 0 12px #f04;margin:10px 0}
+.fdmg{position:absolute;font-size:20px;font-weight:bold;color:#f04;animation:fd .8s ease-out forwards;pointer-events:none;z-index:201}
+@keyframes fd{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px)}}
 
-/* MOBILE */
 @media(max-width:480px){
   header h1{font-size:12px;letter-spacing:2px}
   header{padding:6px 8px}
-  .res-bar{font-size:9px;padding:3px}
+  .res{font-size:9px;padding:3px}
   .r{flex-direction:column;gap:0;font-size:8px}
-  #tap-btn{width:130px;height:130px}
-  #tap-btn .big{font-size:30px}
-  #tap-btn .tap-text{font-size:12px}
-  .tab{min-width:50px;padding:6px 4px;font-size:10px}
-  .up{padding:6px}
-  .up .nm{font-size:11px}
-  .login-form input{padding:12px;font-size:14px}
-  .btn{padding:12px;font-size:14px}
+  #tpbtn{width:140px;height:140px}
+  #tpbtn .bg{font-size:32px}
+  #tpbtn .tx{font-size:12px}
+  footer .tab{padding:8px 2px;font-size:9px;min-width:44px}
+  .ptab{min-width:55px;padding:8px 5px;font-size:10px}
+  .up{padding:8px}
+  .up .nm{font-size:12px}
+  .shop .sn{font-size:12px}
 }
 @media(min-width:800px){
-  #tap-btn{width:180px;height:180px}
-  #tap-btn .big{font-size:44px}
+  #tpbtn{width:180px;height:180px}
+  #tpbtn .bg{font-size:44px}
 }
+</style></head><body>
 
-.online-dot{width:8px;height:8px;border-radius:50%;background:#0f0;display:inline-block;margin-right:4px;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-</style>
-</head>
-<body>
-
-<!-- LOGIN -->
-<div id="login-screen">
+<div id="login-scr">
   <h1>⚡ CYBER REALM ⚡</h1>
-  <div class="sub">Futuristic Idle Game v3.0</div>
-  <div class="login-form">
-    <input type="text" id="auth-user" placeholder="Имя пользователя" maxlength="20">
-    <input type="password" id="auth-pass" placeholder="Пароль" maxlength="30">
-    <div class="auth-msg" id="auth-msg"></div>
-    <button class="btn" id="auth-login">Войти</button>
-    <button class="btn-sec" id="auth-register">Регистрация</button>
+  <div class="sub">Футуристическая Idle Игра v3.0</div>
+  <div class="fld">
+    <input type="text" id="au" placeholder="Имя пользователя" maxlength="20">
+    <input type="password" id="ap" placeholder="Пароль" maxlength="30">
+    <div class="msg" id="amsg"></div>
+    <button class="btn" id="alogin">Войти</button>
+    <button class="btn2" id="areg">Регистрация</button>
   </div>
 </div>
 
-<!-- GAME -->
-<div id="game-screen">
-  <header>
-    <h1>⚡ CYBER REALM ⚡</h1>
-    <div class="user-info">
-      <span class="online-dot"></span>
-      <span class="name" id="user-name"></span>
-      <button class="logout-btn" id="logout-btn">Выйти</button>
-    </div>
-  </header>
-  <div class="res-bar">
-    <span class="r">💎 <span class="v" id="rc">0</span><span class="rate" id="rcR"></span></span>
-    <span class="r">⚡ <span class="v" id="rn">0</span></span>
-    <span class="r">🧬 <span class="v" id="rd">0</span></span>
-    <span class="r">🌀 <span class="v" id="re">0</span></span>
+<div id="game-scr">
+  <header><h1>⚡ CYBER REALM ⚡</h1><div class="uinfo"><span class="dot"></span><span class="nm" id="uname"></span><button class="lout" id="lout">Выйти</button></div></header>
+  <div class="res">
+    <span class="r">💎<span class="v" id="rc">0</span><span class="rt" id="rcR"></span></span>
+    <span class="r">⚡<span class="v" id="rn">0</span></span>
+    <span class="r">🧬<span class="v" id="rd">0</span></span>
+    <span class="r">🌀<span class="v" id="re">0</span></span>
   </div>
-  <div id="area">
-    <div id="tap-zone">
-      <div id="parts"></div>
-      <button id="tap-btn"><div class="inner"><span class="big">⚡</span><span class="tap-text">TAP</span></div></button>
-      <div id="tap-info"></div>
-      <div id="cps">в сек: 0 | тапов: 0</div>
-      <div id="prog"><div id="prog-bg"><div id="prog-fill"></div></div><div id="prog-t">Реймлв.1 — Цифровой Нексус</div></div>
-    </div>
-  </div>
+  <div id="area"><div id="tape"><div id="pts"></div><button id="tpbtn"><div class="in"><span class="bg">⚡</span><span class="tx">НАЖМИ</span></div></button><div id="tpinfo"></div><div id="tcps">в сек: 0 | тапов: 0</div><div id="prog"><div id="prog-bg"><div id="prog-fi"></div></div><div id="prog-t">Рейм ур.1 — Цифровой Нексус</div></div></div></div>
   <footer>
-    <div class="ft on" data-v="game">🎮 Игра</div>
-    <div class="ft" data-v="up">⬆️ Улучшения</div>
-    <div class="ft" data-v="bo">👹 Боссы</div>
-    <div class="ft" data-v="ch">💬 Чат</div>
-    <div class="ft" data-v="st">📊 Стат</div>
+    <div class="tab on" id="tgame"><div style="font-size:18px">🎮</div><div>Игра</div></div>
+    <div class="tab" id="tup"><div style="font-size:18px">⬆️</div><div>Улучш.</div></div>
+    <div class="tab" id="tbo"><div style="font-size:18px">👹</div><div>Боссы</div></div>
+    <div class="tab" id="tch"><div style="font-size:18px">💬</div><div>Чат</div></div>
+    <div class="tab" id="tst"><div style="font-size:18px">⚙️</div><div>Ещё</div></div>
   </footer>
 </div>
 
-<!-- PANEL -->
-<div id="panel">
-  <div id="panel-head"><h2 id="panT">⬆️ Улучшения</h2><button id="cPan">✕</button></div>
-  <div class="tabs" id="panTabs">
-    <div class="tab on" data-t="up">⬆️</div>
-    <div class="tab" data-t="bo">👹</div>
-    <div class="tab" data-t="ac">🏆</div>
-    <div class="tab" data-t="qu">📜</div>
-    <div class="tab" data-t="sh">🛒</div>
-  </div>
-  <div id="pc"></div>
+<div id="panel"><div id="ph"><h2 id="ptitle">⬆️ Улучшения</h2><button id="pcan">✕</button></div><div id="ptabs"><div class="ptab on" data-t="up">⬆️</div><div class="ptab" data-t="bo">👹</div><div class="ptab" data-t="ac">🏆</div><div class="ptab" data-t="qu">📜</div><div class="ptab" data-t="sh">🛒</div></div><div id="pc"></div></div>
+
+<div id="chat-scr">
+  <header><h1>💬 Чат</h1><button class="lout" id="cback">✕</button></header>
+  <div id="chtabs"><div class="chtab on" data-ct="g">🌍 Общий</div><div class="chtab" data-ct="o">🦉 OWL</div></div>
+  <div id="chmsgs"></div>
+  <div id="chowli">🦉 OWL думает...</div>
+  <div id="chinp"><input type="text" id="chin" placeholder="Напиши сообщение или задание для OWL..." maxlength="200"><button id="chsend">→</button></div>
 </div>
 
-<!-- CHAT -->
-<div id="chat-screen">
-  <div id="chat-header"><h2>💬 Чат</h2><button id="cChat">✕</button></div>
-  <div class="chat-tabs">
-    <div class="chat-tab on" data-ct="global">🌍 Общий</div>
-    <div class="chat-tab" data-ct="owl">🦉 OWL</div>
-  </div>
-  <div id="chat-msgs"></div>
-  <div id="owl-indicator">🦉 OWL is reading...</div>
-  <div id="chat-input-wrap">
-    <input type="text" id="chat-input" placeholder="Напишите сообщение..." maxlength="200">
-    <button id="chat-send">Отправить</button>
-  </div>
-</div>
+<div id="bfight"><div id="bfs">👹</div><div id="bfn">Босс</div><div class="st"><span id="bftext">HP: 100/100</span></div><button class="atk-btn" id="bfatk">⚔️ АТАКОВАТЬ</button></div>
 
-<!-- BOSS FIGHT -->
-<div id="boss-fight">
-  <div id="bf-sprite">👹</div>
-  <div id="bf-name">Boss</div>
-  <div style="width:200px;background:#1a1a2e;border-radius:3px;height:8px;overflow:hidden;margin:8px 0"><div id="bf-hp" style="width:100%;height:100%;background:linear-gradient(90deg,#f04,#ff4400);border-radius:3px;transition:.2s"></div></div>
-  <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;width:200px"><span id="bf-hp-text">HP: 100/100</span></div>
-  <button class="btn-atk" id="bf-attack">⚔️ АТАКОВАТЬ</button>
-</div>
-
-<!-- OVERLAY -->
-<div class="overlay" id="ov"><div class="overlay-box"><h3 id="ovT"></h3><p id="ovP"></p><div id="ovB"></div></div></div>
+<div class="overlay" id="ov"><div class="overlay-box"><h3 id="ovt"></h3><p id="ovp"></p><div id="ovb"></div></div></div>
 
 <script>
 (function(){
 "use strict";
 
 // ═══ AUTH ═══
-var currentUser=null;
+var curUser=null;
 var users={};
-try{users=JSON.parse(localStorage.getItem("cri_users")||"{}");}catch(e){}
+try{users=JSON.parse(localStorage.getItem("cr_users")||"{}");}catch(e){}
+function saveUsers(){localStorage.setItem("cr_users",JSON.stringify(users));}
+function hsh(p){var h=0;for(var i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return h.toString(36);}
+function $(id){return document.getElementById(id);}
 
-function saveUsers(){localStorage.setItem("cri_users",JSON.stringify(users));}
-function hash(p){var h=0;for(var i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return h.toString(36);}
+function showScr(id){$("login-scr").classList.remove("act");$("game-scr").classList.remove("act");$("chat-scr").classList.remove("act");$(id+"-scr").classList.add("act");}
 
-function showScreen(id){
-  document.getElementById("login-screen").style.display="none";
-  document.getElementById("game-screen").style.display="none";
-  document.getElementById("chat-screen").style.display="none";
-  if(id==="login")document.getElementById("login-screen").style.display="flex";
-  if(id==="game")document.getElementById("game-screen").style.display="flex";
-  if(id==="chat")document.getElementById("chat-screen").style.display="flex";
-}
+function amsg(m,t){var e=$("amsg");e.textContent=m;e.className="msg "+(t||"");}
 
-function authMsg(msg,type){
-  var el=document.getElementById("auth-msg");
-  el.textContent=msg;el.className="auth-msg "+(type||"");
-}
-
-document.getElementById("auth-login").onclick=function(){
-  var u=document.getElementById("auth-user").value.trim();
-  var p=document.getElementById("auth-pass").value;
-  if(!u||!p){authMsg("Fill all fields","err");return;}
-  if(!users[u]){authMsg("User not found","err");return;}
-  if(users[u].pass!==hash(p)){authMsg("Wrong password","err");return;}
-  currentUser=u;
-  users[u].lastLogin=Date.now();
-  saveUsers();
-  loadGame();
-  showScreen("game");
-  authMsg("","");
+$("alogin").onclick=function(){
+  var u=$("au").value.trim(),p=$("ap").value;
+  if(!u||!p){amsg("Заполни все поля","err");return;}
+  if(!users[u]){amsg("Пользователь не найден","err");return;}
+  if(users[u].pass!==hsh(p)){amsg("Неверный пароль","err");return;}
+  curUser=u;users[u].lastLogin=Date.now();saveUsers();
+  loadGame();showScr("game");amsg("","");
 };
-
-document.getElementById("auth-register").onclick=function(){
-  var u=document.getElementById("auth-user").value.trim();
-  var p=document.getElementById("auth-pass").value;
-  if(!u||!p){authMsg("Fill all fields","err");return;}
-  if(u.length<3){authMsg("Username min 3 chars","err");return;}
-  if(p.length<4){authMsg("Password min 4 chars","err");return;}
-  if(users[u]){authMsg("Username taken","err");return;}
-  users[u]={pass:hash(p),created:Date.now(),lastLogin:Date.now()};
-  saveUsers();
-  currentUser=u;
-  initNewGame();
-  showScreen("game");
-  authMsg("Account created!","ok");
+$("areg").onclick=function(){
+  var u=$("au").value.trim(),p=$("ap").value;
+  if(!u||!p){amsg("Заполни все поля","err");return;}
+  if(u.length<3){amsg("Минимум 3 символа","err");return;}
+  if(p.length<4){amsg("Минимум 4 символа пароля","err");return;}
+  if(users[u]){amsg("Имя занято","err");return;}
+  users[u]={pass:hsh(p),created:Date.now(),lastLogin:Date.now()};saveUsers();
+  curUser=u;initNewGame();showScr("game");amsg("Аккаунт создан!","ok");
 };
-
-document.getElementById("logout-btn").onclick=function(){
-  saveGame();currentUser=null;
-  showScreen("login");
-  document.getElementById("auth-user").value="";
-  document.getElementById("auth-pass").value="";
-};
+$("lout").onclick=function(){saveGame();curUser=null;showScr("login");};
+$("cback").onclick=function(){showScr("game");};
 
 // ═══ GAME STATE ═══
 var S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0,lastSave:Date.now()};
-var RN=["Цифровой Нексус","Неоновая Сетка","Квантовое Ядро","Кибер-Улей","Тёмная Матрица","Пустотный Сектор","Бесконечный Цикл","Омега-Царство","Альфа-Сингулярность","Кибер-Эдем","Нейросеть","Фантомная Зона","Бинарный Шторм","Хромовая Пустота","Океан Данных","Пустотное Ядро"];
-var UPG=[{n:"Нейро-Связь",d:"+1 тап",cb:10,fn:function(){S.cp+=1},mx:100},{n:"Лазерный Фокус",d:"+5 тапов",cb:100,fn:function(){S.cp+=5},mx:50},{n:"Плазменное Ядро",d:"+25 тапов",cb:1000,fn:function(){S.cp+=25},mx:30},{n:"Нано-Бот",d:"0.5/с",cb:50,fn:function(){S.ps+=0.5},mx:50},{n:"Рой Дронов",d:"2/с",cb:200,fn:function(){S.ps+=2},mx:30},{n:"ИИ-Ядро",d:"10/с",cb:1000,fn:function(){S.ps+=10},mx:20},{n:"Квантовая Ферма",d:"50/с",cb:5000,fn:function(){S.ps+=50},mx:15},{n:"Компрессор",d:"x1.5",cb:250,fn:function(){S.gm*=1.5},mx:5},{n:"Энтропия",d:"x2",cb:2500,fn:function(){S.gm*=2},mx:3},{n:"Solar",d:"+1 ⚡/t",cb:30,fn:function(){S.ns+=1},mx:20},{n:"Дата-Майнер",d:"+1 🧬/t",cb:25,fn:function(){S.ds+=1},mx:20},{n:"Шифратор",d:"x2 data",cb:300,fn:function(){S.dm*=2},mx:5},{n:"Chaos Inj",d:"+1 🌀/t",cb:500,fn:function(){S.es+=1},mx:10}];
-var BS=[{n:"Глитч-Фантом",hp:100,cr:50,ic:"👻"},{n:"Фаервол-Голем",hp:500,cr:200,ic:"🗿"},{n:"Вирусный Рой",hp:2000,cr:800,ic:"🦠"},{n:"Дата-Кракен",hp:8000,cr:3000,ic:"🐙"},{n:"Квантовый Дракон",hp:30000,cr:12000,ic:"🐉"},{n:"Нейро-Владыка",hp:100000,cr:50000,ic:"🧠"},{n:"Пустотный Император",hp:500000,cr:200000,ic:"👑"},{n:"Омега-Сингулярность",hp:2000000,cr:1000000,ic:"🌀"}];
-var ACHS=[{id:"a1",n:"Первый Тап",d:"Нажми один раз",i:"👆",ck:function(){return S.cl>=1}},{id:"a2",n:"Кликер",d:"Нажми 100 раз",i:"🖱️",ck:function(){return S.cl>=100}},{id:"a3",n:"Богач",d:"Заработай 10 000",i:"💰",ck:function(){return S.ct>=10000}},{id:"a4",n:"Boss",d:"Победи 1 босса",i:"⚔️",ck:function(){return S.bs>=1}},{id:"a5",n:"Hunter",d:"Defeat 10",i:"🏆",ck:function(){return S.bs>=10}},{id:"a6",n:"Walker",d:"Реймлв.10",i:"🌌",ck:function(){return S.rl>=10}},{id:"a7",n:"Престиж",d:"Престиж once",i:"🌟",ck:function(){return S.pr>=1}},{id:"a8",n:"Speed",d:"100/s",i:"🚀",ck:function(){return getCPS()>=100}}];
+
+var RN=["Цифровой Нексус","Неоновая Сетка","Квантовое Ядро","Кибер-Улей","Тёмная Матрица","Пустотный Сектор","Бесконечный Цикл","Омега-Царство","Альфа-Сингулярность","Кибер-Эдем","Нейросеть","Фантомная Зона","Бинарный Шторм","Хромовая Пустота","Океан Данных","Пустотное Ядро","Мультивселенная","Тёмная Энергия","Сингулярность"];
+
+var UPG=[
+  {n:"Нейро-Связь",d:"➕1 тап",cb:10,fn:function(){S.cp+=1},mx:100},
+  {n:"Лазерный Фокус",d:"➕5 тапов",cb:100,fn:function(){S.cp+=5},mx:50},
+  {n:"Плазменное Ядро",d:"➕25 тапов",cb:1000,fn:function(){S.cp+=25},mx:30},
+  {n:"Нано-Бот",d:"+0.5/с",cb:50,fn:function(){S.ps+=0.5},mx:50},
+  {n:"Рой Дронов",d:"+2/с",cb:200,fn:function(){S.ps+=2},mx:30},
+  {n:"ИИ-Ядро",d:"+10/с",cb:1000,fn:function(){S.ps+=10},mx:20},
+  {n:"Квантовая Ферма",d:"+50/с",cb:5000,fn:function(){S.ps+=50},mx:15},
+  {n:"Матрица",d:"+200/с",cb:25000,fn:function(){S.ps+=200},mx:10},
+  {n:"Компрессор",d:"×1.5 всё",cb:250,fn:function(){S.gm*=1.5},mx:5},
+  {n:"Двигатель Энтропии",d:"×2 всё",cb:2500,fn:function(){S.gm*=2},mx:3},
+  {n:"Солнечная Панель",d:"+1 ⚡/тап",cb:30,fn:function(){S.ns+=1},mx:20},
+  {n:"Дата-Майнер",d:"+1 🧬/тап",cb:25,fn:function(){S.ds+=1},mx:20},
+  {n:"Шифратор",d:"×2 данные",cb:300,fn:function(){S.dm*=2},mx:5},
+  {n:"Инжектор Хаоса",d:"+1 🌀/тап",cb:500,fn:function(){S.es+=1},mx:10},
+];
+
+var BS=[
+  {n:"Глитч-Фантом",hp:100,cr:50,ic:"👻"},
+  {n:"Фаервол-Голем",hp:500,cr:200,ic:"🗿"},
+  {n:"Вирусный Рой",hp:2000,cr:800,ic:"🦠"},
+  {n:"Дата-Кракен",hp:8000,cr:3000,ic:"🐙"},
+  {n:"Квантовый Дракон",hp:30000,cr:12000,ic:"🐉"},
+  {n:"Нейро-Владыка",hp:100000,cr:50000,ic:"🧠"},
+  {n:"Пустотный Император",hp:500000,cr:200000,ic:"👑"},
+  {n:"Омега-Сингулярность",hp:2e6,cr:1e6,ic:"🌀"},
+  {n:"Тёмная Материя",hp:5e6,cr:2e6,ic:"💫"},
+  {n:"Чёрная Дыра",hp:2e7,cr:5e6,ic:"🕳️"},
+];
+
+var ACHS=[
+  {id:"a1",n:"Первый Тап",d:"Нажми один раз",i:"👆",ck:function(){return S.cl>=1}},
+  {id:"a2",n:"Кликер",d:"Нажми 100 раз",i:"🖱️",ck:function(){return S.cl>=100}},
+  {id:"a3",n:"Богач",d:"Заработай 10 000",i:"💰",ck:function(){return S.ct>=1e4}},
+  {id:"a4",n:"Убийца Боссов",d:"Победи 1 босса",i:"⚔️",ck:function(){return S.bs>=1}},
+  {id:"a5",n:"Охотник",d:"Победи 10 боссов",i:"🏆",ck:function(){return S.bs>=10}},
+  {id:"a6",n:"Странник",d:"Рейм ур.10",i:"🌌",ck:function(){return S.rl>=10}},
+  {id:"a7",n:"Престиж",d:"Престиж 1 раз",i:"🌟",ck:function(){return S.pr>=1}},
+  {id:"a8",n:"Демон Скорости",d:"100/с доход",i:"🚀",ck:function(){return getCPS()>=100}},
+  {id:"a9",n:"Коллекционер",d:"10 улучшений",i:"📦",ck:function(){return Object.keys(S.up).length>=10}},
+  {id:"a10",n:"Мастер",d:"Рейм ур.25",i:"👑",ck:function(){return S.rl>=25}},
+];
 
 function getCPS(){return S.ps*S.gm;}
 function fmt(n){if(n>=1e12)return(n/1e12).toFixed(1)+"T";if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e4)return(n/1e3).toFixed(1)+"K";return Math.floor(n);}
-function $(id){return document.getElementById(id);}
-function showP(show){$("panel").classList.toggle("open",show);}
-function dlg(t,p,bs){$("ovT").textContent=t;$("ovP").textContent=p;$("ovB").innerHTML="";for(var i=0;i<bs.length;i++){var b=document.createElement("button");b.textContent=bs[i].t;b.onclick=bs[i].f;$("ovB").appendChild(b);}$("ov").classList.add("show");}
-function cdlg(){$("ov").classList.remove("show");}
+function showPact(){document.getElementById("panel").classList.add("act");}
+function showPdis(){document.getElementById("panel").classList.remove("act");}
 
 // ═══ TAP ═══
-var tapBtn=$("tap-btn");
+var tpBtn=$("tpbtn");
 function doTap(){
   var v=Math.floor(S.cp*S.gm);
   S.c+=v;S.ct+=v;S.cl++;S.rp+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
-  $("tap-info").textContent="+"+fmt(v)+" 💎";
-  tapBtn.classList.add("pressed");setTimeout(function(){tapBtn.classList.remove("pressed");},100);
-  var rip=document.createElement("div");rip.className="tap-ripple";tapBtn.appendChild(rip);setTimeout(function(){rip.remove();},600);
+  $("tpinfo").textContent="+"+fmt(v)+" 💎";
+  tpBtn.classList.add("active");setTimeout(function(){tpBtn.classList.remove("active");},120);
+  var rip=document.createElement("div");rip.className="ripple";tpBtn.appendChild(rip);setTimeout(function(){rip.remove();},600);
   if(S.cb&&S.bh>0){S.bh-=v;if(S.bh<=0)winBoss();}
-  while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;upLvl(S.rl);}
+  while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;lvlUp(S.rl);}
   if(!S.cb&&S.rl>=5&&Math.random()<0.01)spawnBoss();
-  chkAch();fly("+"+fmt(v));draw();
+  chkAch();fly("+ "+fmt(v));draw();
 }
-tapBtn.addEventListener("touchstart",function(e){e.preventDefault();doTap();},{passive:false});
-tapBtn.addEventListener("mousedown",function(e){e.preventDefault();doTap();});
+tpBtn.addEventListener("touchstart",function(e){e.preventDefault();doTap();},{passive:false});
+tpBtn.addEventListener("mousedown",function(e){e.preventDefault();doTap();});
 
-function spawnBoss(){var i=Math.min(Math.floor(S.rl/5),BS.length-1);S.cb=BS[i];S.bh=S.cb.hp;showBossFight();}
-function winBoss(){S.c+=S.cb.cr;S.bs++;fly("+"+fmt(S.cb.cr)+" 💎");S.cb=null;S.bh=0;chkAch();hideBossFight();}
-function upLvl(lv){dlg("🌀 REALM UP!","Level "+lv+" — "+RN[Math.min(lv-1,RN.length-1)],[{t:"OK",f:function(){cdlg();}}]);}
+function spawnBoss(){var i=Math.min(Math.floor(S.rl/5),BS.length-1);S.cb={...BS[i]};S.bh=S.cb.hp;showBoss();}
+function winBoss(){var r=Math.floor(S.cb.cr*S.gm);S.c+=r;S.bs++;fly("+ "+fmt(r)+" 💎");S.cb=null;S.bh=0;chkAch();hideBoss();}
+function lvlUp(lv){$("ovt").textContent="🌀 УРОВЕНЬ!";$("ovp").textContent="Рейм уровень "+lv+" — "+RN[Math.min(lv-1,RN.length-1)];$("ovb").innerHTML='<button onclick="document.getElementById(\'ov\').classList.remove(\'act\');">OK</button>';$("ov").classList.add("act");}
 function chkAch(){for(var i=0;i<ACHS.length;i++){var a=ACHS[i];if(S.ac.indexOf(a.id)<0&&a.ck()){S.ac.push(a.id);S.g+=10;}}}
 
-function showBossFight(){
-  $("boss-fight").classList.add("show");
-  $("bf-sprite").textContent=S.cb.ic;
-  $("bf-name").textContent=S.cb.n;
-  updateBossHP();
-}
-function hideBossFight(){$("boss-fight").classList.remove("show");}
-function updateBossHP(){
-  var pct=Math.max(0,(S.bh/S.cb.hp)*100);
-  $("bf-hp").style.width=pct+"%";
-  $("bf-hp-text").textContent="HP: "+fmt(S.bh)+"/"+fmt(S.cb.hp);
-}
-$("bf-attack").onclick=function(){
+function showBoss(){$("bfight").classList.add("act");$("bfs").textContent=S.cb.ic;$("bfn").textContent=S.cb.n;updateBossHP();}
+function hideBoss(){$("bfight").classList.remove("act");}
+function updateBossHP(){var pct=Math.max(0,(S.bh/S.cb.hp)*100);var hpEl=document.querySelector("#bfight .hp-f");if(hpEl)hpEl.style.width=pct+"%";$("bftext").textContent="HP: "+fmt(S.bh)+" / "+fmt(S.cb.hp);}
+
+$("bfatk").onclick=function(){
   var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
-  // Show floating damage
-  var dmg=document.createElement("div");dmg.className="floating-dmg";dmg.textContent="-"+fmt(v);
-  dmg.style.left=(30+Math.random()*40)+"%";dmg.style.top="30%";
-  $("boss-fight").appendChild(dmg);setTimeout(function(){dmg.remove();},800);
+  var dmg=document.createElement("div");dmg.className="fdmg";dmg.textContent="-"+fmt(v);dmg.style.left=(30+Math.random()*40)+"%";dmg.style.top="30%";document.getElementById("bfight").appendChild(dmg);setTimeout(function(){dmg.remove();},800);
   if(S.bh<=0)winBoss();else updateBossHP();
   while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
   draw();
@@ -400,87 +342,82 @@ $("bf-attack").onclick=function(){
 
 // ═══ DRAW ═══
 function draw(){
-  $("rc").textContent=fmt(S.c);$("rn").textContent=fmt(S.n);
-  $("rd").textContent=fmt(S.d);$("re").textContent=fmt(S.e);
-  $("rcR").textContent=getCPS()>0?"+"+fmt(getCPS())+"/s":"";
-  $("cps").textContent="в сек: "+fmt(getCPS())+" | тапов: "+fmt(S.cl);
-  $("prog-fill").style.width=Math.min(100,(S.rp/S.rg)*100)+"%";
-  $("prog-t").textContent="Реймлв."+S.rl+" — "+RN[Math.min(S.rl-1,RN.length-1)];
-  $("user-name").textContent=currentUser||"";
+  $("rc").textContent=fmt(S.c);$("rn").textContent=fmt(S.n);$("rd").textContent=fmt(S.d);$("re").textContent=fmt(S.e);
+  $("rcR").textContent=getCPS()>0?"+"+fmt(getCPS())+"/с":"";
+  $("tcps").textContent="в сек: "+fmt(getCPS())+" | тапов: "+fmt(S.cl);
+  $("prog-fi").style.width=Math.min(100,(S.rp/S.rg)*100)+"%";
+  $("prog-t").textContent="Рейм ур."+S.rl+" — "+RN[Math.min(S.rl-1,RN.length-1)];
+  $("uname").textContent=curUser||"";
 }
-function fly(t){var p=document.createElement("div");p.className="pt";p.textContent=t;p.style.left=(30+Math.random()*40)+"%";p.style.top="40%";$("parts").appendChild(p);setTimeout(function(){p.remove();},800);}
+function fly(t){var p=document.createElement("div");p.className="pt";p.textContent=t;p.style.left=(30+Math.random()*40)+"%";p.style.top="40%";$("pts").appendChild(p);setTimeout(function(){p.remove();},800);}
 
 // ═══ PANEL ═══
 var curTab="up";
-$("cPan").addEventListener("click",function(){showP(false);});
-$("cPan").addEventListener("touchstart",function(){},{passive:false});
-$("panTabs").addEventListener("click",function(e){var t=e.target.closest(".tab");if(!t)return;$("panTabs").querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");curTab=t.dataset.t;renderP();});
+$("pcan").onclick=function(){showPdis();};
+$("ptabs").addEventListener("click",function(e){var t=e.target.closest(".ptab");if(!t)return;$("ptabs").querySelectorAll(".ptab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");curTab=t.dataset.t;renderP();});
 
 function renderP(){
   var p=$("pc");p.innerHTML="";
-  if(curTab==="up")renderUp(p);
-  else if(curTab==="bo")renderBoss(p);
-  else if(curTab==="ac")renderAch(p);
-  else if(curTab==="qu")renderQuest(p);
-  else if(curTab==="sh")renderShop(p);
+  if(curTab==="up")renderUp(p);else if(curTab==="bo")renderBossPanel(p);else if(curTab==="ac")renderAch(p);
+  else if(curTab==="qu")renderQuest(p);else if(curTab==="sh")renderShop(p);
 }
 
-function renderUp(pc){
-  var h='<div class="sec">⬆️ Улучшения</div>';
-  for(var i=0;i<UPG.length;i++){var u=UPG[i];var o=S.up[i]||0;var mx=o>=u.mx;var cost=Math.floor(u.cb*Math.pow(1.15,o));var ok=S.c>=cost&&!mx;h+='<div class="up'+(mx?' m':'')+'" data-i="'+i+'"><div class="h"><span class="nm">'+u.n+'</span><span class="lv">'+o+'/'+u.mx+'</span></div><div class="d">'+u.d+'</div><div class="c'+(ok?' ok':'')+'">'+(mx?'МАКС':fmt(cost)+' 💎')+'</div></div>';}
-  pc.innerHTML=h;
-  pc.querySelectorAll(".up").forEach(function(el){
-    var h=function(){if(el.classList.contains("m"))return;var i=parseInt(el.dataset.i);var u=UPG[i];var o=S.up[i]||0;var cost=Math.floor(u.cb*Math.pow(1.15,o));if(S.c<cost)return;S.c-=cost;S.up[i]=o+1;u.fn();chkAch();renderP();draw();};
-    el.addEventListener("click",h);el.addEventListener("touchstart",function(){},{passive:false});
+function renderUp(p){
+  p.innerHTML='<div class="sec">⬆️ Улучшения</div>';
+  for(var i=0;i<UPG.length;i++){
+    var u=UPG[i],o=S.up[i]||0,mx=o>=u.mx,cost=Math.floor(u.cb*Math.pow(1.15,o)),ok=S.c>=cost&&!mx;
+    p.innerHTML+='<div class="up'+(mx?' m':'')+'" data-i="'+i+'"><div class="h"><span class="nm">'+u.n+'</span><span class="lv">'+o+'/'+u.mx+'</span></div><div class="d">'+u.d+'</div><div class="c'+(ok?' ok':'')+'">'+(mx?'МАКС':fmt(cost)+' 💎')+'</div></div>';
+  }
+  p.querySelectorAll(".up").forEach(function(el){
+    el.onclick=function(){if(el.classList.contains("m"))return;var i=parseInt(el.dataset.i),u=UPG[i],o=S.up[i]||0,cost=Math.floor(u.cb*Math.pow(1.15,o));if(S.c<cost)return;S.c-=cost;S.up[i]=o+1;u.fn();chkAch();renderP();draw();};
   });
 }
 
-function renderBoss(pc){
-  if(!S.cb){pc.innerHTML='<div class="sec">👹 Боссes</div><p style="color:#666;font-size:12px;margin:8px 0">Reach Реймлв.5+</p><button class="btn-atk" id="sBtn">⚔️ Призвать</button>';$("sBtn").onclick=function(){spawnBoss();};}
-  else{var pct=Math.max(0,(S.bh/S.cb.hp)*100);pc.innerHTML='<div class="sec">👹 '+S.cb.ic+' '+S.cb.n+'</div><div class="hp-bar"><div class="hp-f" style="width:'+pct+'%"></div></div><div class="st"><span>HP:'+fmt(S.bh)+'/'+fmt(S.cb.hp)+'</span><span>'+pct.toFixed(0)+'%</span></div><div class="rw">Reward: '+fmt(S.cb.cr)+' 💎</div><button class="btn-atk" id="aBtn">⚔️ АТАКОВАТЬ</button>';$("aBtn").onclick=function(){var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;if(S.bh<=0)winBoss();while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}renderP();draw();};}
+function renderBossPanel(p){
+  if(!S.cb){p.innerHTML='<div class="sec">👹 Боссы</div><div style="color:#777;font-size:11px;margin:8px 0">Доберись до Рейм ур.5+ чтобы встретить боссов!</div><button class="atk-btn" id="sb">⚔️ Призвать босса</button>';$("sb").onclick=function(){spawnBoss();};}
+  else{var pct=Math.max(0,(S.bh/S.cb.hp)*100);p.innerHTML='<div class="sec">👹 '+S.cb.ic+' '+S.cb.n+'</div><div class="boss hp"><div class="boss hp-f" style="width:'+pct+'%"></div></div><div class="boss st"><span>HP: '+fmt(S.bh)+' / '+fmt(S.cb.hp)+'</span><span>'+pct.toFixed(0)+'%</span></div><div class="boss rw">Награда: '+fmt(S.cb.cr)+' 💎</div><button class="atk-btn" id="abtn">⚔️ АТАКОВАТЬ ('+fmt(Math.floor(S.cp*S.gm))+' урона)</button>';
+  $("abtn").onclick=function(){var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;if(S.bh<=0)winBoss();else renderBossPanel($("pc"));draw();};}
 }
 
-function renderAch(pc){
-  var h='<div class="sec">🏆 Достижения ('+S.ac.length+'/'+ACHS.length+')</div>';
-  for(var i=0;i<ACHS.length;i++){var a=ACHS[i];var done=S.ac.indexOf(a.id)>=0;h+='<div class="ach'+(done?' do':'')+'"><span class="ic">'+(done?'✅':a.i)+'</span><div class="inf"><div class="an">'+a.n+'</div><div class="ad">'+a.d+'</div></div>'+(done?'<span class="ar">Done</span>':'<span class="ar">💎10</span>')+'</div>';}
-  pc.innerHTML=h;
+function renderAch(p){
+  p.innerHTML='<div class="sec">🏆 Достижения ('+S.ac.length+'/'+ACHS.length+')</div>';
+  for(var i=0;i<ACHS.length;i++){var a=ACHS[i],done=S.ac.indexOf(a.id)>=0;p.innerHTML+='<div class="ach'+(done?' do':'')+'"><span class="ic">'+(done?'✅':a.i)+'</span><div class="inf"><div class="an">'+a.n+'</div><div class="ad">'+a.d+'</div></div>'+(done?'<span class="ar">Получено</span>':'<span class="ar">💎10</span>')+'</div>';}
 }
 
-function renderQuest(pc){
-  if(!S.quests||!S.quests.length){S.quests=[{id:"q1",n:"Tap 50",d:"Tap 50 times",ck:function(){return S.cl>=50},rw:5},{id:"q2",n:"Earn 5K",d:"Collect 5000 credits",ck:function(){return S.ct>=5000},rw:10},{id:"q3",n:"Kill 3 bosses",d:"Defeat 3 bosses",ck:function(){return S.bs>=3},rw:15}];}
-  var h='<div class="sec">📜 Задания</div>';
-  for(var i=0;i<S.quests.length;i++){var q=S.quests[i];var done=q.ck();h+='<div class="up"><div class="h"><span class="nm">'+q.n+'</span>'+(done?'<span class="lv">✅</span>':'')+'</div><div class="d">'+q.d+'</div>'+(done?'<button data-qid="'+q.id+'" style="margin-top:4px;width:100%;background:#a0f;border:none;color:#fff;padding:6px;border-radius:3px;cursor:pointer">Забрать '+q.rw+' 💎</button>':'')+'</div>';}
-  pc.innerHTML=h;
-  pc.querySelectorAll("[data-qid]").forEach(function(b){
+function renderQuest(p){
+  if(!S.quests||!S.quests.length){S.quests=[{id:"q1",n:"Нажми 50 раз",d:"Сделай 50 тапов",ck:function(){return S.cl>=50},rw:5},{id:"q2",n:"Заработай 5K",d:"Собери 5000 кредитов",ck:function(){return S.ct>=5000},rw:10},{id:"q3",n:"Победи 3 босса",d:"Убей 3 боссов",ck:function(){return S.bs>=3},rw:15}];}
+  p.innerHTML='<div class="sec">📜 Задания</div>';
+  for(var i=0;i<S.quests.length;i++){var q=S.quests[i],done=q.ck();p.innerHTML+='<div class="up"><div class="h"><span class="nm">'+q.n+'</span>'+(done?'<span class="lv">✅</span>':'')+'</div><div class="d">'+q.d+'</div>'+(done?'<button data-qid="'+q.id+'" style="margin-top:4px;width:100%;background:#a0f;border:none;color:#fff;padding:6px;border-radius:3px;cursor:pointer">Забрать '+q.rw+' 💎</button>':'')+'</div>';}
+  p.querySelectorAll("[data-qid]").forEach(function(b){
     b.onclick=function(){var q=S.quests.find(function(x){return x.id===b.dataset.qid});if(!q||!q.ck())return;S.g+=q.rw;S.quests=S.quests.filter(function(x){return x.id!==q.id;});renderP();draw();};
   });
 }
 
-function renderShop(pc){
-  var items=[{n:"Starter",d:"100 Gems",p:"$0.99",g:100},{n:"Про-Набор",d:"500 Gems + x2/h",p:"$2.99",g:500},{n:"Мега-Набор",d:"2000 Gems + x3/h",p:"$9.99",g:2000},{n:"VIP🔥",d:"x1.5 forever + 1K Gems",p:"$19.99",g:1000}];
-  var h='<div class="sec">🛒 Premium Shop</div>';
-  for(var i=0;i<items.length;i++){var it=items[i];h+='<div class="shop-item"><div class="si">💎</div><div class="sn">'+it.n+'</div><div class="sd">'+it.d+'</div><div class="sp">'+it.p+'</div><button data-g="'+it.g+'">Купить</button></div>';}
-  h+='<button style="width:100%;margin-top:10px;padding:10px;background:rgba(255,0,68,.2);border:1px solid #f045;color:#f04;border-radius:4px;cursor:pointer" id="dnBtn">❤️ Поддержать</button>';
-  pc.innerHTML=h;
-  pc.querySelectorAll("[data-g]").forEach(function(b){
-    b.onclick=function(){dlg("Payment","Payment coming soon!\n+"+b.dataset.g+" gems (test).",[{t:"OK",f:function(){S.g+=parseInt(b.dataset.g);cdlg();draw();}}]);};
-  });
-  $("dnBtn").onclick=function(){dlg("Support","BTC: bc1q...\nETH: 0x...\n\nСпасибо! ❤️",[{t:"Close",f:function(){cdlg();}}]);};
+function renderShop(p){
+  p.innerHTML='<div class="sec">🛒 Магазин</div><div class="shop"><div class="si">💎</div><div class="sn">Стартовый набор</div><div class="sd">100 Гемов — для начинающих</div><div class="sp">$0.99</div><button data-g="100">Купить</button></div><div class="shop"><div class="si">💎</div><div class="sn">Про-набор</div><div class="sd">500 Гемов + ×2/час</div><div class="sp">$2.99</div><button data-g="500">Купить</button></div><div class="shop"><div class="si">💎</div><div class="sn">Мега-набор</div><div class="sd">2000 Гемов + ×3/час</div><div class="sp">$9.99</div><button data-g="2000">Купить</button></div><div class="shop"><div class="si">👑</div><div class="sn">VIP-пропуск</div><div class="sd">×1.5 навсегда + 1000 Гемов</div><div class="sp">$19.99</div><button data-g="1000">Купить</button></div>';
+  p.querySelectorAll("[data-g]").forEach(function(b){b.onclick=function(){S.g+=parseInt(b.dataset.g);fly("+ "+fmt(parseInt(b.dataset.g))+" гемов");draw();};});
 }
 
-function renderStats(){
+function renderSettings(){
+  $("ptitle").textContent="⚙️ Ещё";document.getElementById("ptabs").style.display="none";
   var p=$("pc");
-  var h='<div class="sec">📊 Статистика</div>';
-  [["Clicks",fmt(S.cl)],["Total Credits",fmt(S.ct)],["Tap Power",fmt(S.cp)],["Per Sec",fmt(getCPS())],["Global Mult",S.gm.toFixed(1)+"x"],["Realm",S.rl],["Bosses",S.bs],["Престиж",S.pr],["Points",S.pp.toFixed(1)],["Gems",S.g]].forEach(function(r){h+='<div class="stat-row"><span class="sl">'+r[0]+'</span><span class="sv">'+r[1]+'</span></div>';});
-  h+='<button style="width:100%;margin-top:10px;padding:10px;background:rgba(255,215,0,.1);border:1px solid #ffd70055;color:#ffd700;border-radius:4px;cursor:pointer" id="prBtn">🌟 Престиж ('+Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5)+' pts)</button>';
-  h+='<button style="width:100%;margin-top:6px;padding:10px;background:rgba(0,255,255,.1);border:1px solid #0ff3;color:#0ff;border-radius:4px;cursor:pointer" id="exBtn">📤 Экспорт</button>';
-  h+='<button style="width:100%;margin-top:6px;padding:10px;background:rgba(0,255,255,.1);border:1px solid #0ff3;color:#0ff;border-radius:4px;cursor:pointer" id="imBtn">📥 Импорт</button>';
-  h+='<button class="danger" id="dlBtn">🗑️ Удалить всё</button>';
+  var h='<div class="sec">⚙️ Настройки</div>';
+  h+='<div class="strow"><span class="sl">Пользователь</span><span class="sv">'+curUser+'</span></div>';
+  h+='<div class="strow"><span class="sl">Тапов</span><span class="sv">'+fmt(S.cl)+'</span></div>';
+  h+='<div class="strow"><span class="sl">Всего кредитов</span><span class="sv">'+fmt(S.ct)+'</span></div>';
+  h+='<div class="strow"><span class="sl">Рейм уровень</span><span class="sv">'+S.rl+'</span></div>';
+  h+='<div class="strow"><span class="sl">Боссов убито</span><span class="sv">'+S.bs+'</span></div>';
+
+  h+='<div class="sec" style="margin-top:12px">🌟 Престиж ('+Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5)+' очков)</div>';
+  h+='<button class="btn" id="prBtn" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;cursor:pointer">Престиж</button>';
+  h+='<button class="btn" style="margin-top:6px;background:rgba(0,255,255,.1);border:1px solid #0ff3;color:#0ff;cursor:pointer" id="exBtn">📤 Экспорт</button>';
+  h+='<button class="btn" style="margin-top:6px;background:rgba(0,255,255,.1);border:1px solid #0ff3;color:#0ff;cursor:pointer" id="imBtn">📥 Импорт</button>';
+  h+='<button class="danger" id="dlBtn" style="margin-top:6px">🗑️ Удалить всё</button>';
   p.innerHTML=h;
-  $("prBtn").onclick=function(){var pts=Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5);if(pts<1)return;dlg("🌟 Престиж","Reset for "+pts+" pts?\nPermanent +"+Math.floor(pts*10)+"% tap bonus!",[{t:"Отмена",f:function(){cdlg();}},{t:"Престиж!",f:function(){doPres();}}]);};
-  $("exBtn").onclick=function(){prompt("Copy save:",btoa(JSON.stringify(S)));};
-  $("imBtn").onclick=function(){var d=prompt("Paste save:");if(!d)return;try{Object.assign(S,JSON.parse(atob(d)));save();showP(false);draw();}catch(e){alert("Invalid");}};
-  $("dlBtn").onclick=function(){dlg("Delete ALL?","Cannot undo!",[{t:"Отмена",f:function(){cdlg();}},{t:"DELETE",f:function(){localStorage.removeItem("cri_save");location.reload();}}]);};
+  $("prBtn").onclick=function(){var pts=Math.floor(Math.sqrt(S.ct/1e6)+S.rl*0.5);if(pts<1)return;dlg("🌟 Престиж","Сбросить прогресс за "+pts+" очков?\nПостоянный бонус: +"+Math.floor(pts*10)+"% к тапу",[{t:"Отмена",f:function(){cdlg();}},{t:"Престиж!",f:function(){doPres();}}]);};
+  $("exBtn").onclick=function(){prompt("Скопируй код сохранения:",btoa(JSON.stringify(S)));};
+  $("imBtn").onclick=function(){var d=prompt("Вставь код сохранения:");if(!d)return;try{Object.assign(S,JSON.parse(atob(d)));save();showPdis();draw();}catch(e){alert("Неверный код");}};
+  $("dlBtn").onclick=function(){dlg("Удалить ВСЁ?","Это нельзя отменить!",[{t:"Отмена",f:function(){cdlg();}},{t:"УДАЛИТЬ",f:function(){localStorage.removeItem("cr_save");localStorage.removeItem("cr_saves");location.reload();}}]);};
 }
 
 function doPres(){
@@ -489,177 +426,138 @@ function doPres(){
   S.pr++;S.pp+=pts;S.c=0;S.ct=0;S.n=0;S.d=0;S.e=0;S.cl=0;
   S.cp=1+S.pp*0.1;S.ps=0;S.gm=1;S.dm=1;S.ns=0;S.ds=0;S.es=0;
   S.rl=1;S.rp=0;S.rg=100;S.up={};S.cb=null;S.bh=0;
-  cdlg();showP(false);draw();
+  cdlg();showPdis();draw();
 }
 
 // ═══ CHAT ═══
-var chatMessages=[];
-var chatTab="global";
-var owlTasks=[];  // Tasks from players for OWL to execute
-try{chatMessages=JSON.parse(localStorage.getItem("cri_chat")||"[]");}catch(e){}
-try{owlTasks=JSON.parse(localStorage.getItem("cri_tasks")||"[]");}catch(e){}
-function saveChat(){localStorage.setItem("cri_chat",JSON.stringify(chatMessages.slice(-200)));}
-function saveTasks(){localStorage.setItem("cri_tasks",JSON.stringify(owlTasks.slice(-50)));}
+var chatTab="g";
+var owlTasks=[];
 
-function addChatMsg(author,text,own){
-  var msg={author:author,text:text,time:Date.now(),own:own};
-  chatMessages.push(msg);saveChat();
-  renderChat();
-}
+try{owlTasks=JSON.parse(localStorage.getItem("cr_tasks")||"[]");}catch(e){}
+function saveTasks(){localStorage.setItem("cr_tasks",JSON.stringify(owlTasks.slice(-50)));}
 
-function addTask(text){
-  owlTasks.push({text:text,from:currentUser,time:Date.now(),done:false});
-  saveTasks();
+var chatMsgs=[];
+try{chatMsgs=JSON.parse(localStorage.getItem("cr_chat")||"[]");}catch(e){}
+function saveChat(){localStorage.setItem("cr_chat",JSON.stringify(chatMsgs.slice(-200)));}
+
+function addMsg(author,text,own){
+  var msg={a:author,t:text,ts:Date.now(),own:own};
+  chatMsgs.push(msg);saveChat();renderChat();
 }
 
 function renderChat(){
-  var el=$("chat-msgs");el.innerHTML="";
-  var msgs=chatTab==="global"?chatMessages:chatMessages.filter(function(m){return m.author==="🦉 OWL"||m.own;});
+  var e=$("chmsgs");e.innerHTML="";
+  var msgs=chatTab==="g"?chatMsgs:chatMsgs.filter(function(m){return m.a==="🦉 OWL"||m.own;});
   for(var i=0;i<msgs.length;i++){
-    var m=msgs[i];
-    var d=new Date(m.time);
-    var t=(d.getMonth()+1)+"/"+d.getDate()+" "+d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");
-    el.innerHTML+='<div class="chat-msg'+(m.own?' own':'')+'"><div class="author">'+m.author+'</div><div class="text">'+m.text+'</div><div class="time">'+t+'</div></div>';
+    var m=msgs[i],d=new Date(m.ts),t=d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+    e.innerHTML+='<div class="chmsg'+(m.own?' me':'')+'"><div class="auth">'+m.a+'</div><div class="txt">'+m.t+'</div><div class="time">'+t+'</div></div>';
   }
-  el.scrollTop=el.scrollHeight;
-  // Show task count
-  var pending=owlTasks.filter(function(t){return !t.done;}).length;
-  if(pending>0){
-    el.innerHTML+='<div style="text-align:center;padding:8px;background:rgba(255,215,0,.05);border-radius:6px;margin-top:8px"><small style="color:#ffd700">📋 '+pending+' task(s) queued for OWL</small></div>';
-  }
+  e.scrollTop=e.scrollHeight;
 }
 
-$cChat.onclick=function(){showScreen("game");};
-document.querySelectorAll(".chat-tab").forEach(function(t){
-  t.onclick=function(){document.querySelectorAll(".chat-tab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");chatTab=t.dataset.ct;renderChat();};
-});
-$("chat-send").onclick=sendChat;
-$("chat-input").addEventListener("keydown",function(e){if(e.key==="Enter")sendChat();});
+function owlReply(text){
+  var L=text.toLowerCase();
+  var r="";
 
-function buildTaskReport(action, detail, state){
-  var r="🔧 TASK EXECUTED\n━━━━━━━━━━━━━━\n";
-  r+="📝 Request: "+action+"\n";
-  r+="⚡ Action: "+detail+"\n";
-  r+="📊 State: "+state+"\n";
-  r+="⏰ Time: "+new Date().toLocaleTimeString();
-  return r;
-}
-
-function sendChat(){
-  var text=$("chat-input").value.trim();
-  if(!text)return;
-  $("chat-input").value="";
-  addChatMsg(currentUser,text,true);
-
-  if(chatTab==="owl"){
-    addTask(text);
-    $("owl-indicator").style.display="block";
-
-    setTimeout(function(){
-      $("owl-indicator").style.display="false";
-      var L=text.toLowerCase();
-      var resp="";
-
-      if(L.indexOf("boss")>=0||L.indexOf("босс")>=0){
-        var bNames=["Void","Nebula","Quasar","Pulsar","Singularity","Phantom","Nebula","Cosmic"];
-        var bIcons=["🌌","🌠","⚡","🔮","💫","👁️","🌟","💀"];
-        var idx=Math.floor(Math.random()*bNames.length);
-        var hp=Math.floor(50000*Math.pow(1.8,BS.length));
-        var cr=Math.floor(hp*0.4);
-        BS.push({n:bNames[idx]+" Overlord",hp:hp,cr:cr,ic:bIcons[idx]});
-        resp=buildTaskReport("Add Boss","Создатьd '"+bNames[idx]+" Overlord' (HP:"+fmt(hp)+", Reward:"+fmt(cr)+"💎)",'BS['+BS.length+']');
-      }else if(L.indexOf("upgrade")>=0||L.indexOf("улучшен")>=0||L.indexOf("апгрейд")>=0){
-        var uNames=["Quantum Accelerator","Neural Amplifier","Plasma Injector","Dark Matter Pump","Void Crystal","Entropy Lens"];
-        var uIdx=Math.floor(Math.random()*uNames.length);
-        var uCost=Math.floor(100*Math.pow(2,UPG.length));
-        var uMult=1+Math.floor(UPG.length/3)*0.5;
-        UPG.push({n:uNames[uIdx],d:"+"+Math.floor(uMult*10)+"% all income",cb:uCost,fn:function(){S.gm*=uMult},mx:3});
-        resp=buildTaskReport("Add Upgrade","Создатьd '"+uNames[uIdx]+' (x'+uMult+' income, cost:'+fmt(uCost)+'💎)',"UPG["+UPG.length+"]");
-      }else if(L.indexOf("credit")>=0||L.indexOf("money")>=0||L.indexOf("кредит")>=0||L.indexOf("монет")>=0||L.indexOf("cash")>=0){
-        var amt=500+Math.floor(Math.random()*1500);
-        S.c+=amt;S.ct+=amt;
-        resp=buildTaskReport("Add Credits","Added "+fmt(amt)+" credits to player balance","credits="+fmt(S.c));
-      }else if(L.indexOf("realm")>=0||L.indexOf("level")>=0||L.indexOf("левел")>=0){
-        var lvGain=1+Math.floor(Math.random()*3);
-        S.rl+=lvGain;
-        resp=buildTaskReport("Level Up","Increased Realm Level by "+lvGain,"realm="+S.rl+" goal="+fmt(S.rg));
-      }else if(L.indexOf("gem")>=0||L.indexOf("гем")>=0||L.indexOf("premium")>=0){
-        var gAmt=20+Math.floor(Math.random()*80);
-        S.g+=gAmt;
-        resp=buildTaskReport("Add Gems","Added "+gAmt+" premium gems","gems="+S.g);
-      }else if(L.indexOf("achievement")>=0||L.indexOf("ачивк")>=0){
-        var achId="ach_"+Date.now();
-        S.ac.push(achId);S.g+=25;
-        resp=buildTaskReport("New Achievement","Unlocked achievement '"+achId+"' (+25💎)","achievements="+S.ac.length);
-      }else if(L.indexOf("animation")>=0||L.indexOf("анимац")>=0||L.indexOf("visual")>=0||L.indexOf("effect")>=0){
-        resp=buildTaskReport("Visual Update","Enhanced tap ripples, boss bounce, loot particles, upgrade glow effects. CSS animations optimized.","animations=enabled");
-      }else if(L.indexOf("balance")>=0||L.indexOf("баланс")>=0||L.indexOf("цен")>=0){
-        var discount=0.85-Math.floor(UPG.length/10)*0.05;
-        var totalSaved=0;
-        for(var i=0;i<UPG.length;i++){var old=UPG[i].cb;UPG[i].cb=Math.floor(UPG[i].cb*discount);totalSaved+=old-UPG[i].cb;}
-        resp=buildTaskReport("Баланс Patch","All upgrade prices reduced by "+Math.floor((1-discount)*100)+"%","total_savings="+fmt(totalSaved)+"💎");
-      }else if(L.indexOf("fix")>=0||L.indexOf("bug")>=0||L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("crash")>=0){
-        resp=buildTaskReport("Баг Fix","Fixed: tap button mobile responsiveness, NaN in CPS calculation, panel close on mobile, chat message overflow. All edge cases tested.","status=stable");
-      }else if(L.indexOf("hello")>=0||L.indexOf("hi")>=0||L.indexOf("привет")>=0||L.indexOf("хай")>=0){
-        resp="👋 Hello "+currentUser+"!\n\nI'm OWL 🦉 — the AI that builds this game in real-time.\n\nTry these commands:\n• 'Add boss' → new cosmic boss\n• 'Add upgrade' → new power-up\n• 'Give credits/money' → free credits\n• 'Level up' → realm boost\n• 'Give gems' → premium currency\n• 'New achievement' → earn gems\n• 'Better animations' → visual FX\n• 'Баланс prices' → cheaper upgrades\n• 'Fix bugs' → stability patch\n\nEvery task gives you a bonus! 🎁";
-      }else if(L.indexOf("больше")>=0||L.indexOf("more")>=0||L.indexOf("добавь")>=0){
-        // Random useful addition
-        var opts=[
-          function(){S.c+=2000;S.ct+=2000;return buildTaskReport("Bonus","💰 +2000 credits bonus","credits="+fmt(S.c));},
-          function(){S.g+=100;return buildTaskReport("Bonus","💎 +100 гемов","gems="+S.g);},
-          function(){var n=UPG.length;UPG.push({n:"Mega Boost #"+n,d:"+50% income",cb:5000+500*n,fn:function(){S.gm*=1.5},mx:2});return buildTaskReport("Bonus","⚡ Новое МЕГА-улучшение добавлено!","upgrades="+n);},
-          function(){BS.push({n:"Random Entity",hp:99999,cr:50000,ic:["👾","🤖","💀","👽"][Math.floor(Math.random()*4)]});return buildTaskReport("Bonus","👹 Новый босс-тайна!","bosses="+BS.length);},
-        ];
-        resp=opts[Math.floor(Math.random()*opts.length)]();
-      }else{
-        var bonuses=[
-          function(){var a=500+Math.floor(Math.random()*2000);S.c+=a;S.ct+=a;return "💰 +"+fmt(a)+" credits";},
-          function(){var a=10+Math.floor(Math.random()*90);S.g+=a;return "💎 "+a+" gems";},
-          function(){S.cp+=3;return "⚡ +3 tap power";},
-          function(){S.rl+=2;return "🌀 +2 realm levels";},
-        ];
-        var bon=bonuses[Math.floor(Math.random()*bonuses.length)]();
-        resp=buildTaskReport("General Task","Queued for review. Bonus reward given as thanks.",bon);
-      }
-
-      // Mark task done
-      for(var i=owlTasks.length-1;i>=0;i--){if(!owlTasks[i].done){owlTasks[i].done=true;break;}}
-      saveTasks();
-      addChatMsg("🦉 OWL",resp,false);
-      draw();
-    },1500+Math.random()*2000);
+  if(L.indexOf("босс")>=0||L.indexOf("boss")>=0){
+    var bn=["Пустотный","Небулярный","Квазаровый","Пульсарный","Тёмный","Фантомный","Космический"];
+    var bi=["🌌","🌠","⚡","🔮","💫","👁️","💀","🌑"];
+    var idx=Math.floor(Math.random()*bn.length);
+    var hp=Math.floor(5e4*Math.pow(1.8,BS.length));
+    var cr=Math.floor(hp*0.4);
+    BS.push({n:bn[idx]+" Владыка",hp:hp,cr:cr,ic:bi[idx]});
+    r="✅ Босс создан!\n\n👹 "+bn[idx]+" Владыка\n❤️ HP: "+fmt(hp)+"\n💰 Награда: "+fmt(cr)+" 💎\n\nВсего боссов: "+BS.length;
+  }else if(L.indexOf("улучшен")>=0||L.indexOf("upgrade")>=0||L.indexOf("апгрейд")>=0){
+    var un=["Квантовый Ускоритель","Нейро-Усилитель","Плазменный Инжектор","Вакуумный Насос"];
+    var ui=Math.floor(Math.random()*un.length);
+    var uc=Math.floor(100*Math.pow(2,UPG.length));
+    var um=1+Math.floor(UPG.length/3)*0.3;
+    UPG.push({n:un[ui],d:"+"+Math.floor(um*10)+"% доход",cb:uc,fn:function(){S.gm*=um},mx:3});
+    r="✅ Улучшение добавлено!"+"\n"+"\n⚡ "+un[ui]+"\nЭффект: ×"+um+" доход"+"\nЦена: "+fmt(uc)+" 💎";
+  }else if(L.indexOf("кредит")>=0||L.indexOf("монет")>=0||L.indexOf("денег")>=0||L.indexOf("money")>=0){
+    var amt=500+Math.floor(Math.random()*2000);
+    S.c+=amt;S.ct+=amt;
+    r="💰 Начислено "+fmt(amt)+" кредитов!\n\nТекущий баланс: "+fmt(S.c)+" 💎";
+  }else if(L.indexOf("уровень")>=0||L.indexOf("рейм")>=0||L.indexOf("level")>=0){
+    var lv=1+Math.floor(Math.random()*3);
+    S.rl+=lv;r="🌀 Рейм повышен на "+lv+"!\n\nТекущий уровень: "+S.rl+"\nДо следующего: "+fmt(S.rg-S.rp)+" 💎";
+  }else if(L.indexOf("гем")>=0||L.indexOf("gem")>=0||L.indexOf("премиум")>=0){
+    var g=20+Math.floor(Math.random()*80);S.g+=g;
+    r="💎 Начислено "+g+" премиум-гемов!\n\nТекущий баланс: "+S.g+" 💎";
+  }else if(L.indexOf("достижен")>=0||L.indexOf("ачивк")>=0){
+    var id="ach_"+Date.now();S.ac.push(id);S.g+=25;
+    r="🏆 Достижение разблокировано!\n\nID: "+id+"\nНаграда: +25 💎\nВсего достижений: "+S.ac.length;
+  }else if(L.indexOf("анимац")>=0||L.indexOf("визуал")>=0||L.indexOf("эффект")>=0){
+    r="✨ Визуал улучшен!\n\n• Усиленные частицы при тапе\n• Плавные переходы панелей\n• Анимация боссов\n• Эффекты улучшений";
+  }else if(L.indexOf("баланс")>=0||L.indexOf("цен")>=0){
+    var disc=0.85-Math.floor(UPG.length/10)*0.05,totalSaved=0;
+    for(var i=0;i<UPG.length;i++){var old=UPG[i].cb;UPG[i].cb=Math.floor(UPG[i].cb*disc);totalSaved+=old-UPG[i].cb;}
+    r="⚖️ Баланс обновлён!\n\nЦены снижены на "+Math.floor((1-disc)*100)+"%\nОбщая экономия: "+fmt(totalSaved)+" 💎\n\nВсего улучшений: "+UPG.length;
+  }else if(L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("fix")>=0){
+    r="🐛 Исправления внесены!\n\n• Кнопки на мобильных\n• Панель улучшений\n• Чат на русском\n• Сохранение при выходе";
+  }else{
+    var bonuses=[function(){var a=500+Math.floor(Math.random()*2000);S.c+=a;S.ct=a;return "💰 +"+fmt(a)+" кредитов";},function(){var a=10+Math.floor(Math.random()*90);S.g+=a;return "💎 +"+a+" гемов";},function(){S.cp+=3;return "⚡ +3 сила тапа";},function(){S.rl+=2;return "🌀 +2 уровня рейма";}];
+    var bon=bonuses[Math.floor(Math.random()*bonuses.length)]();
+    r="✅ Задано!\n\nБонус: "+bon+"\n\nТвоя идея добавлена в очередь разработки.";
   }
+
+  // Mark task done
+  for(var i=owlTasks.length-1;i>=0;i--){if(!owlTasks[i].done){owlTasks[i].done=true;break;}}
+  saveTasks();
+  addMsg("🦉 OWL",r,false);
+  draw();
 }
 
 // ═══ NAV ═══
-document.querySelectorAll(".ft").forEach(function(ft){
-  ft.addEventListener("click",function(){
-    document.querySelectorAll(".ft").forEach(function(x){x.classList.remove("a");});
-    ft.classList.add("a");
-    var v=ft.dataset.v;
-    if(v==="game"){showScreen("game");showP(false);}
-    else if(v==="up"){showScreen("game");showP(true);$("panT").textContent="⬆️ Улучшения";$("panTabs").style.display="";curTab="up";$("panTabs").querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="up");});renderP();}
-    else if(v==="bo"){showScreen("game");showP(true);$("panT").textContent="👹 Босс";$("panTabs").style.display="";curTab="bo";$("panTabs").querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="bo");});renderP();}
-    else if(v==="ch"){showScreen("chat");renderChat();}
-    else if(v==="st"){showScreen("game");showP(true);$("panT").textContent="📊 Статистика";$("panTabs").style.display="none";renderStats();}
-  });
+document.querySelectorAll("footer .tab").forEach(function(ft){
+  ft.onclick=function(){
+    document.querySelectorAll("footer .tab").forEach(function(x){x.classList.remove("on");});
+    ft.classList.add("on");
+    showScr("game");
+    showPdis();
+    var v=ft.id;
+    if(v==="tup"){$("ptitle").textContent="⬆️ Улучшения";document.getElementById("ptabs").style.display="";curTab="up";document.getElementById("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="up");});showPact();renderP();}
+    else if(v==="tbo"){$("ptitle").textContent="👹 Босс";document.getElementById("ptabs").style.display="";curTab="bo";document.getElementById("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="bo");});showPact();renderP();}
+    else if(v==="tch"){$("chat-scr").classList.add("act");renderChat();}
+    else if(v==="tst"){$("ptitle").textContent="⚙️ Ещё";document.getElementById("ptabs").style.display="none";showPact();renderSettings();}
+  };
 });
+
+// ═══ SEND CHAT ═══
+function sendChat(){
+  var text=$("chin").value.trim();
+  if(!text)return;$("chin").value="";
+  addMsg(curUser,text,true);
+  if(chatTab==="o"){
+    owlTasks.push({text:text,from:curUser,time:Date.now(),done:false});
+    saveTasks();
+    $("chowli").style.display="block";
+    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},1500+Math.random()*2000);
+  }
+}
+
+$("chsend").onclick=sendChat;
+$("chin").addEventListener("keydown",function(e){if(e.key==="Enter")sendChat();});
+$("chtabs").addEventListener("click",function(e){var t=e.target.closest(".chtab");if(!t)return;$("chtabs").querySelectorAll(".chtab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");chatTab=t.dataset.ct;renderChat();});
 
 // ═══ SAVE/LOAD ═══
 function save(){
-  if(!currentUser)return;
+  if(!curUser)return;
   S.lastSave=Date.now();
-  var saves={};try{saves=JSON.parse(localStorage.getItem("cri_saves")||"{}");}catch(e){}
-  saves[currentUser]=JSON.stringify(S);
-  localStorage.setItem("cri_saves",JSON.stringify(saves));
+  var saves={};try{saves=JSON.parse(localStorage.getItem("cr_saves")||"{}");}catch(e){}
+  saves[curUser]=JSON.stringify(S);
+  localStorage.setItem("cr_saves",JSON.stringify(saves));
+  localStorage.setItem("cr_lastUser",curUser);
 }
 function loadGame(){
-  if(!currentUser)return;
-  try{var saves=JSON.parse(localStorage.getItem("cri_saves")||"{}");var d=saves[currentUser];if(d){var v=JSON.parse(d);for(var k in v)S[k]=v[k];}}catch(e){}
+  if(!curUser)return;
+  try{var saves=JSON.parse(localStorage.getItem("cr_saves")||"{}");var d=saves[curUser];if(d){var v=JSON.parse(d);for(var k in v)S[k]=v[k];}}catch(e){}
 }
-function initNewGame(){
-  S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0,lastSave:Date.now()};
-}
+function initNewGame(){S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0,lastSave:Date.now()};}
+
+// ═══ AUTO SAVE ON EXIT ═══
+window.addEventListener("beforeunload",function(){save();});
+window.addEventListener("visibilitychange",function(){if(document.hidden)save();});
 
 // ═══ LOOP ═══
 setInterval(function(){
@@ -667,18 +565,11 @@ setInterval(function(){
   while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
   draw();
 },300);
-setInterval(function(){save();},15000);
+setInterval(function(){save();},10000);
 
 // ═══ INIT ═══
-// Check if user was logged in
-var lastUser=localStorage.getItem("cri_lastUser");
-if(lastUser&&users[lastUser]){
-  currentUser=lastUser;
-  loadGame();
-  showScreen("game");
-} else {
-  showScreen("login");
-}
+var lastUser=localStorage.getItem("cr_lastUser");
+if(lastUser&&users[lastUser]){curUser=lastUser;loadGame();showScr("game");}else{showScr("login");}
 draw();
 
 })();
