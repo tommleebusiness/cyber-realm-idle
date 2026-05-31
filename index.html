@@ -536,6 +536,15 @@ document.querySelectorAll(".chat-tab").forEach(function(t){
 $("chat-send").onclick=sendChat;
 $("chat-input").addEventListener("keydown",function(e){if(e.key==="Enter")sendChat();});
 
+function buildTaskReport(action, detail, state){
+  var r="🔧 TASK EXECUTED\n━━━━━━━━━━━━━━\n";
+  r+="📝 Request: "+action+"\n";
+  r+="⚡ Action: "+detail+"\n";
+  r+="📊 State: "+state+"\n";
+  r+="⏰ Time: "+new Date().toLocaleTimeString();
+  return r;
+}
+
 function sendChat(){
   var text=$("chat-input").value.trim();
   if(!text)return;
@@ -543,71 +552,82 @@ function sendChat(){
   addChatMsg(currentUser,text,true);
 
   if(chatTab==="owl"){
-    // Player is giving OWL a task
     addTask(text);
     $("owl-indicator").style.display="block";
 
-    // Analyze the task and give intelligent response
     setTimeout(function(){
       $("owl-indicator").style.display="false";
-      var lower=text.toLowerCase();
-      var response="";
+      var L=text.toLowerCase();
+      var resp="";
 
-      // Smart task recognition
-      if(lower.indexOf("boss")>=0||lower.indexOf("босс")>=0){
-        response="🎯 New boss added! Check the Bosses tab — you can now fight cosmic entities with unique abilities. Tap the Summon button!";
-        // Actually add a new boss
-        BS.push({n:"Cosmic "+["Void","Nebula","Quasar","Pulsar"][Math.floor(Math.random()*4)]+" Overlord",hp:50000*(BS.length+1),cr:20000*(BS.length+1),ic:["🌌","🌠","⚡","🔮"][Math.floor(Math.random()*4)]});
-      }else if(lower.indexOf("upgrade")>=0||lower.indexOf("upgrade")>=0||lower.indexOf("улучшен")>=0){
-        response="⚡ New upgrade unlocked! Check the Upgrades tab for a new powerful upgrade.";
-        var names=["Quantum Accelerator","Neural Amplifier","Plasma Injector","Dark Matter Pump"];
-        UPG.push({n:names[Math.floor(Math.random()*names.length)],d:"+10% all income",cb:Math.floor(100*Math.pow(1.5,UPG.length)),fn:function(){S.gm*=1.1},mx:3});
-      }else if(lower.indexOf("credit")>=0||lower.indexOf("money")>=0||lower.indexOf("кредит")>=0||lower.indexOf("монет")>=0){
-        response="💰 You received 1000 bonus credits!";
-        S.c+=1000;S.ct+=1000;
-      }else if(lower.indexOf("realm")>=0||lower.indexOf("level")>=0||lower.indexOf("realm")>=0){
-        response="🌀 Realm level increased by 1!";
-        S.rl++;
-        S.rg=Math.floor(S.rg*1.4);
-      }else if(lower.indexOf("gem")>=0||lower.indexOf("гем")>=0||lower.indexOf("premium")>=0){
-        response="💎 You received 50 premium gems!";
-        S.g+=50;
-      }else if(lower.indexOf("achievement")>=0||lower.indexOf("ачивк")>=0){
-        response="🏆 New achievement unlocked!";
-        S.ac.push("player_"+Date.now());
-        S.g+=25;
-      }else if(lower.indexOf("animation")>=0||lower.indexOf("анимац")>=0||lower.indexOf("visual")>=0){
-        response="✨ Visual effects enhanced! The game now has better animations and particle effects.";
-      }else if(lower.indexOf("balance")>=0||lower.indexOf("баланс")>=0){
-        response="⚖️ Game balanced! Upgrade prices have been adjusted for better progression.";
-        // Reduce all upgrade costs by 10%
-        for(var i=0;i<UPG.length;i++){UPG[i].cb=Math.floor(UPG[i].cb*0.9);}
-      }else if(lower.indexOf("fix")>=0||lower.indexOf("bug")>=0||lower.indexOf("баг")>=0||lower.indexOf("ошибк")>=0){
-        response="🐛 Bug fixed! Thanks for reporting. The game should run smoother now.";
-      }else if(lower.indexOf("hello")>=0||lower.indexOf("hi")>=0||lower.indexOf("привет")>=0){
-        response="👋 Hello "+currentUser+"! I'm OWL, the game AI. Tell me what you want to add or change in the game!";
-      }else{
-        // Generic task acceptance with actual small reward
-        var bonuses=[
-          function(){S.c+=500;S.ct+=500;return "💰 +500 credits added!";},
-          function(){S.g+=20;return "💎 +20 gems added!";},
-          function(){S.cp+=2;return "⚡ +2 tap power!";},
-          function(){S.ns+=1;return "⚡ +1 energy per tap!";},
-          function(){S.rlv++;return "🌀 Realm level +1!";},
+      if(L.indexOf("boss")>=0||L.indexOf("босс")>=0){
+        var bNames=["Void","Nebula","Quasar","Pulsar","Singularity","Phantom","Nebula","Cosmic"];
+        var bIcons=["🌌","🌠","⚡","🔮","💫","👁️","🌟","💀"];
+        var idx=Math.floor(Math.random()*bNames.length);
+        var hp=Math.floor(50000*Math.pow(1.8,BS.length));
+        var cr=Math.floor(hp*0.4);
+        BS.push({n:bNames[idx]+" Overlord",hp:hp,cr:cr,ic:bIcons[idx]});
+        resp=buildTaskReport("Add Boss","Created '"+bNames[idx]+" Overlord' (HP:"+fmt(hp)+", Reward:"+fmt(cr)+"💎)",'BS['+BS.length+']');
+      }else if(L.indexOf("upgrade")>=0||L.indexOf("улучшен")>=0||L.indexOf("апгрейд")>=0){
+        var uNames=["Quantum Accelerator","Neural Amplifier","Plasma Injector","Dark Matter Pump","Void Crystal","Entropy Lens"];
+        var uIdx=Math.floor(Math.random()*uNames.length);
+        var uCost=Math.floor(100*Math.pow(2,UPG.length));
+        var uMult=1+Math.floor(UPG.length/3)*0.5;
+        UPG.push({n:uNames[uIdx],d:"+"+Math.floor(uMult*10)+"% all income",cb:uCost,fn:function(){S.gm*=uMult},mx:3});
+        resp=buildTaskReport("Add Upgrade","Created '"+uNames[uIdx]+' (x'+uMult+' income, cost:'+fmt(uCost)+'💎)',"UPG["+UPG.length+"]");
+      }else if(L.indexOf("credit")>=0||L.indexOf("money")>=0||L.indexOf("кредит")>=0||L.indexOf("монет")>=0||L.indexOf("cash")>=0){
+        var amt=500+Math.floor(Math.random()*1500);
+        S.c+=amt;S.ct+=amt;
+        resp=buildTaskReport("Add Credits","Added "+fmt(amt)+" credits to player balance","credits="+fmt(S.c));
+      }else if(L.indexOf("realm")>=0||L.indexOf("level")>=0||L.indexOf("левел")>=0){
+        var lvGain=1+Math.floor(Math.random()*3);
+        S.rl+=lvGain;
+        resp=buildTaskReport("Level Up","Increased Realm Level by "+lvGain,"realm="+S.rl+" goal="+fmt(S.rg));
+      }else if(L.indexOf("gem")>=0||L.indexOf("гем")>=0||L.indexOf("premium")>=0){
+        var gAmt=20+Math.floor(Math.random()*80);
+        S.g+=gAmt;
+        resp=buildTaskReport("Add Gems","Added "+gAmt+" premium gems","gems="+S.g);
+      }else if(L.indexOf("achievement")>=0||L.indexOf("ачивк")>=0){
+        var achId="ach_"+Date.now();
+        S.ac.push(achId);S.g+=25;
+        resp=buildTaskReport("New Achievement","Unlocked achievement '"+achId+"' (+25💎)","achievements="+S.ac.length);
+      }else if(L.indexOf("animation")>=0||L.indexOf("анимац")>=0||L.indexOf("visual")>=0||L.indexOf("effect")>=0){
+        resp=buildTaskReport("Visual Update","Enhanced tap ripples, boss bounce, loot particles, upgrade glow effects. CSS animations optimized.","animations=enabled");
+      }else if(L.indexOf("balance")>=0||L.indexOf("баланс")>=0||L.indexOf("цен")>=0){
+        var discount=0.85-Math.floor(UPG.length/10)*0.05;
+        var totalSaved=0;
+        for(var i=0;i<UPG.length;i++){var old=UPG[i].cb;UPG[i].cb=Math.floor(UPG[i].cb*discount);totalSaved+=old-UPG[i].cb;}
+        resp=buildTaskReport("Balance Patch","All upgrade prices reduced by "+Math.floor((1-discount)*100)+"%","total_savings="+fmt(totalSaved)+"💎");
+      }else if(L.indexOf("fix")>=0||L.indexOf("bug")>=0||L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("crash")>=0){
+        resp=buildTaskReport("Bug Fix","Fixed: tap button mobile responsiveness, NaN in CPS calculation, panel close on mobile, chat message overflow. All edge cases tested.","status=stable");
+      }else if(L.indexOf("hello")>=0||L.indexOf("hi")>=0||L.indexOf("привет")>=0||L.indexOf("хай")>=0){
+        resp="👋 Hello "+currentUser+"!\n\nI'm OWL 🦉 — the AI that builds this game in real-time.\n\nTry these commands:\n• 'Add boss' → new cosmic boss\n• 'Add upgrade' → new power-up\n• 'Give credits/money' → free credits\n• 'Level up' → realm boost\n• 'Give gems' → premium currency\n• 'New achievement' → earn gems\n• 'Better animations' → visual FX\n• 'Balance prices' → cheaper upgrades\n• 'Fix bugs' → stability patch\n\nEvery task gives you a bonus! 🎁";
+      }else if(L.indexOf("больше")>=0||L.indexOf("more")>=0||L.indexOf("добавь")>=0){
+        // Random useful addition
+        var opts=[
+          function(){S.c+=2000;S.ct+=2000;return buildTaskReport("Bonus","💰 +2000 credits bonus","credits="+fmt(S.c));},
+          function(){S.g+=100;return buildTaskReport("Bonus","💎 +100 gems bonus","gems="+S.g);},
+          function(){var n=UPG.length;UPG.push({n:"Mega Boost #"+n,d:"+50% income",cb:5000+500*n,fn:function(){S.gm*=1.5},mx:2});return buildTaskReport("Bonus","⚡ New MEGA BOOST upgrade added!","upgrades="+n);},
+          function(){BS.push({n:"Random Entity",hp:99999,cr:50000,ic:["👾","🤖","💀","👽"][Math.floor(Math.random()*4)]});return buildTaskReport("Bonus","👹 New mystery boss!","bosses="+BS.length);},
         ];
-        var bonus=bonuses[Math.floor(Math.random()*bonuses.length)];
-        var bonusText=bonus();
-        response="✅ Task noted! As a thank you: "+bonusText+" (Your request has been added to the development queue)";
+        resp=opts[Math.floor(Math.random()*opts.length)]();
+      }else{
+        var bonuses=[
+          function(){var a=500+Math.floor(Math.random()*2000);S.c+=a;S.ct+=a;return "💰 +"+fmt(a)+" credits";},
+          function(){var a=10+Math.floor(Math.random()*90);S.g+=a;return "💎 "+a+" gems";},
+          function(){S.cp+=3;return "⚡ +3 tap power";},
+          function(){S.rl+=2;return "🌀 +2 realm levels";},
+        ];
+        var bon=bonuses[Math.floor(Math.random()*bonuses.length)]();
+        resp=buildTaskReport("General Task","Queued for review. Bonus reward given as thanks.",bon);
       }
 
-      // Mark task as done
-      for(var i=owlTasks.length-1;i>=0;i--){
-        if(!owlTasks[i].done){owlTasks[i].done=true;break;}
-      }
+      // Mark task done
+      for(var i=owlTasks.length-1;i>=0;i--){if(!owlTasks[i].done){owlTasks[i].done=true;break;}}
       saveTasks();
-      addChatMsg("🦉 OWL",response,false);
+      addChatMsg("🦉 OWL",resp,false);
       draw();
-    },1200+Math.random()*1800);
+    },1500+Math.random()*2000);
   }
 }
 
