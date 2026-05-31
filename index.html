@@ -201,7 +201,7 @@ function draw(){
   $("rc").textContent=fmt(S.c);$("rn").textContent=fmt(S.n);
   $("rd").textContent=fmt(S.d);$("re").textContent=fmt(S.e);$("rg").textContent=fmt(S.g);
   $("rcR").textContent=getCPS()>0?"+"+fmt(getCPS())+"/s":"";
-  $("cps").textContent="per sec: "+fmt(getCPS)+" | taps: "+fmt(S.cl);
+  $("cps").textContent="per sec: "+fmt(getCPS())+" | taps: "+fmt(S.cl);
   $("prog-fill").style.width=Math.min(100,(S.rp/S.rg)*100)+"%";
   $("prog-t").textContent="Realm Lv."+S.rl+" — "+RN[Math.min(S.rl-1,RN.length-1)];
 }
