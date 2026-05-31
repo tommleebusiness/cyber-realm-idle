@@ -518,8 +518,9 @@ document.querySelectorAll("footer .tab").forEach(function(ft){
     var v=ft.id;
     if(v==="tup"){$("ptitle").textContent="⬆️ Улучшения";document.getElementById("ptabs").style.display="";curTab="up";document.getElementById("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="up");});showPact();renderP();}
     else if(v==="tbo"){$("ptitle").textContent="👹 Босс";document.getElementById("ptabs").style.display="";curTab="bo";document.getElementById("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="bo");});showPact();renderP();}
-    else if(v==="tch"){$("chat-scr").classList.add("act");renderChat();}
+    else if(v==="tch"){showScr("chat");renderChat();}
     else if(v==="tst"){$("ptitle").textContent="⚙️ Ещё";document.getElementById("ptabs").style.display="none";showPact();renderSettings();}
+    else if(v==="tgame"){showPdis();draw();}
   };
 });
 
