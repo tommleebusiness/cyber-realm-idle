@@ -3,7 +3,9 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{background:#050510;color:#0ff;font-family:'Segoe UI',system-ui,sans-serif;height:100%;overflow:hidden;touch-action:manipulation}
 body{display:flex;flex-direction:column;-webkit-user-select:none}
-#login-scr{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;background:radial-gradient(ellipse at 50% 30%,rgba(0,255,255,.08),transparent 70%)}
+.scr{display:none;flex-direction:column;height:100%}
+.scr.act{display:flex}
+#login-scr{align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 50% 30%,rgba(0,255,255,.08),transparent 70%)}
 #login-scr h1{font-size:2em;letter-spacing:4px;text-shadow:0 0 20px #0ff;margin-bottom:8px}
 #login-scr .sub{color:#0f0;font-size:.9em;margin-bottom:20px}
 .fld{width:100%;max-width:320px}
@@ -15,7 +17,6 @@ body{display:flex;flex-direction:column;-webkit-user-select:none}
 .btn2{width:100%;padding:14px;background:transparent;border:1px solid #0ff5;color:#0ff;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;margin-top:4px}
 .msg{text-align:center;font-size:12px;margin-top:10px;min-height:16px}
 .msg.ok{color:#0f0}.msg.err{color:#f04}
-#game-scr{display:none;flex-direction:column;height:100%}
 header{background:linear-gradient(180deg,#0a1628,#0d1025);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0ff4;flex-shrink:0}
 header h1{font-size:14px;letter-spacing:3px;text-shadow:0 0 8px #0ff}
 .uinfo{display:flex;align-items:center;gap:8px;font-size:11px}
@@ -92,7 +93,6 @@ footer .tab:active{background:rgba(0,255,255,.1)}
 .shop .sp{color:#ffd700;font-size:14px;font-weight:bold}
 .shop button{margin-top:4px;background:linear-gradient(135deg,#0ff,#4af);border:none;color:#000;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer}
 .danger{background:#f043;border:1px solid #f045;color:#f04;padding:6px;border-radius:4px;font-size:11px;cursor:pointer;margin-top:6px;width:100%}
-#chat-scr{display:none;flex-direction:column;height:100%}
 #chtabs{display:flex;border-bottom:1px solid #0ff2;flex-shrink:0}
 .chtab{flex:1;text-align:center;padding:8px;font-size:11px;cursor:pointer;color:#666;border-bottom:2px solid transparent}
 .chtab.on{color:#0ff;border-color:#0ff}
@@ -121,21 +121,17 @@ footer .tab:active{background:rgba(0,255,255,.1)}
 .overlay-box p{color:#888;font-size:12px;margin-bottom:15px;line-height:1.5}
 .overlay-box button{background:#0ff;border:none;color:#000;padding:6px 15px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;margin:3px}
 @media(max-width:480px){
-  header h1{font-size:12px;letter-spacing:2px}
-  header{padding:6px 8px}
-  .res{font-size:9px;padding:3px}
-  .r{flex-direction:column;gap:0;font-size:8px}
-  #tpbtn{width:140px;height:140px}
-  #tpbtn .bg{font-size:32px}
-  #tpbtn .tx{font-size:12px}
+  header h1{font-size:12px;letter-spacing:2px}header{padding:6px 8px}
+  .res{font-size:9px;padding:3px}.r{flex-direction:column;gap:0;font-size:8px}
+  #tpbtn{width:140px;height:140px}#tpbtn .bg{font-size:32px}#tpbtn .tx{font-size:12px}
   footer .tab{padding:8px 2px;font-size:9px}
   .ptab{min-width:55px;padding:8px 5px;font-size:10px}
 }
 </style></head><body>
 
-<div id="login-scr">
+<div class="scr act" id="login-scr">
   <h1>⚡ CYBER REALM ⚡</h1>
-  <div class="sub">Футуристическая Idle Игра v3.0</div>
+  <div class="sub">Футуристическая Idle Игра v4.0</div>
   <div class="fld">
     <input type="text" id="au" placeholder="Имя пользователя" maxlength="20">
     <input type="password" id="ap" placeholder="Пароль" maxlength="30">
@@ -145,7 +141,7 @@ footer .tab:active{background:rgba(0,255,255,.1)}
   </div>
 </div>
 
-<div id="game-scr">
+<div class="scr" id="game-scr">
   <header><h1>⚡ CYBER REALM ⚡</h1><div class="uinfo"><span class="dot"></span><span class="nm" id="uname"></span><button class="lout" id="lout">Выйти</button></div></header>
   <div class="res">
     <span class="r">💎<span class="v" id="rc">0</span><span class="rt" id="rcR"></span></span>
@@ -153,41 +149,81 @@ footer .tab:active{background:rgba(0,255,255,.1)}
     <span class="r">🧬<span class="v" id="rd">0</span></span>
     <span class="r">🌀<span class="v" id="re">0</span></span>
   </div>
-  <div id="main"><div id="tapz"><div id="parts"></div><button id="tpbtn"><div class="in"><span class="bg">⚡</span><span class="tx">НАЖМИ</span></div></button><div id="tpinfo"></div><div id="tcps">в сек: 0 | тапов: 0</div><div id="prog"><div id="prog-bg"><div id="prog-fi"></div></div><div id="prog-t">Рейм ур.1 — Цифровой Нексус</div></div></div></div>
+  <div id="main">
+    <div id="tapz">
+      <div id="parts"></div>
+      <button id="tpbtn"><div class="in"><span class="bg">⚡</span><span class="tx">НАЖМИ</span></div></button>
+      <div id="tpinfo"></div>
+      <div id="tcps">в сек: 0 | тапов: 0</div>
+      <div id="prog"><div id="prog-bg"><div id="prog-fi"></div></div><div id="prog-t">Рейм ур.1 — Цифровой Нексус</div></div>
+    </div>
+  </div>
   <footer>
-    <div class="tab on" id="tgame"><div style="font-size:18px">🎮</div><div>Игра</div></div>
-    <div class="tab" id="tup"><div style="font-size:18px">⬆️</div><div>Улучш.</div></div>
-    <div class="tab" id="tbo"><div style="font-size:18px">👹</div><div>Боссы</div></div>
-    <div class="tab" id="tch"><div style="font-size:18px">💬</div><div>Чат</div></div>
-    <div class="tab" id="tst"><div style="font-size:18px">⚙️</div><div>Ещё</div></div>
+    <div class="tab on" data-scr="game"><div style="font-size:18px">🎮</div><div>Игра</div></div>
+    <div class="tab" data-scr="up"><div style="font-size:18px">⬆️</div><div>Улучш.</div></div>
+    <div class="tab" data-scr="bo"><div style="font-size:18px">👹</div><div>Боссы</div></div>
+    <div class="tab" data-scr="chat"><div style="font-size:18px">💬</div><div>Чат</div></div>
+    <div class="tab" data-scr="settings"><div style="font-size:18px">⚙️</div><div>Ещё</div></div>
   </footer>
 </div>
 
-<div id="panel"><div id="ph"><h2 id="ptitle">⬆️ Улучшения</h2><button id="pcan">✕</button></div><div id="ptabs"><div class="ptab on" data-t="up">⬆️</div><div class="ptab" data-t="bo">👹</div><div class="ptab" data-t="ac">🏆</div><div class="ptab" data-t="qu">📜</div><div class="ptab" data-t="sh">🛒</div></div><div id="pc"></div></div>
-
-<div id="chat-scr">
-  <header><h1>💬 Чат</h1><button class="lout" id="cback">✕</button></header>
-  <div id="chtabs"><div class="chtab on" data-ct="g">🌍 Общий</div><div class="chtab" data-ct="o">🦉 OWL</div></div>
-  <div id="chmsgs"></div>
-  <div id="chowli">🦉 OWL думает...</div>
-  <div id="chinp"><input type="text" id="chin" placeholder="Сообщение или задание для OWL..." maxlength="200"><button id="chsend">→</button></div>
+<div id="panel">
+  <div id="ph"><h2 id="ptitle">⬆️ Улучшения</h2><button id="pcan">✕</button></div>
+  <div class="ptabs" id="ptabs">
+    <div class="ptab on" data-tab="up">⬆️</div>
+    <div class="ptab" data-tab="bo">👹</div>
+    <div class="ptab" data-tab="ac">🏆</div>
+    <div class="ptab" data-tab="qu">📜</div>
+    <div class="ptab" data-tab="sh">🛒</div>
+  </div>
+  <div id="pc"></div>
 </div>
 
-<div id="bfight"><div id="bfs">👹</div><div id="bfn">Босс</div><div style="width:200px;background:#1a1a2e;border-radius:3px;height:8px;overflow:hidden;margin:8px 0"><div id="bf-hp" style="width:100%;height:100%;background:linear-gradient(90deg,#f04,#ff4400);border-radius:3px;transition:.2s"></div></div><div style="display:flex;justify-content:space-between;font-size:10px;color:#888;width:200px"><span id="bftext">HP: 100/100</span></div><button class="atk-btn" id="bfatk">⚔️ АТАКОВАТЬ</button></div>
+<div class="scr" id="chat-scr">
+  <header><h1>💬 Чат</h1><button class="lout" id="cback">✕</button></header>
+  <div id="chtabs">
+    <div class="chtab on" data-tab="g">🌍 Общий</div>
+    <div class="chtab" data-tab="o">🦉 OWL</div>
+  </div>
+  <div id="chmsgs"></div>
+  <div id="chowli">🦉 OWL думает...</div>
+  <div id="chinp">
+    <input type="text" id="chin" placeholder="Сообщение или задание для OWL..." maxlength="200">
+    <button id="chsend">→</button>
+  </div>
+</div>
 
-<div class="overlay" id="ov"><div class="overlay-box"><h3 id="ovt"></h3><p id="ovp"></p><div id="ovb"></div></div></div>
+<div id="bfight">
+  <div id="bfs">👹</div>
+  <div id="bfn">Босс</div>
+  <div style="width:200px;background:#1a1a2e;border-radius:3px;height:8px;overflow:hidden;margin:8px 0">
+    <div id="bf-hp" style="width:100%;height:100%;background:linear-gradient(90deg,#f04,#ff4400);border-radius:3px;transition:.2s"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;width:200px"><span id="bftext">HP: 100/100</span></div>
+  <button class="atk-btn" id="bfatk">⚔️ АТАКОВАТЬ</button>
+</div>
+
+<div class="overlay" id="ov">
+  <div class="overlay-box">
+    <h3 id="ovt"></h3>
+    <p id="ovp"></p>
+    <div id="ovb"></div>
+  </div>
+</div>
 
 <script>
 (function(){
-"use strict";
-
-// AUTH
 var curUser=null,users={};
 try{users=JSON.parse(localStorage.getItem("cr_users")||"{}");}catch(e){}
 function saveUsers(){localStorage.setItem("cr_users",JSON.stringify(users));}
 function hsh(p){var h=0;for(var i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return h.toString(36);}
 function $(id){return document.getElementById(id);}
-function showScr(id){$("login-scr").style.display="none";$("game-scr").style.display="none";$("chat-scr").style.display="none";$(id+"-scr").style.display="flex";}
+
+function showScr(id){
+  document.querySelectorAll(".scr").forEach(function(s){s.classList.remove("act");});
+  $(id).classList.add("act");
+}
+
 function amsg(m,t){var e=$("amsg");e.textContent=m;e.className="msg "+(t||"");}
 
 $("alogin").onclick=function(){
@@ -195,9 +231,9 @@ $("alogin").onclick=function(){
   if(!u||!p){amsg("Заполни все поля","err");return;}
   if(!users[u]){amsg("Пользователь не найден","err");return;}
   if(users[u].pass!==hsh(p)){amsg("Неверный пароль","err");return;}
-  curUser=u;users[u].lastLogin=Date.now();saveUsers();
-  loadGame();showScr("game");amsg("","");
+  curUser=u;users[u].lastLogin=Date.now();saveUsers();loadGame();showScr("game-scr");
 };
+
 $("areg").onclick=function(){
   var u=$("au").value.trim(),p=$("ap").value;
   if(!u||!p){amsg("Заполни все поля","err");return;}
@@ -205,64 +241,28 @@ $("areg").onclick=function(){
   if(p.length<4){amsg("Минимум 4 символа пароля","err");return;}
   if(users[u]){amsg("Имя занято","err");return;}
   users[u]={pass:hsh(p),created:Date.now(),lastLogin:Date.now()};saveUsers();
-  curUser=u;initNewGame();showScr("game");amsg("Аккаунт создан!","ok");
+  curUser=u;initNewGame();showScr("game-scr");amsg("Аккаунт создан!","ok");
 };
-$("lout").onclick=function(){
-  try{saveGame();}catch(e){console.log("save error: "+e.message);}
-  curUser=null;
-  showScr("login");
-};
-$("cback").onclick=function(){showScr("game");};
 
-// GAME STATE
+$("lout").onclick=function(){saveGame();curUser=null;showScr("login-scr");};
+$("cback").onclick=function(){showScr("game-scr");};
+
 var S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0,lastSave:Date.now()};
 var RN=["Цифровой Нексус","Неоновая Сетка","Квантовое Ядро","Кибер-Улей","Тёмная Матрица","Пустотный Сектор","Бесконечный Цикл","Омега-Царство","Альфа-Сингулярность","Кибер-Эдем","Нейросеть","Фантомная Зона","Бинарный Шторм","Хромовая Пустота","Океан Данных","Пустотное Ядро"];
-var UPG=[
-  {n:"Нейро-Связь",d:"+1 тап",cb:10,fn:function(){S.cp+=1},mx:100},
-  {n:"Лазерный Фокус",d:"+5 тапов",cb:100,fn:function(){S.cp+=5},mx:50},
-  {n:"Плазменное Ядро",d:"+25 тапов",cb:1000,fn:function(){S.cp+=25},mx:30},
-  {n:"Нано-Бот",d:"+0.5/с",cb:50,fn:function(){S.ps+=0.5},mx:50},
-  {n:"Рой Дронов",d:"+2/с",cb:200,fn:function(){S.ps+=2},mx:30},
-  {n:"ИИ-Ядро",d:"+10/с",cb:1000,fn:function(){S.ps+=10},mx:20},
-  {n:"Квантовая Ферма",d:"+50/с",cb:5000,fn:function(){S.ps+=50},mx:15},
-  {n:"Компрессор",d:"x1.5 всё",cb:250,fn:function(){S.gm*=1.5},mx:5},
-  {n:"Энтропия",d:"x2 всё",cb:2500,fn:function(){S.gm*=2},mx:3},
-  {n:"Солнечная Панель",d:"+1 ⚡/тап",cb:30,fn:function(){S.ns+=1},mx:20},
-  {n:"Дата-Майнер",d:"+1 🧬/тап",cb:25,fn:function(){S.ds+=1},mx:20},
-  {n:"Шифратор",d:"x2 данные",cb:300,fn:function(){S.dm*=2},mx:5},
-  {n:"Инжектор Хаоса",d:"+1 🌀/тап",cb:500,fn:function(){S.es+=1},mx:10}
-];
-var BS=[
-  {n:"Глитч-Фантом",hp:100,cr:50,ic:"👻"},
-  {n:"Фаервол-Голем",hp:500,cr:200,ic:"🗿"},
-  {n:"Вирусный Рой",hp:2000,cr:800,ic:"🦠"},
-  {n:"Дата-Кракен",hp:8000,cr:3000,ic:"🐙"},
-  {n:"Квантовый Дракон",hp:30000,cr:12000,ic:"🐉"},
-  {n:"Нейро-Владыка",hp:100000,cr:50000,ic:"🧠"},
-  {n:"Пустотный Император",hp:500000,cr:200000,ic:"👑"},
-  {n:"Омега-Сингулярность",hp:2e6,cr:1e6,ic:"🌀"}
-];
-var ACHS=[
-  {id:"a1",n:"Первый Тап",d:"Нажми один раз",i:"👆",ck:function(){return S.cl>=1}},
-  {id:"a2",n:"Кликер",d:"Нажми 100 раз",i:"🖱️",ck:function(){return S.cl>=100}},
-  {id:"a3",n:"Богач",d:"Заработай 10 000",i:"💰",ck:function(){return S.ct>=1e4}},
-  {id:"a4",n:"Убийца Боссов",d:"Победи 1 босса",i:"⚔️",ck:function(){return S.bs>=1}},
-  {id:"a5",n:"Охотник",d:"Победи 10 боссов",i:"🏆",ck:function(){return S.bs>=10}},
-  {id:"a6",n:"Странник",d:"Рейм ур.10",i:"🌌",ck:function(){return S.rl>=10}},
-  {id:"a7",n:"Престиж",d:"Престиж 1 раз",i:"🌟",ck:function(){return S.pr>=1}},
-  {id:"a8",n:"Демон Скорости",d:"100/с доход",i:"🚀",ck:function(){return getCPS()>=100}}
-];
+var UPG=[{n:"Нейро-Связь",d:"+1 тап",cb:10,fn:function(){S.cp+=1},mx:100},{n:"Лазерный Фокус",d:"+5 тапов",cb:100,fn:function(){S.cp+=5},mx:50},{n:"Плазменное Ядро",d:"+25 тапов",cb:1000,fn:function(){S.cp+=25},mx:30},{n:"Нано-Бот",d:"+0.5/с",cb:50,fn:function(){S.ps+=0.5},mx:50},{n:"Рой Дронов",d:"+2/с",cb:200,fn:function(){S.ps+=2},mx:30},{n:"ИИ-Ядро",d:"+10/с",cb:1000,fn:function(){S.ps+=10},mx:20},{n:"Квантовая Ферма",d:"+50/с",cb:5000,fn:function(){S.ps+=50},mx:15},{n:"Компрессор",d:"x1.5 всё",cb:250,fn:function(){S.gm*=1.5},mx:5},{n:"Энтропия",d:"x2 всё",cb:2500,fn:function(){S.gm*=2},mx:3},{n:"Солнечная Панель",d:"+1 ⚡/тап",cb:30,fn:function(){S.ns+=1},mx:20},{n:"Дата-Майнер",d:"+1 🧬/тап",cb:25,fn:function(){S.ds+=1},mx:20},{n:"Шифратор",d:"x2 данные",cb:300,fn:function(){S.dm*=2},mx:5},{n:"Инжектор Хаоса",d:"+1 🌀/тап",cb:500,fn:function(){S.es+=1},mx:10}];
+var BS=[{n:"Глитч-Фантом",hp:100,cr:50,ic:"👻"},{n:"Фаервол-Голем",hp:500,cr:200,ic:"🗿"},{n:"Вирусный Рой",hp:2000,cr:800,ic:"🦠"},{n:"Дата-Кракен",hp:8000,cr:3000,ic:"🐙"},{n:"Квантовый Дракон",hp:30000,cr:12000,ic:"🐉"},{n:"Нейро-Владыка",hp:100000,cr:50000,ic:"🧠"},{n:"Пустотный Император",hp:500000,cr:200000,ic:"👑"},{n:"Омега-Сингулярность",hp:2e6,cr:1e6,ic:"🌀"}];
+var ACHS=[{id:"a1",n:"Первый Тап",i:"👆",ck:function(){return S.cl>=1}},{id:"a2",n:"Кликер",i:"🖱️",ck:function(){return S.cl>=100}},{id:"a3",n:"Богач",i:"💰",ck:function(){return S.ct>=1e4}},{id:"a4",n:"Убийца Боссов",i:"⚔️",ck:function(){return S.bs>=1}},{id:"a5",n:"Охотник",i:"🏆",ck:function(){return S.bs>=10}},{id:"a6",n:"Странник",i:"🌌",ck:function(){return S.rl>=10}},{id:"a7",n:"Престиж",i:"🌟",ck:function(){return S.pr>=1}},{id:"a8",n:"Демон Скорости",i:"🚀",ck:function(){return getCPS()>=100}}];
 
 function getCPS(){return S.ps*S.gm;}
 function fmt(n){if(n>=1e12)return(n/1e12).toFixed(1)+"T";if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e4)return(n/1e3).toFixed(1)+"K";return Math.floor(n);}
 
-// TAP
 var tpBtn=$("tpbtn");
 function doTap(){
   var v=Math.floor(S.cp*S.gm);
   S.c+=v;S.ct+=v;S.cl++;S.rp+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
   $("tpinfo").textContent="+"+fmt(v)+" 💎";
-  tpBtn.classList.add("active");setTimeout(function(){tpBtn.classList.remove("active");},120);
+  tpBtn.classList.add("active");
+  setTimeout(function(){tpBtn.classList.remove("active");},120);
   if(S.cb&&S.bh>0){S.bh-=v;if(S.bh<=0)winBoss();}
   while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;lvlUp(S.rl);}
   if(!S.cb&&S.rl>=5&&Math.random()<0.01)spawnBoss();
@@ -273,22 +273,16 @@ tpBtn.addEventListener("mousedown",function(e){e.preventDefault();doTap();});
 
 function spawnBoss(){var i=Math.min(Math.floor(S.rl/5),BS.length-1);S.cb=BS[i];S.bh=S.cb.hp;showBoss();}
 function winBoss(){var r=Math.floor(S.cb.cr*S.gm);S.c+=r;S.bs++;fly("+ "+fmt(r)+" 💎");S.cb=null;S.bh=0;chkAch();hideBoss();}
-function lvlUp(lv){$("ovt").textContent="🌀 УРОВЕНЬ!";$("ovp").textContent="Рейм уровень "+lv+" — "+RN[Math.min(lv-1,RN.length-1)];$("ovb").innerHTML="<button onclick=\"document.getElementById('ov').classList.remove('act')\">OK</button>";$("ov").classList.add("act");}
+function lvlUp(lv){$("ovt").textContent="🌀 УРОВЕНЬ!";$("ovp").textContent="Рейм уровень "+lv+" — "+RN[Math.min(lv-1,RN.length-1)];$("ovb").innerHTML='<button onclick="document.getElementById(\'ov\').classList.remove(\'act\')">OK</button>';$("ov").classList.add("act");}
 function chkAch(){for(var i=0;i<ACHS.length;i++){var a=ACHS[i];if(S.ac.indexOf(a.id)<0&&a.ck()){S.ac.push(a.id);S.g+=10;}}}
-
 function showBoss(){$("bfight").classList.add("act");$("bfs").textContent=S.cb.ic;$("bfn").textContent=S.cb.n;updateBossHP();}
 function hideBoss(){$("bfight").classList.remove("act");}
 function updateBossHP(){var pct=Math.max(0,(S.bh/S.cb.hp)*100);$("bf-hp").style.width=pct+"%";$("bftext").textContent="HP: "+fmt(S.bh)+" / "+fmt(S.cb.hp);}
-$("bfatk").onclick=function(){
-  var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;
-  var dmg=document.createElement("div");dmg.className="fdmg";dmg.textContent="-"+fmt(v);dmg.style.left=(30+Math.random()*40)+"%";dmg.style.top="30%";$("bfight").appendChild(dmg);setTimeout(function(){dmg.remove();},800);
-  if(S.bh<=0)winBoss();else updateBossHP();
-  while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
-  draw();
-};
+$("bfatk").onclick=function(){var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;var d=document.createElement("div");d.className="fdmg";d.textContent="-"+fmt(v);d.style.left=(30+Math.random()*40)+"%";d.style.top="30%";$("bfight").appendChild(d);setTimeout(function(){d.remove();},800);if(S.bh<=0)winBoss();else updateBossHP();while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}draw();};
 
 function draw(){
-  $("rc").textContent=fmt(S.c);$("rn").textContent=fmt(S.n);$("rd").textContent=fmt(S.d);$("re").textContent=fmt(S.e);
+  $("rc").textContent=fmt(S.c);$("rn").textContent=fmt(S.n);
+  $("rd").textContent=fmt(S.d);$("re").textContent=fmt(S.e);
   $("rcR").textContent=getCPS()>0?"+"+fmt(getCPS())+"/с":"";
   $("tcps").textContent="в сек: "+fmt(getCPS())+" | тапов: "+fmt(S.cl);
   $("prog-fi").style.width=Math.min(100,(S.rp/S.rg)*100)+"%";
@@ -297,10 +291,9 @@ function draw(){
 }
 function fly(t){var p=document.createElement("div");p.className="pt";p.textContent=t;p.style.left=(30+Math.random()*40)+"%";p.style.top="40%";$("parts").appendChild(p);setTimeout(function(){p.remove();},800);}
 
-// PANEL
 var curTab="up";
 $("pcan").onclick=function(){$("panel").classList.remove("act");};
-$("ptabs").addEventListener("click",function(e){var t=e.target.closest(".ptab");if(!t)return;$("ptabs").querySelectorAll(".ptab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");curTab=t.dataset.t;renderP();});
+$("ptabs").addEventListener("click",function(e){var t=e.target.closest(".ptab");if(!t)return;$(".ptab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");curTab=t.dataset.tab;renderP();});
 
 function renderP(){
   var p=$("pc");p.innerHTML="";
@@ -323,8 +316,14 @@ function renderUp(p){
 }
 
 function renderBossPanel(p){
-  if(!S.cb){p.innerHTML='<div class="sec">👹 Боссы</div><div style="color:#777;font-size:11px;margin:8px 0">Доберись до Рейм ур.5+</div><button class="atk-btn" id="sb">⚔️ Призвать босса</button>';$("sb").onclick=function(){spawnBoss();};}
-  else{var pct=Math.max(0,(S.bh/S.cb.hp)*100);p.innerHTML='<div class="sec">👹 '+S.cb.ic+' '+S.cb.n+'</div><div class="boss hp"><div class="boss hp-f" style="width:'+pct+'%"></div></div><div class="boss st"><span>HP: '+fmt(S.bh)+' / '+fmt(S.cb.hp)+'</span><span>'+pct.toFixed(0)+'%</span></div><div class="boss rw">Награда: '+fmt(S.cb.cr)+' 💎</div><button class="atk-btn" id="abtn">⚔️ АТАКОВАТЬ</button>';$("abtn").onclick=function(){var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;if(S.bh<=0)winBoss();else renderBossPanel($("pc"));draw();};}
+  if(!S.cb){
+    p.innerHTML='<div class="sec">👹 Боссы</div><div style="color:#777;font-size:11px;margin:8px 0">Доберись до Рейм ур.5+</div><button class="atk-btn" id="sb">⚔️ Призвать босса</button>';
+    $("sb").onclick=function(){spawnBoss();};
+  } else {
+    var pct=Math.max(0,(S.bh/S.cb.hp)*100);
+    p.innerHTML='<div class="sec">👹 '+S.cb.ic+' '+S.cb.n+'</div><div class="boss hp"><div class="boss hp-f" style="width:'+pct+'%"></div></div><div class="boss st"><span>HP: '+fmt(S.bh)+' / '+fmt(S.cb.hp)+'</span><span>'+pct.toFixed(0)+'%</span></div><div class="boss rw">Награда: '+fmt(S.cb.cr)+' 💎</div><button class="atk-btn" id="abtn">⚔️ АТАКОВАТЬ</button>';
+    $("abtn").onclick=function(){var v=Math.floor(S.cp*S.gm);S.bh-=v;S.rp+=v;S.c+=v;S.ct+=v;S.n+=S.ns;S.d+=S.ds*S.dm;S.e+=S.es;if(S.bh<=0)winBoss();else renderBossPanel($("pc"));draw();};
+  }
 }
 
 function renderAch(p){
@@ -333,7 +332,7 @@ function renderAch(p){
 }
 
 function renderQuest(p){
-  if(!S.quests||!S.quests.length){S.quests=[{id:"q1",n:"Нажми 50 раз",d:"Сделай 50 тапов",ck:function(){return S.cl>=50},rw:5},{id:"q2",n:"Заработай 5K",d:"Собери 5000 кредитов",ck:function(){return S.ct>=5000},rw:10},{id:"q3",n:"Победи 3 босса",d:"Убей 3 боссов",ck:function(){return S.bs>=3},rw:15}];}
+  if(!S.quests||!S.quests.length){S.quests=[{id:"q1",n:"Нажми 50 раз",ck:function(){return S.cl>=50},rw:5},{id:"q2",n:"Заработай 5K",ck:function(){return S.ct>=5000},rw:10},{id:"q3",n:"Победи 3 босса",ck:function(){return S.bs>=3},rw:15}];}
   p.innerHTML='<div class="sec">📜 Задания</div>';
   for(var i=0;i<S.quests.length;i++){var q=S.quests[i],done=q.ck();p.innerHTML+='<div class="up"><div class="h"><span class="nm">'+q.n+'</span>'+(done?'<span class="lv">✅</span>':'')+'</div><div class="d">'+q.d+'</div>'+(done?'<button data-qid="'+q.id+'" style="margin-top:4px;width:100%;background:#a0f;border:none;color:#fff;padding:6px;border-radius:3px;cursor:pointer">Забрать '+q.rw+' 💎</button>':'')+'</div>';}
   p.querySelectorAll("[data-qid]").forEach(function(b){b.onclick=function(){var q=S.quests.find(function(x){return x.id===b.dataset.qid});if(!q||!q.ck())return;S.g+=q.rw;S.quests=S.quests.filter(function(x){return x.id!==q.id;});renderP();draw();};});
@@ -371,63 +370,38 @@ function doPres(){
   cdlg();$("panel").classList.remove("act");draw();
 }
 
-// CHAT + GIST SYNC
-var chatTab="g",chatMsgs=[],GIST_ID="a816386d2f06b505cdfcf57ee6eef0e2";
+function dlg(t,p,bs){$("ovt").textContent=t;$("ovp").textContent=p;$("ovb").innerHTML="";for(var i=0;i<bs.length;i++){var b=document.createElement("button");b.textContent=bs[i].t;b.onclick=bs[i].f;$("ovb").appendChild(b);}$("ov").classList.add("act");}
+function cdlg(){$("ov").classList.remove("act");}
+
+// CHAT
+var chatTab="g",chatMsgs=[];
 try{chatMsgs=JSON.parse(localStorage.getItem("cr_chat")||"[]");}catch(e){}
 function saveChat(){localStorage.setItem("cr_chat",JSON.stringify(chatMsgs.slice(-200)));}
 function addMsg(author,text){chatMsgs.push({a:author,t:text,ts:Date.now()});saveChat();renderChat();}
 
-// Save task to localStorage (synced via Gist by OWL)
-function saveTaskToGist(taskText){
-  var tasks=[];
-  try{tasks=JSON.parse(localStorage.getItem("owl_tasks")||"[]");}catch(e){}
-  var lastId=tasks.length>0?tasks[tasks.length-1].id:0;
-  tasks.push({id:lastId+1,text:taskText,from:curUser,ts:Date.now(),status:"pending",reply:""});
-  localStorage.setItem("owl_tasks",JSON.stringify(tasks));
-  console.log("Task #"+(lastId+1)+" saved locally");
-}
-
-// Check for OWL replies from localStorage
-function checkGistReplies(){
-  var tasks=[];
-  try{tasks=JSON.parse(localStorage.getItem("owl_tasks")||"[]");}catch(e){}
-  for(var i=0;i<tasks.length;i++){
-    if(tasks[i].status==="replied"&&tasks[i].reply){
-      var alreadyShown=false;
-      for(var j=0;j<chatMsgs.length;j++){
-        if(chatMsgs[j].a==="🦉 OWL"&&chatMsgs[j].t===tasks[i].reply){alreadyShown=true;break;}
-      }
-      if(!alreadyShown){
-        addMsg("🦉 OWL","📋 Задача #"+tasks[i].id+" выполнена!\n\n"+tasks[i].reply,false);
-      }
-    }
-  }
-}
-
-// Poll for replies every 30 seconds
-setInterval(checkGistReplies,30000);
-
 function owlReply(text){
   var L=text.toLowerCase(),r="";
-  if(L.indexOf("босс")>=0){var bn=["Пустотный","Небулярный","Квазаровый","Пульсарный","Тёмный"];var bi=["🌌","🌠","⚡","🔮","💫"];var i=Math.floor(Math.random()*bn.length);var hp=Math.floor(5e4*Math.pow(1.8,BS.length));BS.push({n:bn[i]+" Владыка",hp:hp,cr:Math.floor(hp*.4),ic:bi[i]});r="✅ Босс создан!\n👹 "+bn[i]+" Владыка\n❤️ HP: "+fmt(hp)+"\n💰 Награда: "+fmt(Math.floor(hp*.4))+"💎\nВсего боссов: "+BS.length;}
-  else if(L.indexOf("улучшен")>=0||L.indexOf("апгрейд")>=0){var un=["Квантовый Ускоритель","Нейро-Усилитель","Плазменный Инжектор"];var i=Math.floor(Math.random()*un.length);var c=Math.floor(100*Math.pow(2,UPG.length));UPG.push({n:un[i],d:"+10% доход",cb:c,fn:function(){S.gm*=1.1},mx:3});r="✅ Улучшение добавлено!\n⚡ "+un[i]+"\nЦена: "+fmt(c)+"💎\nУлучшений: "+UPG.length;}
+  if(L.indexOf("босс")>=0){var bn=["Пустотный","Небулярный","Квазаровый","Пульсарный","Тёмный","Фантомный"];var bi=["🌌","🌠","⚡","🔮","💫","👁️"];var i=Math.floor(Math.random()*bn.length);var hp=Math.floor(5e4*Math.pow(1.8,BS.length));BS.push({n:bn[i]+" Владыка",hp:hp,cr:Math.floor(hp*.4),ic:bi[i]});r="✅ Босс создан!\n👹 "+bn[i]+" Владыка\n❤️ HP: "+fmt(hp)+"\n💰 Награда: "+fmt(Math.floor(hp*.4))+"💎\nВсего боссов: "+BS.length;}
+  else if(L.indexOf("улучшен")>=0||L.indexOf("апгрейд")>=0){var un=["Квантовый Ускоритель","Нейро-Усилитель","Плазменный Инжектор","Вакуумный Насос"];var i=Math.floor(Math.random()*un.length);var c=Math.floor(100*Math.pow(2,UPG.length));UPG.push({n:un[i],d:"+10% доход",cb:c,fn:function(){S.gm*=1.1},mx:3});r="✅ Улучшение добавлено!\n⚡ "+un[i]+"\nЦена: "+fmt(c)+"💎\nУлучшений: "+UPG.length;}
   else if(L.indexOf("кредит")>=0||L.indexOf("монет")>=0||L.indexOf("денег")>=0){var a=500+Math.floor(Math.random()*2000);S.c+=a;S.ct+=a;r="💰 Начислено "+fmt(a)+" кредитов!\nБаланс: "+fmt(S.c)+"💎";}
   else if(L.indexOf("уровень")>=0||L.indexOf("рейм")>=0){var lv=1+Math.floor(Math.random()*3);S.rl+=lv;r="🌀 Рейм повышен на "+lv+"!\nУровень: "+S.rl+"\nДо следующего: "+fmt(S.rg-S.rp)+"💎";}
   else if(L.indexOf("гем")>=0||L.indexOf("премиум")>=0){var g=20+Math.floor(Math.random()*80);S.g+=g;r="💎 Начислено "+g+" гемов!\nБаланс: "+S.g+"💎";}
-  else if(L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("не работа")>=0){S.c+=1e3;S.g+=50;S.cp+=5;r="🐛 Баги исправлены!\n\nПатчи:\n✅ Кнопки на мобильных\n✅ Панель улучшений\n✅ Чат OWL\n✅ Сохранение\n\nБонус: +1000💎 +50💎гемов +5 тап";}
-  else if(L.indexOf("привет")>=0||L.indexOf("хай")>=0){r="👋 Привет, "+curUser+"!\nЯ — OWL 🦉, ИИ-разработчик.\n\n📌 Команды:\n• Добавй босса\n• Добавй улучшение\n• Дай кредитов/гемов\n• Повысь уровень\n• Исправь баги\n\nКаждая команда = бонус! 🎁\n\n💡 Или опиши проблему — я передам разработчику!";}
-  else{r="✅ Задача принята!\n\n📤 Отправлена разработчику.\n\nБонус: +300💎 +10💎гемов\n\nБаланс: "+fmt(S.c)+"💎 | Гемы: "+S.g;}
+  else if(L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("не работа")>=0){S.c+=1e3;S.g+=50;S.cp+=5;r="🐛 Баги исправлены!\n\nПатчи:\n✅ Кнопки на мобильных\n✅ Панель улучшений\n✅ Чат OWL\n✅ Сохранение при выходе\n\nБонус: +1000💎 +50💎гемов +5 тап";}
+  else if(L.indexOf("привет")>=0||L.indexOf("хай")>=0||L.indexOf("hello")>=0){r="👋 Привет, "+curUser+"!\n\nЯ — OWL 🦉, ИИ-разработчик этой игры.\n\n📌 Команды:\n• Добавь босса\n• Добавь улучшение\n• Дай кредитов/гемов\n• Повысь уровень\n• Исправь баги\n• Баланс (снизить цены)\n\nКаждая команда = бонус! 🎁";}
+  else if(L.indexOf("баланс")>=0||L.indexOf("цен")>=0||L.indexOf("дорого")>=0){var disc=0.85-Math.floor(UPG.length/10)*0.05,totalSaved=0;for(var i=0;i<UPG.length;i++){var old=UPG[i].cb;UPG[i].cb=Math.floor(UPG[i].cb*disc);totalSaved+=old-UPG[i].cb;}r="⚖️ Баланс обновлён!\n\nЦены снижены на "+Math.floor((1-disc)*100)+"%\nОбщая экономия: "+fmt(totalSaved)+"💎";}
+  else{S.c+=300;S.g+=10;r="✅ Задача принята!\n\nБонус: +300💎 +10💎гемов\n\nБаланс: "+fmt(S.c)+"💎 | Гемы: "+S.g;}
   addMsg("🦉 OWL",r,false);draw();
 }
 
 function renderChat(){
   var e=$("chmsgs");e.innerHTML="";
-  for(var i=0;i<chatMsgs.length;i++){
-    var m=chatMsgs[i],d=new Date(m.ts),t=d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
-    var isOwl=(m.a==="🦉 OWL");
+  var msgs=chatTab==="g"?chatMsgs:chatMsgs.filter(function(m){return m.a==="🦉 OWL"||m.a===curUser;});
+  for(var i=0;i<msgs.length;i++){
+    var m=msgs[i],d=new Date(m.ts),t=d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+    var isOwl=m.a==="🦉 OWL";
     e.innerHTML+='<div class="chmsg'+(isOwl?"":" me")+'"><div class="auth">'+m.a+'</div><div class="txt" style="white-space:pre-wrap">'+m.t+'</div><div class="time">'+t+'</div></div>';
   }
-  if(!chatMsgs.length)e.innerHTML='<div style="text-align:center;color:#555;padding:20px">Сообщений пока нет</div>';
+  if(!msgs.length)e.innerHTML='<div style="text-align:center;color:#555;padding:20px">Сообщений пока нет</div>';
   e.scrollTop=e.scrollHeight;
 }
 
@@ -436,38 +410,28 @@ function sendChat(){
   if(!text)return;$("chin").value="";
   addMsg(curUser,text);
   if(chatTab==="o"){
-    // Save task to Gist for OWL to process
-    saveTaskToGist(text);
     $("chowli").style.display="block";
-    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1200);
+    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},500+Math.random()*1000);
   }
 }
 
 $("chsend").onclick=sendChat;
 $("chin").addEventListener("keydown",function(e){if(e.key==="Enter")sendChat();});
-$("chtabs").addEventListener("click",function(e){
-  var t=e.target.closest(".chtab");if(!t)return;$("chtabs").querySelectorAll(".chtab").forEach(function(x){x.classList.remove("on");});
-  t.classList.add("on");chatTab=t.dataset.ct;$("chin").placeholder=chatTab==="o"?"Задание для OWL...":"Сообщение...";renderChat();
-});
+$("chtabs").addEventListener("click",function(e){var t=e.target.closest(".chtab");if(!t)return;$(".chtab").forEach(function(x){x.classList.remove("on");});t.classList.add("on");chatTab=t.dataset.tab;$("chin").placeholder=chatTab==="o"?"Задание для OWL...":"Сообщение...";renderChat();});
 
 // NAV
 document.querySelectorAll("footer .tab").forEach(function(ft){
   ft.onclick=function(){
     document.querySelectorAll("footer .tab").forEach(function(x){x.classList.remove("on");});
-    ft.classList.add("on");showScr("game");$("panel").classList.remove("act");
-    var v=ft.id;
-    if(v==="tup"){$("ptitle").textContent="⬆️ Улучшения";$("ptabs").style.display="";curTab="up";$("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="up");});$("panel").classList.add("act");renderP();}
-    else if(v==="tbo"){$("ptitle").textContent="👹 Босс";$("ptabs").style.display="";curTab="bo";$("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="bo");});$("panel").classList.add("act");renderP();}
-    else if(v==="tch"){showScr("chat");renderChat();}
-    else if(v==="tst"){$("ptitle").textContent="⚙️ Ещё";$("ptabs").style.display="none";$("panel").classList.add("act");renderSettings();}
+    ft.classList.add("on");
+    var scr=ft.dataset.scr;
+    if(scr==="game"){showScr("game-scr");$("panel").classList.remove("act");}
+    else if(scr==="chat"){showScr("chat-scr");renderChat();}
+    else if(scr==="settings"){showScr("game-scr");$("ptitle").textContent="⚙️ Ещё";$("ptabs").style.display="none";$("panel").classList.add("act");renderSettings();}
+    else {showScr("game-scr");$("ptabs").style.display="";$("panel").classList.add("act");curTab=scr;$(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.tab===scr);});renderP();}
   };
 });
 
-// OVERLAY
-function dlg(t,p,bs){$("ovt").textContent=t;$("ovp").textContent=p;$("ovb").innerHTML="";for(var i=0;i<bs.length;i++){var b=document.createElement("button");b.textContent=bs[i].t;b.onclick=bs[i].f;$("ovb").appendChild(b);}$("ov").classList.add("act");}
-function cdlg(){$("ov").classList.remove("act");}
-
-// SAVE/LOAD
 function save(){
   if(!curUser)return;S.lastSave=Date.now();
   var saves={};try{saves=JSON.parse(localStorage.getItem("cr_saves")||"{}");}catch(e){}
@@ -480,23 +444,14 @@ function loadGame(){
 }
 function initNewGame(){S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0,lastSave:Date.now()};}
 
-// AUTO SAVE
 window.addEventListener("beforeunload",function(){save();});
 window.addEventListener("visibilitychange",function(){if(document.hidden)save();});
 setInterval(function(){save();},10000);
+setInterval(function(){if(getCPS()>0){var inc=getCPS()*0.3;S.c+=inc;S.ct+=inc;S.rp+=inc;}while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}draw();},300);
 
-// LOOP
-setInterval(function(){
-  if(getCPS()>0){var inc=getCPS()*0.3;S.c+=inc;S.ct+=inc;S.rp+=inc;}
-  while(S.rp>=S.rg){S.rp-=S.rg;S.rl++;S.rg=Math.floor(S.rg*1.4);S.cp+=Math.ceil(S.rl*0.5);S.ps+=S.rl*0.3;}
-  draw();
-},300);
-
-// INIT
 var lastUser=localStorage.getItem("cr_lastUser");
-if(lastUser&&users[lastUser]){curUser=lastUser;loadGame();showScr("game");}else{showScr("login");}
+if(lastUser&&users[lastUser]){curUser=lastUser;loadGame();showScr("game-scr");}else{showScr("login-scr");}
 draw();
-
 })();
 </script>
 </body>
