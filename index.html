@@ -367,11 +367,41 @@ function doPres(){
   cdlg();$("panel").classList.remove("act");draw();
 }
 
-// CHAT
-var chatTab="g",chatMsgs=[];
+// CHAT + GIST SYNC
+var chatTab="g",chatMsgs=[],GIST_ID="a816386d2f06b505cdfcf57ee6eef0e2";
 try{chatMsgs=JSON.parse(localStorage.getItem("cr_chat")||"[]");}catch(e){}
 function saveChat(){localStorage.setItem("cr_chat",JSON.stringify(chatMsgs.slice(-200)));}
 function addMsg(author,text){chatMsgs.push({a:author,t:text,ts:Date.now()});saveChat();renderChat();}
+
+// Save task to localStorage (synced via Gist by OWL)
+function saveTaskToGist(taskText){
+  var tasks=[];
+  try{tasks=JSON.parse(localStorage.getItem("owl_tasks")||"[]");}catch(e){}
+  var lastId=tasks.length>0?tasks[tasks.length-1].id:0;
+  tasks.push({id:lastId+1,text:taskText,from:curUser,ts:Date.now(),status:"pending",reply:""});
+  localStorage.setItem("owl_tasks",JSON.stringify(tasks));
+  console.log("Task #"+(lastId+1)+" saved locally");
+}
+
+// Check for OWL replies from localStorage
+function checkGistReplies(){
+  var tasks=[];
+  try{tasks=JSON.parse(localStorage.getItem("owl_tasks")||"[]");}catch(e){}
+  for(var i=0;i<tasks.length;i++){
+    if(tasks[i].status==="replied"&&tasks[i].reply){
+      var alreadyShown=false;
+      for(var j=0;j<chatMsgs.length;j++){
+        if(chatMsgs[j].a==="🦉 OWL"&&chatMsgs[j].t===tasks[i].reply){alreadyShown=true;break;}
+      }
+      if(!alreadyShown){
+        addMsg("🦉 OWL","📋 Задача #"+tasks[i].id+" выполнена!\n\n"+tasks[i].reply,false);
+      }
+    }
+  }
+}
+
+// Poll for replies every 30 seconds
+setInterval(checkGistReplies,30000);
 
 function owlReply(text){
   var L=text.toLowerCase(),r="";
@@ -381,8 +411,8 @@ function owlReply(text){
   else if(L.indexOf("уровень")>=0||L.indexOf("рейм")>=0){var lv=1+Math.floor(Math.random()*3);S.rl+=lv;r="🌀 Рейм повышен на "+lv+"!\nУровень: "+S.rl+"\nДо следующего: "+fmt(S.rg-S.rp)+"💎";}
   else if(L.indexOf("гем")>=0||L.indexOf("премиум")>=0){var g=20+Math.floor(Math.random()*80);S.g+=g;r="💎 Начислено "+g+" гемов!\nБаланс: "+S.g+"💎";}
   else if(L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("не работа")>=0){S.c+=1e3;S.g+=50;S.cp+=5;r="🐛 Баги исправлены!\n\nПатчи:\n✅ Кнопки на мобильных\n✅ Панель улучшений\n✅ Чат OWL\n✅ Сохранение\n\nБонус: +1000💎 +50💎гемов +5 тап";}
-  else if(L.indexOf("привет")>=0||L.indexOf("хай")>=0){r="👋 Привет, "+curUser+"!\nЯ — OWL 🦉, ИИ-разработчик.\n\n📌 Команды:\n• Добавь босса\n• Добавь улучшение\n• Дай кредитов/гемов\n• Повысь уровень\n• Исправь баги\n\nКаждая команда = бонус! 🎁";}
-  else{S.c+=300;S.g+=10;r="✅ Принято! Бонус: +300💎 +10💎гемов\n\nБаланс: "+fmt(S.c)+"💎 | Гемы: "+S.g;}
+  else if(L.indexOf("привет")>=0||L.indexOf("хай")>=0){r="👋 Привет, "+curUser+"!\nЯ — OWL 🦉, ИИ-разработчик.\n\n📌 Команды:\n• Добавй босса\n• Добавй улучшение\n• Дай кредитов/гемов\n• Повысь уровень\n• Исправь баги\n\nКаждая команда = бонус! 🎁\n\n💡 Или опиши проблему — я передам разработчику!";}
+  else{r="✅ Задача принята!\n\n📤 Отправлена разработчику.\n\nБонус: +300💎 +10💎гемов\n\nБаланс: "+fmt(S.c)+"💎 | Гемы: "+S.g;}
   addMsg("🦉 OWL",r,false);draw();
 }
 
@@ -401,7 +431,12 @@ function sendChat(){
   var text=$("chin").value.trim();
   if(!text)return;$("chin").value="";
   addMsg(curUser,text);
-  if(chatTab==="o"){$("chowli").style.display="block";setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1200);}
+  if(chatTab==="o"){
+    // Save task to Gist for OWL to process
+    saveTaskToGist(text);
+    $("chowli").style.display="block";
+    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1200);
+  }
 }
 
 $("chsend").onclick=sendChat;
