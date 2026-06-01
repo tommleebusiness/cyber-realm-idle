@@ -235,7 +235,7 @@ footer .tab:active{background:rgba(0,255,255,.1)}
 
 <div class="overlay" id="ov"><div class="overlay-box"><h3 id="ovt"></h3><p id="ovp"></p><div id="ovb"></div></div></div>
 
-<script>
+<script type="text/javascript">
 (function(){
 "use strict";
 
@@ -499,26 +499,11 @@ $("chtabs").addEventListener("click",function(e){
   t.classList.add("on");chatTab=t.dataset.ct;$("chin").placeholder=chatTab==="o"?"Задание для OWL...":"Сообщение...";renderChat();
 });
 
-add("on");
-    showScr("game");
-    showPdis();
-    var v=ft.id;
-    if(v==="tup"){$("ptitle").textContent="⬆️ Улучшения";document.getElementById("ptabs").style.display="";curTab="up";document.getElementById("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="up");});showPact();renderP();}
-    else if(v==="tbo"){$("ptitle").textContent="👹 Босс";document.getElementById("ptabs").style.display="";curTab="bo";document.getElementById("ptabs").querySelectorAll(".ptab").forEach(function(t){t.classList.toggle("on",t.dataset.t==="bo");});showPact();renderP();}
-    else if(v==="tch"){showScr("chat");renderChat();}
-    else if(v==="tst"){$("ptitle").textContent="⚙️ Ещё";document.getElementById("ptabs").style.display="none";showPact();renderSettings();}
-    else if(v==="tgame"){showPdis();draw();}
-
 function sendChat(){
   var text=$("chin").value.trim();
   if(!text)return;$("chin").value="";
-  addMsg(curUser,text,true);
-  if(chatTab==="o"){
-    owlTasks.push({text:text,from:curUser,time:Date.now(),done:false});
-    saveTasks();
-    $("chowli").style.display="block";
-    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},1500+Math.random()*2000);
-  }
+  addMsg(curUser,text);
+  if(chatTab==="o"){$("chowli").style.display="block";setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1200);}
 }
 
 $("chsend").onclick=sendChat;
