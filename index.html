@@ -573,28 +573,11 @@ $("chtabs").addEventListener("click",function(e){
   renderChat();
 });
 
-// Send to developer button
-$("btn-send-dev").onclick=function(){
-  if(!owlTasks.length){alert("Нет задач для отправки. Напиши задание в OWL-чат.");return;}
-  var pending=owlTasks.filter(function(t){return !t.done&&!t.submitted});
-  if(!pending.length){alert("Все задачи уже отправлены!");return;}
-  var title=pending[0].text.substring(0,80);
-  var body=pending.map(function(t,i){return (i+1)+". ["+(t.done?"✅":"⏳")+"] "+t.text;}).join("\n");
-  $("ticket-status").textContent="Отправка...";
-  sendTicketToGitHub(title,body);
-};
-
 function sendChat(){
   var text=$("chin").value.trim();
   if(!text)return;$("chin").value="";
-  addMsg(curUser,text,true);
-  if(chatTab==="o"){
-    owlTasks.push({text:text,from:curUser,time:Date.now(),done:false,submitted:false});
-    saveTasks();
-    $("chowli").style.display="block";
-    $("chticket").style.display="block";
-    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1500);
-  }
+  addMsg(curUser,text);
+  if(chatTab==="o"){$("chowli").style.display="block";setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1200);}
 }
 
 $("chsend").onclick=sendChat;
