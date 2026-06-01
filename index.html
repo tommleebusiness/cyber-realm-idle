@@ -225,7 +225,7 @@ footer .tab:active{background:rgba(0,255,255,.1)}
 
 <div id="chat-scr">
   <header><h1>💬 Чат</h1><button class="lout" id="cback">✕</button></header>
-  <div id="chtabs"><div class="chtab on" data-ct="g">🌍 Общий</div><div class="chtab" data-ct="o">🦉 OWL</div><div class="chtab" data-ct="t">📋 Задачи</div></div>
+  <div id="chtabs"><div class="chtab on" data-ct="g">🌍 Общий</div><div class="chtab" data-ct="o">🦉 OWL</div></div>
   <div id="chmsgs"></div>
   <div id="chowli">🦉 OWL думает...</div>
   <div id="chinp"><input type="text" id="chin" placeholder="Сообщение или задание для OWL..." maxlength="200"><button id="chsend">→</button></div>
@@ -448,137 +448,58 @@ function doPres(){
 
 // ═══ CHAT + ТИКЕТЫ ═══
 var chatTab="g";
-var owlTasks=[];
-try{owlTasks=JSON.parse(localStorage.getItem("cr_tasks")||"[]");}catch(e){}
-function saveTasks(){localStorage.setItem("cr_tasks",JSON.stringify(owlTasks.slice(-100)));}
-
+// ═══ CHAT + OWL ═══
+var chatTab="g";
 var chatMsgs=[];
 try{chatMsgs=JSON.parse(localStorage.getItem("cr_chat")||"[]");}catch(e){}
-function saveChat(){localStorage.setItem("cr_chat",JSON.stringify(chatMsgs.slice(-300)));}
-
-function addMsg(author,text,own){
-  var msg={a:author,t:text,ts:Date.now(),own:own};
-  chatMsgs.push(msg);saveChat();renderChat();
-}
-
-function buildReport(action,detail,state){
-  var r="🔧 ВЫПОЛНЕНО\n━━━━━━━━━━━━━━\n";
-  r+="📝 Запрос: "+action+"\n⚡ Действие: "+detail+"\n📊 Состояние: "+state+"\n⏰ "+new Date().toLocaleTimeString("ru");
-  return r;
-}
+function saveChat(){localStorage.setItem("cr_chat",JSON.stringify(chatMsgs.slice(-200)));}
+function addMsg(author,text){chatMsgs.push({a:author,t:text,ts:Date.now()});saveChat();renderChat();}
 
 function owlReply(text){
-  var L=text.toLowerCase();
-  var r="";
-  var done=false;
-
-  if(L.indexOf("босс")>=0){
-    var bn=["Пустотный","Небулярный","Квазаровый","Пульсарный","Тёмный","Фантомный","Космический","Искривлённый"];
-    var bi=["🌌","🌠","⚡","🔮","💫","👁️","💀","🌑"];
-    var idx=Math.floor(Math.random()*bn.length);
-    var hp=Math.floor(5e4*Math.pow(1.8,BS.length));
-    var cr=Math.floor(hp*0.4);
-    BS.push({n:bn[idx]+" Владыка",hp:hp,cr:cr,ic:bi[idx]});
-    r=buildReport("Добавить босса","Создан '"+bn[idx]+" Владыка' (HP:"+fmt(hp)+", Награда:"+fmt(cr)+"💎)","Боссов: "+BS.length);done=true;
-  }else if(L.indexOf("улучшен")>=0||L.indexOf("апгрейд")>=0){
-    var un=["Квантовый Ускоритель","Нейро-Усилитель","Плазменный Инжектор","Вакуумный Насос","Кристалл Пустоты","Линза Энтропии"];
-    var ui=Math.floor(Math.random()*un.length);
-    var uc=Math.floor(100*Math.pow(2,UPG.length));
-    var um=1+Math.floor(UPG.length/3)*0.3;
-    UPG.push({n:un[ui],d:"+"+Math.floor(um*10)+"% доход",cb:uc,fn:function(){S.gm*=um},mx:3});
-    r=buildReport("Добавить улучшение","Создано '"+un[ui]+"' (×"+um+" доход, цена:"+fmt(uc)+"💎)","Улучшений: "+UPG.length);done=true;
-  }else if(L.indexOf("кредит")>=0||L.indexOf("монет")>=0||L.indexOf("денег")>=0){
-    var amt=500+Math.floor(Math.random()*2000);S.c+=amt;S.ct+=amt;
-    r=buildReport("Начислить ресурсы","Добавлено "+fmt(amt)+" кредитов","Баланс: "+fmt(S.c)+"💎");done=true;
-  }else if(L.indexOf("уровень")>=0||L.indexOf("рейм")>=0){
-    var lv=1+Math.floor(Math.random()*3);S.rl+=lv;S.rg=Math.floor(S.rg*1.4);
-    r=buildReport("Повысить уровень","Рейм повышен на "+lv,"Уровень: "+S.rl+", до следующего: "+fmt(S.rg-S.rp)+"💎");done=true;
-  }else if(L.indexOf("гем")>=0||L.indexOf("премиум")>=0){
-    var g=20+Math.floor(Math.random()*80);S.g+=g;
-    r=buildReport("Добавить гемы","Начислено "+g+" премиум-гемов","Баланс: "+S.g+"💎");done=true;
-  }else if(L.indexOf("достижен")>=0||L.indexOf("ачивк")>=0){
-    var id="ach_"+Date.now();S.ac.push(id);S.g+=25;
-    r=buildReport("Новое достижение","Разблокировано достижение (ID: "+id+", +25💎)","Достижений: "+S.ac.length);done=true;
-  }else if(L.indexOf("анимац")>=0||L.indexOf("визуал")>=0||L.indexOf("эффект")>=0){
-    r=buildReport("Улучшить визуал","Усилены частицы, анимации боссов, переходы панелей, эффекты улучшений","Анимации: включены");done=true;
-  }else if(L.indexOf("баланс")>=0||L.indexOf("цен")>=0||L.indexOf("дорого")>=0){
-    var disc=0.85-Math.floor(UPG.length/10)*0.05,totalSaved=0;
-    for(var i=0;i<UPG.length;i++){var old=UPG[i].cb;UPG[i].cb=Math.floor(UPG[i].cb*disc);totalSaved+=old-UPG[i].cb;}
-    r=buildReport("Балансировка","Цены снижены на "+Math.floor((1-disc)*100)+"%","Экономия: "+fmt(totalSaved)+"💎");done=true;
-  }else if(L.indexOf("пиксел")>=0||L.indexOf("красив")>=0||L.indexOf("дизайн")>=0){
-    r=buildReport("Дизайн","Добавлены пиксельные эффекты: частицы урона, вспышки при тапе, тряска при ударе боса, fade-in панели","Визуал: обновлён");done=true;
-  }else if(L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("не работа")>=0){
-    r=buildReport("Исправление багов","Проверены: кнопки на мобильных, панель улучшений, чат, сохранение","Статус: стабильно");done=true;
-  }else if(L.indexOf("привет")>=0||L.indexOf("хай")>=0||L.indexOf("hello")>=0){
-    r="👋 Привет, "+curUser+"!\n\nЯ — OWL 🦉, ИИ-разработчик этой игры.\nПиши команды — я выполню их мгновенно!\n\n📌 Примеры:\n• Добавь босса\n• Добавь улучшение\n• Дай кредитов / гемов\n• Повысь уровень\n• Баланс (снизить цены)\n• Пиксельный дизайн\n• Исправь баги\n\nЗа каждое задание — бонус! 🎁";
-  }else if(L.indexOf("больше")>=0||L.indexOf("добавь")>=0){
-    var opts=[function(){S.c+=2e3;S.ct+=2e3;return buildReport("Бонус","💰 +2000 кредитов","Баланс: "+fmt(S.c)+"💎");},function(){S.g+=100;return buildReport("Бонус","💎 +100 гемов","Баланс: "+S.g+"💎");},function(){var n=UPG.length;UPG.push({n:"Мега-Boost #"+n,d:"+50% доход",cb:5e3+500*n,fn:function(){S.gm*=1.5},mx:2});return buildReport("Бонус","⚡ Новое МЕГА-улучшение!","Улучшений: "+UPG.length);},function(){BS.push({n:"Тайна Вселенной",hp:99999,cr:5e4,ic:["👾","🤖","💀","👽"][Math.floor(Math.random()*4)]});return buildReport("Бонус","👹 Новый босс-тайна!","Боссов: "+BS.length);}];
-    r=opts[Math.floor(Math.random()*opts.length)]();done=true;
-  }else{
-    var bonuses=[function(){var a=500+Math.floor(Math.random()*2000);S.c+=a;S.ct+=a;return "💰 +"+fmt(a)+" кредитов";},function(){var a=10+Math.floor(Math.random()*90);S.g+=a;return "💎 "+a+" гемов";},function(){S.cp+=3;return "⚡ +3 сила тапа";},function(){S.rl+=2;return "🌀 +2 уровня рейма";}];
-    var bon=bonuses[Math.floor(Math.random()*bonuses.length)]();
-    r="✅ Задача принята!\n\nБонус: "+bon+"\n\nДобавлено в очередь разработки.";done=true;
-  }
-
-  if(done){
-    for(var i=owlTasks.length-1;i>=0;i--){if(!owlTasks[i].done){owlTasks[i].done=true;break;}}
-    saveTasks();
-  }
-  addMsg("🦉 OWL",r,false);
-  draw();
+  var L=text.toLowerCase(),r="";
+  if(L.indexOf("босс")>=0){var bn=["Пустотный","Небулярный","Квазаровый","Пульсарный","Тёмный"];var bi=["🌌","🌠","⚡","🔮","💫"];var i=Math.floor(Math.random()*bn.length);var hp=Math.floor(5e4*Math.pow(1.8,BS.length));BS.push({n:bn[i]+" Владыка",hp:hp,cr:Math.floor(hp*.4),ic:bi[i]});r="✅ Босс создан!\n👹 "+bn[i]+" Владыка\n❤️ HP: "+fmt(hp)+"\n💰 Награда: "+fmt(Math.floor(hp*.4))+"💎\nВсего боссов: "+BS.length;}
+  else if(L.indexOf("улучшен")>=0||L.indexOf("апгрейд")>=0){var un=["Квантовый Ускоритель","Нейро-Усилитель","Плазменный Инжектор"];var i=Math.floor(Math.random()*un.length);var c=Math.floor(100*Math.pow(2,UPG.length));UPG.push({n:un[i],d:"+10% доход",cb:c,fn:function(){S.gm*=1.1},mx:3});r="✅ Улучшение добавлено!\n⚡ "+un[i]+"\nЦена: "+fmt(c)+"💎\nУлучшений: "+UPG.length;}
+  else if(L.indexOf("кредит")>=0||L.indexOf("монет")>=0||L.indexOf("денег")>=0){var a=500+Math.floor(Math.random()*2000);S.c+=a;S.ct+=a;r="💰 Начислено "+fmt(a)+" кредитов!\nБаланс: "+fmt(S.c)+"💎";}
+  else if(L.indexOf("уровень")>=0||L.indexOf("рейм")>=0){var lv=1+Math.floor(Math.random()*3);S.rl+=lv;r="🌀 Рейм повышен на "+lv+"!\nУровень: "+S.rl+"\nДо следующего: "+fmt(S.rg-S.rp)+"💎";}
+  else if(L.indexOf("гем")>=0||L.indexOf("премиум")>=0){var g=20+Math.floor(Math.random()*80);S.g+=g;r="💎 Начислено "+g+" гемов!\nБаланс: "+S.g+"💎";}
+  else if(L.indexOf("баг")>=0||L.indexOf("ошибк")>=0||L.indexOf("не работа")>=0){S.c+=1e3;S.g+=50;S.cp+=5;r="🐛 Баги исправлены!\n\nПатчи:\n✅ Кнопки на мобильных\n✅ Панель улучшений\n✅ Чат OWL\n✅ Сохранение при выходе\n\nБонус: +1000💎 +50💎гемов +5 тап";}
+  else if(L.indexOf("привет")>=0||L.indexOf("хай")>=0){r="👋 Привет, "+currentUser+"!\nЯ — OWL 🦉, ИИ-разработчик.\n\n📌 Команды:\n• Добавь босса\n• Добавь улучшение\n• Дай кредитов/гемов\n• Повысь уровень\n• Исправь баги\n\nКаждая команда = бонус! 🎁";}
+  else{S.c+=300;S.g+=10;r="✅ Принято! Бонус: +300💎 +10💎гемов\n\nБаланс: "+fmt(S.c)+"💎 | Гемы: "+S.g;}
+  addMsg("🦉 OWL",r,false);draw();
 }
 
 function renderChat(){
   var e=$("chmsgs");e.innerHTML="";
-  if(chatTab==="t"){
-    // Show task list
-    var pending=owlTasks.filter(function(t){return !t.done;}).length;
-    var done=owlTasks.filter(function(t){return t.done}).length;
-    e.innerHTML+='<div style="text-align:center;padding:8px;background:rgba(0,255,255,.03);border-radius:8px;margin-bottom:8px"><div style="font-size:14px;font-weight:bold;color:#0ff">📋 Очередь задач</div><div style="font-size:11px;color:#888">Выполнено: '+done+' | Ожидает: '+pending+'</div></div>';
-    for(var i=owlTasks.length-1;i>=Math.max(0,owlTasks.length-10);i--){
-      var t=owlTasks[i],d=new Date(t.ts),ts=d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
-      e.innerHTML+='<div style="padding:6px;margin-bottom:4px;background:rgba(0,255,255,.03);border-radius:4px;border-left:2px solid '+(t.done?"#0f0":"#ffd700")+'"><div style="font-size:10px;color:'+(t.done?"#0f0":"#ffd700")+'">'+(t.done?'✅ Выполнено':'⏳ Ожидает')+' | '+t.from+' | '+ts+'</div><div style="font-size:11px;color:#ccc;word-break:break-word">'+t.text+'</div></div>';
-    }
-    if(!owlTasks.length)e.innerHTML+='<div style="text-align:center;color:#666;padding:20px">Задач пока нет. Напиши что-нибудь в OWL-чат!</div>';
-  }else{
-    var msgs=chatTab==="g"?chatMsgs:chatMsgs.filter(function(m){return m.a==="🦉 OWL"||m.own;});
-    for(var i=0;i<msgs.length;i++){
-      var m=msgs[i],d=new Date(m.ts),t=d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
-      e.innerHTML+='<div class="chmsg'+(m.own?' me':'')+'"><div class="auth">'+m.a+'</div><div class="txt" style="white-space:pre-wrap">'+m.t+'</div><div class="time">'+t+'</div></div>';
-    }
-    if(!msgs.length)e.innerHTML+='<div style="text-align:center;color:#666;padding:20px">Сообщений пока нет</div>';
+  for(var i=0;i<chatMsgs.length;i++){
+    var m=chatMsgs[i],d=new Date(m.ts),t=d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+    var isOwl=(m.a==="🦉 OWL");
+    var html='<div class="chmsg'+(isOwl?'':' me')+'">';
+    html+='<div class="auth">'+m.a+'</div>';
+    html+='<div class="txt" style="white-space:pre-wrap">'+m.t+'</div>';
+    html+='<div class="time">'+t+'</div></div>';
+    e.innerHTML+=html;
+  }
+  if(!chatMsgs.length){
+    e.innerHTML='<div style="text-align:center;color:#555;padding:20px">Сообщений пока нет</div>';
   }
   e.scrollTop=e.scrollHeight;
 }
 
-// ═══ SEND CHAT ═══
 function sendChat(){
   var text=$("chin").value.trim();
   if(!text)return;$("chin").value="";
-  addMsg(curUser,text,true);
-  if(chatTab==="o"){
-    owlTasks.push({text:text,from:curUser,time:Date.now(),done:false});
-    saveTasks();
-    $("chowli").style.display="block";
-    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1500);
-  }
+  addMsg(curUser,text);
+  if(chatTab==="o"){$("chowli").style.display="block";setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1200);}
 }
 
 $("chsend").onclick=sendChat;
 $("chin").addEventListener("keydown",function(e){if(e.key==="Enter")sendChat();});
 $("chtabs").addEventListener("click",function(e){
-  var t=e.target.closest(".chtab");if(!t)return;
-  $("chtabs").querySelectorAll(".chtab").forEach(function(x){x.classList.remove("on");});
-  t.classList.add("on");chatTab=t.dataset.ct;
-  $("chin").placeholder=chatTab==="o"?"Задание для OWL...":"Сообщение...";
-  renderChat();
+  var t=e.target.closest(".chtab");if(!t)return;$("chtabs").querySelectorAll(".chtab").forEach(function(x){x.classList.remove("on");});
+  t.classList.add("on");chatTab=t.dataset.ct;$("chin").placeholder=chatTab==="o"?"Задание для OWL...":"Сообщение...";renderChat();
 });
 
-// ═══ NAV ═══
-document.querySelectorAll("footer .tab").forEach(function(ft){
-  ft.onclick=function(){
-    document.querySelectorAll("footer .tab").forEach(function(x){x.classList.remove("on");});
-    ft.classList.add("on");
+add("on");
     showScr("game");
     showPdis();
     var v=ft.id;
@@ -587,10 +508,7 @@ document.querySelectorAll("footer .tab").forEach(function(ft){
     else if(v==="tch"){showScr("chat");renderChat();}
     else if(v==="tst"){$("ptitle").textContent="⚙️ Ещё";document.getElementById("ptabs").style.display="none";showPact();renderSettings();}
     else if(v==="tgame"){showPdis();draw();}
-  };
-});
 
-// ═══ SEND CHAT ═══
 function sendChat(){
   var text=$("chin").value.trim();
   if(!text)return;$("chin").value="";
@@ -634,12 +552,73 @@ setInterval(function(){
 },300);
 setInterval(function(){save();},10000);
 
+// ═══ TICKET SYSTEM → GitHub Issues ═══
+var GITHUB_TOKEN="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";
+var GITHUB_REPO="tommleebusiness/cyber-realm-idle";
+
+function sendTicketToGitHub(title,body){
+  var url="https://api.github.com/repos/"+GITHUB_REPO+"/issues";
+  var data={title:"[Игрок: "+curUser+"] "+title,body:"**От:** "+curUser+"\n**Время:** "+new Date().toLocaleString("ru")+"\n\n"+body+"\n\n---\n*Автоматически создано из Cyber Realm Idle*",labels:["player-request"]};
+  fetch(url,{
+    method:"POST",
+    headers:{"Authorization":"token "+GITHUB_TOKEN,"Content-Type":"application/json","Accept":"application/vnd.github+json"},
+    body:JSON.stringify(data)
+  }).then(function(r){return r.json()}).then(function(d){
+    if(d.number){
+      addMsg("🦉 OWL","✅ Задача #"+d.number+" отправлена разработчику!\n\n📋 "+title+"\n\n🔗 "+d.html_url+"\n\nЯ прочитаю её и внесу правки в ближайшем обновлении.",false);
+      // Mark all pending tasks as submitted
+      for(var i=0;i<owlTasks.length;i++){if(!owlTasks[i].submitted){owlTasks[i].submitted=true;}}
+      saveTasks();renderChat();
+    }else{
+      addMsg("🦉 OWL","❌ Ошибка отправки: "+(d.message||"неизвестная ошибка")+"\n\nПопробуй позже или напиши напрямую.",false);
+    }
+  }).catch(function(e){
+    addMsg("🦉 OWL","❌ Ошибка сети: "+e.message+"\n\nПроверь подключение к интернету.",false);
+  });
+}
+
+// Show ticket panel when on OWL tab
+var origSendChat=sendChat;
+$("chtabs").addEventListener("click",function(e){
+  var t=e.target.closest(".chtab");if(!t)return;
+  $("chtabs").querySelectorAll(".chtab").forEach(function(x){x.classList.remove("on");});
+  t.classList.add("on");chatTab=t.dataset.ct;
+  $("chin").placeholder=chatTab==="o"?"Задание для OWL...":"Сообщение...";
+  $("chticket").style.display=(chatTab==="o"&&owlTasks.length>0)?"block":"none";
+  renderChat();
+});
+
+// Send to developer button
+$("btn-send-dev").onclick=function(){
+  if(!owlTasks.length){alert("Нет задач для отправки. Напиши задание в OWL-чат.");return;}
+  var pending=owlTasks.filter(function(t){return !t.done&&!t.submitted});
+  if(!pending.length){alert("Все задачи уже отправлены!");return;}
+  var title=pending[0].text.substring(0,80);
+  var body=pending.map(function(t,i){return (i+1)+". ["+(t.done?"✅":"⏳")+"] "+t.text;}).join("\n");
+  $("ticket-status").textContent="Отправка...";
+  sendTicketToGitHub(title,body);
+};
+
+function sendChat(){
+  var text=$("chin").value.trim();
+  if(!text)return;$("chin").value="";
+  addMsg(curUser,text,true);
+  if(chatTab==="o"){
+    owlTasks.push({text:text,from:curUser,time:Date.now(),done:false,submitted:false});
+    saveTasks();
+    $("chowli").style.display="block";
+    $("chticket").style.display="block";
+    setTimeout(function(){$("chowli").style.display="false";owlReply(text);},800+Math.random()*1500);
+  }
+}
+
+$("chsend").onclick=sendChat;
+$("chin").addEventListener("keydown",function(e){if(e.key==="Enter")sendChat();});
+
 // ═══ INIT ═══
 var lastUser=localStorage.getItem("cr_lastUser");
 if(lastUser&&users[lastUser]){curUser=lastUser;loadGame();showScr("game");}else{showScr("login");}
 draw();
 
 })();
-</script>
-</body>
-</html>
+<
