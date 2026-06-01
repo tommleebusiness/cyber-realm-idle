@@ -207,7 +207,11 @@ $("areg").onclick=function(){
   users[u]={pass:hsh(p),created:Date.now(),lastLogin:Date.now()};saveUsers();
   curUser=u;initNewGame();showScr("game");amsg("Аккаунт создан!","ok");
 };
-$("lout").onclick=function(){saveGame();curUser=null;showScr("login");};
+$("lout").onclick=function(){
+  try{saveGame();}catch(e){console.log("save error: "+e.message);}
+  curUser=null;
+  showScr("login");
+};
 $("cback").onclick=function(){showScr("game");};
 
 // GAME STATE
