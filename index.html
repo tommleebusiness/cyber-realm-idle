@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'unsafe-inline' *; script-src 'unsafe-inline' *"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Cyber Realm Idle</title>
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Cyber Realm Idle</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{background:#050510;color:#0ff;font-family:'Segoe UI',system-ui,sans-serif;height:100%;overflow:hidden;touch-action:manipulation}
@@ -244,7 +244,7 @@ $("areg").onclick=function(){
   curUser=u;initNewGame();showScr("game-scr");amsg("Аккаунт создан!","ok");
 };
 
-$("lout").onclick=function(){saveGame();curUser=null;showScr("login-scr");};
+$("lout").onclick=function(){save();curUser=null;showScr("login-scr");};
 $("cback").onclick=function(){showScr("game-scr");};
 
 var S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0,lastSave:Date.now()};
