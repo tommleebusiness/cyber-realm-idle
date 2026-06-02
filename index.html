@@ -249,9 +249,38 @@ $("cback").onclick=function(){showScr("game-scr");};
 
 var S={c:0,ct:0,n:0,d:0,e:0,g:0,cl:0,bs:0,pr:0,pp:0,cp:1,ps:0,ns:0,ds:0,es:0,gm:1,dm:1,rl:1,rp:0,rg:100,up:{},ac:[],cb:null,bh:0,lastSave:Date.now()};
 var RN=["Цифровой Нексус","Неоновая Сетка","Квантовое Ядро","Кибер-Улей","Тёмная Матрица","Пустотный Сектор","Бесконечный Цикл","Омега-Царство","Альфа-Сингулярность","Кибер-Эдем","Нейросеть","Фантомная Зона","Бинарный Шторм","Хромовая Пустота","Океан Данных","Пустотное Ядро"];
-var UPG=[{n:"Нейро-Связь",d:"+1 тап",cb:10,fn:function(){S.cp+=1},mx:100},{n:"Лазерный Фокус",d:"+5 тапов",cb:100,fn:function(){S.cp+=5},mx:50},{n:"Плазменное Ядро",d:"+25 тапов",cb:1000,fn:function(){S.cp+=25},mx:30},{n:"Нано-Бот",d:"+0.5/с",cb:50,fn:function(){S.ps+=0.5},mx:50},{n:"Рой Дронов",d:"+2/с",cb:200,fn:function(){S.ps+=2},mx:30},{n:"ИИ-Ядро",d:"+10/с",cb:1000,fn:function(){S.ps+=10},mx:20},{n:"Квантовая Ферма",d:"+50/с",cb:5000,fn:function(){S.ps+=50},mx:15},{n:"Компрессор",d:"x1.5 всё",cb:250,fn:function(){S.gm*=1.5},mx:5},{n:"Энтропия",d:"x2 всё",cb:2500,fn:function(){S.gm*=2},mx:3},{n:"Солнечная Панель",d:"+1 ⚡/тап",cb:30,fn:function(){S.ns+=1},mx:20},{n:"Дата-Майнер",d:"+1 🧬/тап",cb:25,fn:function(){S.ds+=1},mx:20},{n:"Шифратор",d:"x2 данные",cb:300,fn:function(){S.dm*=2},mx:5},{n:"Инжектор Хаоса",d:"+1 🌀/тап",cb:500,fn:function(){S.es+=1},mx:10}];
+var UPG=[
+  {n:"Нейро-Связь",d:"+1 тап",cb:10,fn:function(){S.cp+=1},mx:100},
+  {n:"Лазерный Фокус",d:"+5 тапов",cb:100,fn:function(){S.cp+=5},mx:50},
+  {n:"Плазменное Ядро",d:"+25 тапов",cb:1000,fn:function(){S.cp+=25},mx:30},
+  {n:"Нано-Бот",d:"+0.5/с",cb:50,fn:function(){S.ps+=0.5},mx:50},
+  {n:"Рой Дронов",d:"+2/с",cb:200,fn:function(){S.ps+=2},mx:30},
+  {n:"ИИ-Ядро",d:"+10/с",cb:1000,fn:function(){S.ps+=10},mx:20},
+  {n:"Квантовая Ферма",d:"+50/с",cb:5000,fn:function(){S.ps+=50},mx:15},
+  {n:"Тёмная Материя",d:"+200/с",cb:25000,fn:function(){S.ps+=200},mx:10},
+  {n:"Компрессор",d:"x1.5 всё",cb:250,fn:function(){S.gm*=1.5},mx:5},
+  {n:"Энтропия",d:"x2 всё",cb:2500,fn:function(){S.gm*=2},mx:3},
+  {n:"Солнечная Панель",d:"+1 ⚡/тап",cb:30,fn:function(){S.ns+=1},mx:20},
+  {n:"Дата-Майнер",d:"+1 🧬/тап",cb:25,fn:function(){S.ds+=1},mx:20},
+  {n:"Шифратор",d:"x2 данные",cb:300,fn:function(){S.dm*=2},mx:5},
+  {n:"Инжектор Хаоса",d:"+1 🌀/тап",cb:500,fn:function(){S.es+=1},mx:10},
+  {n:"Кристалл Пустоты",d:"+5 тап +2/с",cb:10000,fn:function(){S.cp+=5;S.ps+=2},mx:5}
+];
 var BS=[{n:"Глитч-Фантом",hp:100,cr:50,ic:"👻"},{n:"Фаервол-Голем",hp:500,cr:200,ic:"🗿"},{n:"Вирусный Рой",hp:2000,cr:800,ic:"🦠"},{n:"Дата-Кракен",hp:8000,cr:3000,ic:"🐙"},{n:"Квантовый Дракон",hp:30000,cr:12000,ic:"🐉"},{n:"Нейро-Владыка",hp:100000,cr:50000,ic:"🧠"},{n:"Пустотный Император",hp:500000,cr:200000,ic:"👑"},{n:"Омега-Сингулярность",hp:2e6,cr:1e6,ic:"🌀"}];
-var ACHS=[{id:"a1",n:"Первый Тап",i:"👆",ck:function(){return S.cl>=1}},{id:"a2",n:"Кликер",i:"🖱️",ck:function(){return S.cl>=100}},{id:"a3",n:"Богач",i:"💰",ck:function(){return S.ct>=1e4}},{id:"a4",n:"Убийца Боссов",i:"⚔️",ck:function(){return S.bs>=1}},{id:"a5",n:"Охотник",i:"🏆",ck:function(){return S.bs>=10}},{id:"a6",n:"Странник",i:"🌌",ck:function(){return S.rl>=10}},{id:"a7",n:"Престиж",i:"🌟",ck:function(){return S.pr>=1}},{id:"a8",n:"Демон Скорости",i:"🚀",ck:function(){return getCPS()>=100}}];
+var ACHS=[
+  {id:"a1",n:"Первый Тап",i:"👆",ck:function(){return S.cl>=1}},
+  {id:"a2",n:"Кликер",i:"🖱️",ck:function(){return S.cl>=100}},
+  {id:"a3",n:"Богач",i:"💰",ck:function(){return S.ct>=1e4}},
+  {id:"a4",n:"Убийца Боссов",i:"⚔️",ck:function(){return S.bs>=1}},
+  {id:"a5",n:"Охотник",i:"🏆",ck:function(){return S.bs>=10}},
+  {id:"a6",n:"Странник",i:"🌌",ck:function(){return S.rl>=10}},
+  {id:"a7",n:"Престиж",i:"🌟",ck:function(){return S.pr>=1}},
+  {id:"a8",n:"Демон Скорости",i:"🚀",ck:function(){return getCPS()>=100}},
+  {id:"a9",n:"Коллекционер",i:"📦",ck:function(){return Object.keys(S.up).length>=10}},
+  {id:"a10",n:"Мастер",i:"👑",ck:function(){return S.rl>=25}},
+  {id:"a11",n:"Биллионер",i:"💎",ck:function(){return S.ct>=1e9}},
+  {id:"a12",n:"Легенда",i:"⭐",ck:function(){return S.pr>=5}}
+];
 
 function getCPS(){return S.ps*S.gm;}
 function fmt(n){if(n>=1e12)return(n/1e12).toFixed(1)+"T";if(n>=1e9)return(n/1e9).toFixed(1)+"B";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e4)return(n/1e3).toFixed(1)+"K";return Math.floor(n);}
